@@ -69,9 +69,7 @@ class CafeStaff : public User
     private:
         int MaxShifts;
         void BidForShift(Shift shift);
-        void ViewShiftStatus(Shift shift);
-    
-        
+        void ViewShiftStatus(Shift shift);        
 };
 
 #endif
