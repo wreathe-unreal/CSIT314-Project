@@ -1,11 +1,13 @@
 ﻿#pragma once
+#ifndef USERTYPES_H
+#define USERTYPES_H
 #include <string>
 #include <vector>
 
 class Shift;
 class Bid;
 class CafeStaff;
-class Cafe;
+
 using namespace std;
 
 enum class EUserTypes
@@ -15,9 +17,9 @@ enum class EUserTypes
     EUT_CafeMAnager, //2
     EUT_CafeStaff //3
 };
+
 enum class EStaffRoles
 {
-    ESR_NonStaff, //0
     ESR_Chef, //1
     ESR_Cashier, //2
     ESR_Waiter //3
@@ -71,3 +73,5 @@ class CafeStaff : public User
     
         
 };
+
+#endif

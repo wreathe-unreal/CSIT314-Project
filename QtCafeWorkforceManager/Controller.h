@@ -1,10 +1,13 @@
 ﻿#pragma once
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
+
+#include "Commands.h"
 
 class Controller
 {
     public:
-        void HandleCommand(Command* cmd);
-        
-        
+        void HandleCommand(ICommand* cmd);
 };
 
+#endif

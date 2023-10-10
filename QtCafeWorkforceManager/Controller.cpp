@@ -1,14 +1,19 @@
-﻿
+﻿#include "Controller.h"
+#include "Commands.h"
 
-void Controller::HandleCommand(Command* Cmd)
+
+class Command;
+
+void Controller::HandleCommand(ICommand* Cmd)
 {
-    if(Update* UpdateCmd = dynamic_cast<UpdateComponent*>(Cmd))
+    if(Update* UpdateCmd = dynamic_cast<Update*>(Cmd))
     {
-        //handle Update
+        //HandleUpdate(arg1, arg2);
+        //Serialize();
     }
     
-    if(Authorize* AuthorizeCmd = Dynamic_cast<Authorize*>(Cmd))
+    if(Authorize* AuthorizeCmd = dynamic_cast<Authorize*>(Cmd))
     {
-        //handle Authorize
+
     }
 };

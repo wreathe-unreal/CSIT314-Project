@@ -1,12 +1,16 @@
 ﻿#pragma once
+#ifndef BID_H
+#define BID_H
+
+
 #include "Shift.h"
 #include "UserTypes.h"
 
-enum EBidStatus
+enum class EBidStatus
 {
-    PENDING,
-    APPROVED,
-    REJECTED
+    EBS_PENDING,
+    EBS_APPROVED,
+    EBS_REJECTED
 };
 
 class Bid
@@ -18,3 +22,5 @@ class Bid
         void SetStatus();
     
 };
+
+#endif
