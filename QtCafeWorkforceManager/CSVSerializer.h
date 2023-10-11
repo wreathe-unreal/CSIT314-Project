@@ -12,7 +12,7 @@ class CSVSerializer
 
     public:
     static void SerializeUser(User* user, const string& filepath);
-    static std::vector<User*> DeserializeUsers(const std::string& filePath);
+    static void DeserializeUsers(const std::string& filePath);
 
 };
 

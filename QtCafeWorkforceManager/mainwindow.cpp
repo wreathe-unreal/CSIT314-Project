@@ -6,6 +6,7 @@
 #include <string>
 #include "CSVSerializer.h"
 #include <QDir>
+#include "QApplicationGlobal.h"
 
 QString HashPassword(QString password)
 {
@@ -18,16 +19,17 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
     ui->QLE_Password->setEchoMode(QLineEdit::Password);
+
     ui->tableWidget->setColumnCount(4);
+
     QStringList headers;
     headers << "User ID" << "Username" << "Hashed Password" << "Role";
+
     ui->tableWidget->setHorizontalHeaderLabels(headers);
 
-    CSVSerializer CSV = CSVSerializer();
+    CSVSerializer::DeserializeUsers("../QtCafeWorkforceManager/UserTable.csv");
 
-    vector<User*> Users = CSV.DeserializeUsers("../QtCafeWorkforceManager/UserTable.csv");
-
-    for (const auto& user : Users)
+    for (const auto& user : QApplicationGlobal::Users)
     {
         int row = ui->tableWidget->rowCount();
         ui->tableWidget->insertRow(row); // Insert a new row
@@ -58,6 +60,7 @@ void MainWindow::on_LoginButton_clicked()
     QString username = ui->QLE_Username->text();
     QString password = ui->QLE_Password->text();
     QString hashedPassword0x = HashPassword(password);
+
 
 }
 

@@ -74,12 +74,15 @@ class CafeStaff : public User
 {
     public:
 
-        vector<Shift> Shifts;
+        vector<Shift*> Shifts;
 
-        CafeStaff(int userID, string username, string hashedPassword, vector<Shift> shifts)
+        CafeStaff(int userID, string username, string hashedPassword, vector<Shift*> shifts)
             : User(userID, username, hashedPassword) // This calls the base class constructor
         {
-            Shifts = shifts;
+            for(auto& s: shifts)
+            {
+                Shifts.emplace_back(s);
+            }
         }
     private:
         void BidForShift(Shift shift);

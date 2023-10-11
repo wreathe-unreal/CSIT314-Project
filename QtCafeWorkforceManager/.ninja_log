@@ -1,59 +1,59 @@
 # ninja log v5
-1	504	7187292421135177	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-1	504	7187292421135177	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-1	504	7187292421135177	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-1	504	7187292421135177	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+7	300	7187300936110920	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
 504	547	7187292422669381	QtCafeWorkforceManager_autogen/EWIEGA46WW/qrc_CafeResources.cpp	bc11d6ea287a5356
-504	547	7187292422669381	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/EWIEGA46WW/qrc_CafeResources.cpp	bc11d6ea287a5356
+573	878	7187292426021702	CMakeFiles/QtCafeWorkforceManager.dir/Enums.cpp.obj	89a197e94f98745b
 562	618	7187292423420434	CMakeFiles/QtCafeWorkforceManager.dir/UserTypes.cpp.obj	bb6daf9514066d6f
+7	300	7187300936110920	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+7	300	7187300936110920	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+7	300	7187300936110920	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+504	547	7187292422669381	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/EWIEGA46WW/qrc_CafeResources.cpp	bc11d6ea287a5356
 565	620	7187292423420434	CMakeFiles/QtCafeWorkforceManager.dir/Bid.cpp.obj	42b8a87c2d234f99
 550	633	7187292423555635	CMakeFiles/QtCafeWorkforceManager.dir/Commands.cpp.obj	b0db92ffe38a6fd8
 577	640	7187292423640838	CMakeFiles/QtCafeWorkforceManager.dir/Shift.cpp.obj	aa54bf12d749aaf7
 581	698	7187292424224821	CMakeFiles/QtCafeWorkforceManager.dir/QtCafeWorkforceManager_autogen/EWIEGA46WW/qrc_CafeResources.cpp.obj	c7c27f29154f3f2a
 559	854	7187292425788016	CMakeFiles/QtCafeWorkforceManager.dir/Controller.cpp.obj	dd66199741a316d8
-573	878	7187292426021702	CMakeFiles/QtCafeWorkforceManager.dir/Enums.cpp.obj	89a197e94f98745b
 547	2341	7187292440637906	CMakeFiles/QtCafeWorkforceManager.dir/QtCafeWorkforceManager_autogen/mocs_compilation.cpp.obj	cc37cdd7a76cb341
-553	2439	7187292441622734	CMakeFiles/QtCafeWorkforceManager.dir/main.cpp.obj	323a17845ed7edeb
-569	2700	7187292444208977	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
-555	3293	7187292450097183	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
-3294	3539	7187292452586757	QtCafeWorkforceManager.exe	fa8a8a50bb4a3f58
-4	269	7187294634648327	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-4	269	7187294634648327	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-4	269	7187294634648327	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-4	269	7187294634648327	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-281	3550	7187294667416053	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
-4	256	7187294882543705	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-4	256	7187294882543705	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-4	256	7187294882543705	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-4	256	7187294882543705	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-273	2798	7187294908005584	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
-269	3430	7187294914312392	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
-3430	3691	7187294916890956	QtCafeWorkforceManager.exe	fa8a8a50bb4a3f58
-6	345	7187296994106010	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-6	345	7187296994106010	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-6	345	7187296994106010	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-6	345	7187296994106010	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-366	2922	7187297019893750	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
-359	3548	7187297026132163	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
-3549	3810	7187297028751335	QtCafeWorkforceManager.exe	fa8a8a50bb4a3f58
-4	181	7187299669231373	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-4	181	7187299669231373	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-4	181	7187299669231373	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-4	181	7187299669231373	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-193	2019	7187299687597610	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
-189	2588	7187299693296682	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
-2588	2843	7187299695811733	QtCafeWorkforceManager.exe	fa8a8a50bb4a3f58
-6	225	7187300243986954	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-6	225	7187300243986954	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-6	225	7187300243986954	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-6	225	7187300243986954	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-238	2629	7187300268012894	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
-235	3248	7187300274154623	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
-3248	3507	7187300276772656	QtCafeWorkforceManager.exe	fa8a8a50bb4a3f58
-7	300	7187300936110920	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-7	300	7187300936110920	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
-7	300	7187300936110920	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
-7	300	7187300936110920	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
 316	2376	7187300956872955	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
+553	2439	7187292441622734	CMakeFiles/QtCafeWorkforceManager.dir/main.cpp.obj	323a17845ed7edeb
 312	2962	7187300962680189	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
 2962	3223	7187300965311932	QtCafeWorkforceManager.exe	fa8a8a50bb4a3f58
+12	1769	7187336645473815	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+12	1769	7187336645473815	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+12	1769	7187336645473815	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+12	1769	7187336645473815	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+1791	4455	7187336674728874	CMakeFiles/QtCafeWorkforceManager.dir/QApplicationGlobal.cpp.obj	ed56f88160707ec3
+1779	4624	7187336676417966	CMakeFiles/QtCafeWorkforceManager.dir/main.cpp.obj	323a17845ed7edeb
+1769	4712	7187336677293065	CMakeFiles/QtCafeWorkforceManager.dir/QtCafeWorkforceManager_autogen/mocs_compilation.cpp.obj	cc37cdd7a76cb341
+1786	4902	7187336679193792	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
+1774	5511	7187336685223518	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
+5511	5786	7187336687998705	QtCafeWorkforceManager.exe	4f002cfc6650189f
+5	1171	7187345482499374	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+5	1171	7187345482499374	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+5	1171	7187345482499374	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+5	1171	7187345482499374	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+1184	3589	7187345509466680	CMakeFiles/QtCafeWorkforceManager.dir/QApplicationGlobal.cpp.obj	ed56f88160707ec3
+1176	3708	7187345510661925	CMakeFiles/QtCafeWorkforceManager.dir/main.cpp.obj	323a17845ed7edeb
+1172	3796	7187345511529454	CMakeFiles/QtCafeWorkforceManager.dir/QtCafeWorkforceManager_autogen/mocs_compilation.cpp.obj	cc37cdd7a76cb341
+7	258	7187346261409246	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+7	258	7187346261409246	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+7	258	7187346261409246	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+7	258	7187346261409246	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+268	2908	7187346287919470	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
+8	270	7187346359801322	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+8	270	7187346359801322	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+8	270	7187346359801322	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+8	270	7187346359801322	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+284	2652	7187346383611861	CMakeFiles/QtCafeWorkforceManager.dir/CSVSerializer.cpp.obj	8d0b5883679a9e1c
+279	3169	7187346388795458	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
+4	268	7187347443179890	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+4	268	7187347443179890	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+4	268	7187347443179890	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+4	268	7187347443179890	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+282	3042	7187347470946277	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
+6	267	7187349048293135	QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+6	267	7187349048293135	QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+6	267	7187349048293135	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/timestamp	5997c722973561e3
+6	267	7187349048293135	C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/mocs_compilation.cpp	5997c722973561e3
+285	2100	7187349066656846	CMakeFiles/QtCafeWorkforceManager.dir/QApplicationGlobal.cpp.obj	ed56f88160707ec3
+280	2910	7187349074738385	CMakeFiles/QtCafeWorkforceManager.dir/mainwindow.cpp.obj	e8927c9affde862c
+2910	3149	7187349077107429	QtCafeWorkforceManager.exe	4f002cfc6650189f
