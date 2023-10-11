@@ -1,4 +1,0 @@
-#ifndef DESERIALIZE_H
-#define DESERIALIZE_H
-
-#endif // DESERIALIZE_H

@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>content/Copy of Untitled.png</file>
+        <file>content/ShiftTable.csv</file>
+        <file>content/UserTable.csv</file>
     </qresource>
 </RCC>

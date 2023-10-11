@@ -28,8 +28,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Commands.h
         Date.h
         CafeResources.qrc
-        Deserialize.h
-        Deserialize.cpp
+        CSVSerializer.h
+        CSVSerializer.cpp
+        Enums.h
+        Enums.cpp
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET QtCafeWorkforceManager APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

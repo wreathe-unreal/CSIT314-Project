@@ -3,39 +3,39 @@
 #define USERTYPES_H
 #include <string>
 #include <vector>
+#include "Enums.h"
+#include "Shift.h"
 
-class Shift;
 class Bid;
 class CafeStaff;
 
 using namespace std;
 
-enum class EUserTypes
-{
-    EUT_SysAdmin, //0
-    EUT_CafeOwner, //1
-    EUT_CafeMAnager, //2
-    EUT_CafeStaff //3
-};
-
-enum class EStaffRoles
-{
-    ESR_Chef, //1
-    ESR_Cashier, //2
-    ESR_Waiter //3
-};
-
 class User
 {
     public:
+        EStaffRole Role;
         string Username;
-    private:
-        string EncryptedPassword;
+        User(int userID, string username, string hashedPassword)
+        {
+            Role = EStaffRole::ESR_NonStaff;
+            UserID = userID;
+            Username = username;
+            HashedPassword = hashedPassword;
+        }
+        string HashedPassword;
+        int UserID;
+        virtual ~User() {} // virtual destructor
     
 };
 
 class SysAdmin : public User
 {
+    public:
+        SysAdmin(int userID, string username, string hashedPassword)
+            : User(userID, username, hashedPassword) // This calls the base class constructor
+        {
+        }
     private:
         void CreateUser();
         void DeleteUser();
@@ -44,19 +44,28 @@ class SysAdmin : public User
 
 class CafeOwner : public User
 {
-private:
-    void ViewShifts();
-    void ManageShifts();
+    public:
+        CafeOwner(int userID, string username, string hashedPassword)
+            : User(userID, username, hashedPassword) // This calls the base class constructor
+        {
+        }
+    private:
+        void ViewShifts();
+        void ManageShifts();
     
 };
 
 class CafeManager : public User
 {
+    public:
+        CafeManager(int userID, string username, string hashedPassword)
+            : User(userID, username, hashedPassword) // This calls the base class constructor
+        {
+        }
     private:
-        vector<Bid> ReviewBids();
+        void ReviewBids();
         void ApproveBid(Bid bid);
         void RejectBid(Bid bid);
-        vector<CafeStaff> ListCafeStaff();
         void AssignShift(CafeStaff staff, Shift shift);
 };
 
@@ -64,10 +73,15 @@ class CafeManager : public User
 class CafeStaff : public User
 {
     public:
-        EStaffRoles Role;
+
         vector<Shift> Shifts;
+
+        CafeStaff(int userID, string username, string hashedPassword, vector<Shift> shifts)
+            : User(userID, username, hashedPassword) // This calls the base class constructor
+        {
+            Shifts = shifts;
+        }
     private:
-        int MaxShifts;
         void BidForShift(Shift shift);
         void ViewShiftStatus(Shift shift);        
 };
