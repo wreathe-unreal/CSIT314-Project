@@ -14,9 +14,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        AuthWindow.cpp
+        AuthWindow.h
+        AuthWindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -34,6 +34,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Enums.cpp
         QApplicationGlobal.h
         QApplicationGlobal.cpp
+        MainWindow.cpp
+        MainWindow.h
+        MainWindow.ui
 
 
     )

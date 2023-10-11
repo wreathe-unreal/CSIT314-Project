@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "AuthWindow.h"
 #include <QApplication>
 #include "UserTypes.h"
 #include <QDebug>
@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
     QApplicationGlobal a(argc, argv);
-    MainWindow w;
+    AuthWindow w;
     w.show();
     return a.exec();
 }

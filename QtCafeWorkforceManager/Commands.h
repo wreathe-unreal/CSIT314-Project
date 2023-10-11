@@ -1,4 +1,6 @@
+#include <QString>
 #include <string>
+#include <QDebug>
 
 #pragma once
 #ifndef COMMANDS_H
@@ -19,7 +21,7 @@ class ICommand
     virtual void ToString() = 0; //dummy function to make abstract
 };
 
-class Update : ICommand
+class Update : public ICommand
 {
     public:
         ECommandType CommandType = ECT_Update;
@@ -27,12 +29,13 @@ class Update : ICommand
         int AttributeID;
 };
 
-class Authorize : ICommand
+class Authorize : public ICommand
 {
     public:
         ECommandType CommandType = ECT_Authorize;
-        string Username;
-        string Password;
+        QString Username;
+        QString Password;
+        virtual void ToString(){ qDebug() << Username.toStdString() << Password.toStdString(); };
 };
 
 #endif // COMMANDS_H

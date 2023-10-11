@@ -1,13 +1,15 @@
 ﻿#pragma once
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
-
+#include "Enums.h"
 #include "Commands.h"
 
 class Controller
 {
     public:
-        void HandleCommand(ICommand* cmd);
+    ECommandResult HandleCommand(ICommand* cmd);
+    private:
+    ECommandResult HandleAuthorize(Authorize* cmd);
 };
 
 #endif

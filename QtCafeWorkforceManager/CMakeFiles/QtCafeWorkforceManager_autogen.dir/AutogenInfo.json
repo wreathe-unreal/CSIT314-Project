@@ -257,6 +257,12 @@
 	"HEADERS" : 
 	[
 		[
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/AuthWindow.h",
+			"MU",
+			"EWIEGA46WW/moc_AuthWindow.cpp",
+			null
+		],
+		[
 			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Bid.h",
 			"MU",
 			"EWIEGA46WW/moc_Bid.cpp",
@@ -293,6 +299,12 @@
 			null
 		],
 		[
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/MainWindow.h",
+			"MU",
+			"EWIEGA46WW/moc_MainWindow.cpp",
+			null
+		],
+		[
 			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QApplicationGlobal.h",
 			"MU",
 			"EWIEGA46WW/moc_QApplicationGlobal.cpp",
@@ -308,12 +320,6 @@
 			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserTypes.h",
 			"MU",
 			"EWIEGA46WW/moc_UserTypes.cpp",
-			null
-		],
-		[
-			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/mainwindow.h",
-			"MU",
-			"EWIEGA46WW/moc_mainwindow.cpp",
 			null
 		]
 	],
@@ -387,6 +393,11 @@
 	"SOURCES" : 
 	[
 		[
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/AuthWindow.cpp",
+			"MU",
+			null
+		],
+		[
 			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Bid.cpp",
 			"MU",
 			null
@@ -412,6 +423,11 @@
 			null
 		],
 		[
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/MainWindow.cpp",
+			"MU",
+			null
+		],
+		[
 			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QApplicationGlobal.cpp",
 			"MU",
 			null
@@ -428,11 +444,6 @@
 		],
 		[
 			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/main.cpp",
-			"MU",
-			null
-		],
-		[
-			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/mainwindow.cpp",
 			"MU",
 			null
 		]

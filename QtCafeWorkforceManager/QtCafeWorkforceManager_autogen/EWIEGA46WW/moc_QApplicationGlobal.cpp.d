@@ -1,5 +1,7 @@
 C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/EWIEGA46WW/moc_QApplicationGlobal.cpp: C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QApplicationGlobal.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/moc_predefs.h \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/QString \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qalgorithms.h \
@@ -337,6 +339,8 @@ C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/time.h \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/vadefs.h \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Commands.h \
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Controller.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Date.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Enums.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Shift.h \

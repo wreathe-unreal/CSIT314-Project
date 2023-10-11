@@ -2,6 +2,7 @@
 #define QAPPLICATIONGLOBAL_H
 #include "UserTypes.h"
 #include <QApplication>
+#include "Controller.h"
 
 class QApplicationGlobal : public QApplication
 {
@@ -24,6 +25,7 @@ class QApplicationGlobal : public QApplication
 
         static std::vector<User*> Users;
         static std::vector<Shift*> Shifts;
+        static Controller CmdController;
 };
 
 #endif // QAPPLICATIONGLOBAL_H

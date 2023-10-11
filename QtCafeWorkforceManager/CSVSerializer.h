@@ -6,13 +6,9 @@
 
 class CSVSerializer
 {
-    private:
-    std::string UserTableFilename;
-    std::string ShiftTableFilename;
-
     public:
-    static void SerializeUser(User* user, const string& filepath);
-    static void DeserializeUsers(const std::string& filePath);
+    //static void SerializeUser(User* user, const string& filepath);
+    static void DeserializeUsers();
 
 };
 

@@ -2,6 +2,12 @@
 #define ENUMS_H
 #include <stdexcept>
 
+enum class ECommandResult
+{
+    ECR_SUCCESS,
+    ECR_FAILURE
+};
+
 enum class EShiftStatus
 {
     EBS_PENDING,

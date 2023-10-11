@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Debug-ea8d17f536d5c72f59f3.json",
+					"jsonFile" : "directory-.-Debug-cbc3f44e97acda4ed3ed.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "QtCafeWorkforceManager::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-QtCafeWorkforceManager-Debug-a794e8d126c34dbfecc6.json",
+					"jsonFile" : "target-QtCafeWorkforceManager-Debug-a32af4af8761267e7c6a.json",
 					"name" : "QtCafeWorkforceManager",
 					"projectIndex" : 0
 				},

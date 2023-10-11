@@ -24,8 +24,9 @@ std::vector<std::string> split(const std::string &s, char delimiter)
     return tokens;
 }
 
-void CSVSerializer::DeserializeUsers(const std::string& filePath)
+void CSVSerializer::DeserializeUsers()
 {
+    string filePath = "../QtCafeWorkforceManager/UserTable.csv";
     std::ifstream file(filePath);
     std::string line;
 

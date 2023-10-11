@@ -1,4 +1,6 @@
 QtCafeWorkforceManager_autogen/timestamp: \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/QString \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qalgorithms.h \
@@ -143,8 +145,11 @@ QtCafeWorkforceManager_autogen/timestamp: \
   C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs_win.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/QMainWindow \
+  C:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+  C:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qapplication.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qmainwindow.h \
+  C:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qtabwidget.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
@@ -515,6 +520,8 @@ QtCafeWorkforceManager_autogen/timestamp: \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/vadefs.h \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
   .qtc/package-manager/auto-setup.cmake \
+  AuthWindow.cpp \
+  AuthWindow.h \
   Bid.cpp \
   Bid.h \
   CMakeFiles/3.24.2/CMakeCXXCompiler.cmake \
@@ -531,6 +538,8 @@ QtCafeWorkforceManager_autogen/timestamp: \
   Date.h \
   Enums.cpp \
   Enums.h \
+  MainWindow.cpp \
+  MainWindow.h \
   QApplicationGlobal.cpp \
   QApplicationGlobal.h \
   QtCafeWorkforceManager_autogen/moc_predefs.h \
@@ -539,7 +548,6 @@ QtCafeWorkforceManager_autogen/timestamp: \
   UserTypes.cpp \
   UserTypes.h \
   main.cpp \
-  mainwindow.cpp \
-  mainwindow.h \
-  mainwindow.ui \
+  AuthWindow.ui \
+  MainWindow.ui \
   C:/Qt/Tools/CMake_64/bin/cmake.exe

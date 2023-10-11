@@ -1,5 +1,5 @@
 /********************************************************************************
-** Form generated from reading UI file 'mainwindow.ui'
+** Form generated from reading UI file 'MainWindow.ui'
 **
 ** Created by: Qt User Interface Compiler version 6.5.3
 **
@@ -11,15 +11,10 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QGroupBox>
-#include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QCalendarWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -28,12 +23,7 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QGroupBox *groupBox;
-    QLineEdit *QLE_Username;
-    QLineEdit *QLE_Password;
-    QPushButton *LoginButton;
-    QLabel *label;
-    QTableWidget *tableWidget;
+    QCalendarWidget *calendarWidget;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -41,39 +31,16 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(552, 631);
+        MainWindow->resize(800, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
-        groupBox = new QGroupBox(centralwidget);
-        groupBox->setObjectName("groupBox");
-        groupBox->setGeometry(QRect(180, 430, 201, 101));
-        QFont font;
-        font.setFamilies({QString::fromUtf8("Calibri")});
-        font.setBold(true);
-        font.setItalic(false);
-        font.setKerning(true);
-        groupBox->setFont(font);
-        QLE_Username = new QLineEdit(groupBox);
-        QLE_Username->setObjectName("QLE_Username");
-        QLE_Username->setGeometry(QRect(10, 30, 171, 16));
-        QLE_Password = new QLineEdit(groupBox);
-        QLE_Password->setObjectName("QLE_Password");
-        QLE_Password->setGeometry(QRect(10, 50, 171, 16));
-        LoginButton = new QPushButton(groupBox);
-        LoginButton->setObjectName("LoginButton");
-        LoginButton->setGeometry(QRect(10, 70, 80, 21));
-        label = new QLabel(centralwidget);
-        label->setObjectName("label");
-        label->setGeometry(QRect(110, 210, 311, 211));
-        label->setPixmap(QPixmap(QString::fromUtf8(":/content/Copy of Untitled.png")));
-        label->setScaledContents(true);
-        tableWidget = new QTableWidget(centralwidget);
-        tableWidget->setObjectName("tableWidget");
-        tableWidget->setGeometry(QRect(100, 20, 351, 171));
+        calendarWidget = new QCalendarWidget(centralwidget);
+        calendarWidget->setObjectName("calendarWidget");
+        calendarWidget->setGeometry(QRect(150, 260, 280, 163));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 552, 21));
+        menubar->setGeometry(QRect(0, 0, 800, 21));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
@@ -87,11 +54,6 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        groupBox->setTitle(QCoreApplication::translate("MainWindow", "Enter username and password:", nullptr));
-        QLE_Username->setText(QCoreApplication::translate("MainWindow", "example@gmail.com", nullptr));
-        QLE_Password->setText(QCoreApplication::translate("MainWindow", "password", nullptr));
-        LoginButton->setText(QCoreApplication::translate("MainWindow", "Login", nullptr));
-        label->setText(QString());
     } // retranslateUi
 
 };

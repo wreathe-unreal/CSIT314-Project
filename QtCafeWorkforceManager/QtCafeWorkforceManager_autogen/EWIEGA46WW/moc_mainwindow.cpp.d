@@ -1,4 +1,4 @@
-C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/EWIEGA46WW/moc_mainwindow.cpp: C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/mainwindow.h \
+C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/EWIEGA46WW/moc_MainWindow.cpp: C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/MainWindow.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/moc_predefs.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
@@ -134,7 +134,10 @@ C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/
   C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs_win.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/QMainWindow \
+  C:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+  C:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qmainwindow.h \
+  C:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qtabwidget.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \

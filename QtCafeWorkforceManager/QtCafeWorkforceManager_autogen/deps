@@ -1,4 +1,6 @@
 QtCafeWorkforceManager_autogen/timestamp: \
+	C:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
+	C:/Qt/6.5.3/mingw_64/include/QtCore/QString \
 	C:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
 	C:/Qt/6.5.3/mingw_64/include/QtCore/q20type_traits.h \
 	C:/Qt/6.5.3/mingw_64/include/QtCore/qalgorithms.h \
@@ -143,8 +145,11 @@ QtCafeWorkforceManager_autogen/timestamp: \
 	C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs_win.h \
 	C:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
 	C:/Qt/6.5.3/mingw_64/include/QtWidgets/QMainWindow \
+	C:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
+	C:/Qt/6.5.3/mingw_64/include/QtWidgets/qabstractbutton.h \
 	C:/Qt/6.5.3/mingw_64/include/QtWidgets/qapplication.h \
 	C:/Qt/6.5.3/mingw_64/include/QtWidgets/qmainwindow.h \
+	C:/Qt/6.5.3/mingw_64/include/QtWidgets/qpushbutton.h \
 	C:/Qt/6.5.3/mingw_64/include/QtWidgets/qsizepolicy.h \
 	C:/Qt/6.5.3/mingw_64/include/QtWidgets/qtabwidget.h \
 	C:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
@@ -515,6 +520,8 @@ QtCafeWorkforceManager_autogen/timestamp: \
 	C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/vadefs.h \
 	C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/.qtc/package-manager/auto-setup.cmake \
+	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/AuthWindow.cpp \
+	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/AuthWindow.h \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Bid.cpp \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Bid.h \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/CMakeFiles/3.24.2/CMakeCXXCompiler.cmake \
@@ -531,6 +538,8 @@ QtCafeWorkforceManager_autogen/timestamp: \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Date.h \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Enums.cpp \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Enums.h \
+	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/MainWindow.cpp \
+	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/MainWindow.h \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QApplicationGlobal.cpp \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QApplicationGlobal.h \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/moc_predefs.h \
@@ -539,7 +548,6 @@ QtCafeWorkforceManager_autogen/timestamp: \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserTypes.cpp \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserTypes.h \
 	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/main.cpp \
-	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/mainwindow.cpp \
-	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/mainwindow.h \
-	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/mainwindow.ui \
+	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/AuthWindow.ui \
+	C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/MainWindow.ui \
 	C:/Qt/Tools/CMake_64/bin/cmake.exe
