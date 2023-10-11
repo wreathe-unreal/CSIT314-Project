@@ -2,7 +2,10 @@
 #include "./ui_mainwindow.h"
 #include <QCryptographicHash>
 #include <QByteArray>
+#include <iostream>
+#include <string>
 #include "CSVSerializer.h"
+#include <QDir>
 
 QString HashPassword(QString password)
 {
@@ -15,28 +18,33 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
     ui->QLE_Password->setEchoMode(QLineEdit::Password);
-
+    ui->tableWidget->setColumnCount(4);
+    QStringList headers;
+    headers << "User ID" << "Username" << "Hashed Password" << "Role";
+    ui->tableWidget->setHorizontalHeaderLabels(headers);
 
     CSVSerializer CSV = CSVSerializer();
-    vector<User*> Users = CSV.DeserializeUsers("/content/UserTable.csv");
-    for(auto user: Users)
+
+    vector<User*> Users = CSV.DeserializeUsers("../QtCafeWorkforceManager/UserTable.csv");
+
+    for (const auto& user : Users)
     {
-        qInfo() << user->UserID << " | " << QString::fromStdString(user->Username) << " | " << QString::fromStdString(user->HashedPassword) << " | " << EStaffRoleToInt(user->Role);
+        int row = ui->tableWidget->rowCount();
+        ui->tableWidget->insertRow(row); // Insert a new row
+
+        // Create a new item for each piece of data
+        QTableWidgetItem *idItem = new QTableWidgetItem(QString::number(user->UserID));
+        QTableWidgetItem *usernameItem = new QTableWidgetItem(QString::fromStdString(user->Username));
+        QTableWidgetItem *passwordItem = new QTableWidgetItem(QString::fromStdString(user->HashedPassword));
+        QTableWidgetItem *roleItem = new QTableWidgetItem(QString::number(EStaffRoleToInt(user->Role)));
+
+        // Add those items to the table
+        ui->tableWidget->setItem(row, 0, idItem); // 0 is the column number for the UserID
+        ui->tableWidget->setItem(row, 1, usernameItem); // 1 is the column number for the Username
+        ui->tableWidget->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
+        ui->tableWidget->setItem(row, 3, roleItem); // 3 is the column number for the Role
     }
 
-    //     Deserialize CSV -> User* //user table must put ESR after uid/username/password ->separate logic for parsing each ESR type beyond uid/username/password
-    //     Retrieve vector of User* store on Main()
-    //
-    //
-    //
-    //
-    //
-    //     Serialize CSV from User*
-
-    for(auto user: Users)
-    {
-        delete user;
-    }
 }
 
 MainWindow::~MainWindow()
@@ -50,6 +58,12 @@ void MainWindow::on_LoginButton_clicked()
     QString username = ui->QLE_Username->text();
     QString password = ui->QLE_Password->text();
     QString hashedPassword0x = HashPassword(password);
+
+}
+
+
+void MainWindow::on_columnView_clicked(const QModelIndex &index)
+{
 
 }
 

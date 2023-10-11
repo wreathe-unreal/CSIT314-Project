@@ -2,11 +2,12 @@
 #include <QApplication>
 #include "UserTypes.h"
 #include <QDebug>
+#include <iostream>
+#include "CSVSerializer.h"
 #include "Enums.h"
 
 int main(int argc, char *argv[])
 {
-    qputenv("QT_ASSUME_STDERR_HAS_CONSOLE", "1");
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

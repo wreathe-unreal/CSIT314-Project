@@ -4,10 +4,12 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <qDebug>
 #include "UserTypes.h"
 #include "Shift.h"
 #include "CSVSerializer.h"
 #include "Enums.h"
+#include <QDir>
 
 std::vector<std::string> split(const std::string &s, char delimiter) 
 {
@@ -24,19 +26,44 @@ std::vector<std::string> split(const std::string &s, char delimiter)
 std::vector<User*> CSVSerializer::DeserializeUsers(const std::string& filePath)
 {
     std::ifstream file(filePath);
+
+
     std::vector<User*> users;
     std::string line;
-    
+
+    if(file.good())
+    {
+        qDebug() << "File exists.";
+    }
+    else
+    {
+        qDebug() << "File does not exist.";
+    }
+    if (!file.is_open())
+    {
+        qDebug() << "Error: Could not open file - " << filePath;
+    }
+
+    qDebug() << "Current directory:" << QDir::currentPath();
+
+    // Read and discard the header
+    if (!std::getline(file, line)) {
+        // Handle error: even the header could not be read, the file might be empty
+        std::cerr << "Error: File is empty or cannot be read" << std::endl;
+        return {}; // or handle this appropriately
+    }
+
     while (std::getline(file, line)) 
     {
         std::stringstream ss(line);
         std::string item;
 
         std::getline(ss, item, ',');
+        qDebug() << item;
         EUserType userType = IntToEUserType(std::stoi(item));
 
         std::getline(ss, item, ',');
-        int userID = std::stoi(item);
+        int userID = stoi(item);
 
         std::getline(ss, item, ',');
         std::string username = item;
@@ -45,7 +72,7 @@ std::vector<User*> CSVSerializer::DeserializeUsers(const std::string& filePath)
         std::string hashedPassword = item;
 
         std::getline(ss, item, ',');
-        EStaffRole staffRole = IntToEStaffRole(std::stoi(item));
+        EStaffRole staffRole = IntToEStaffRole(stoi(item));
 
         std::getline(ss, item, ',');
         std::vector<std::string> shiftDates = split(item, '%');
@@ -131,10 +158,19 @@ void CSVSerializer::SerializeUser(User* user, const string& filepath)
     string line;
     bool userExists = false;
     string replacement;
+
+    // Read and discard the header
+    if (!std::getline(inFile, line)) {
+        // Handle error: even the header could not be read, the file might be empty
+        std::cerr << "Error: File is empty or cannot be read" << std::endl;
+        return; // or handle this appropriately
+    }
+
     while (getline(buffer, line)) 
 {
         stringstream ss(line);
         string item;
+
         getline(ss, item, ','); // User type
         getline(ss, item, ','); // User ID
         int existingUserID = std::stoi(item);
