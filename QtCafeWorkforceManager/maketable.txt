@@ -1,0 +1,42 @@
+CREATE TABLE IF NOT EXISTS User (
+    UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username TEXT UNIQUE NOT NULL,
+    Password TEXT NOT NULL, -- Store the hashed password, not plain text
+    EUP INTEGER NOT NULL, -- Represents enum EUserProfile
+    ESR INTEGER NOT NULL, -- Represents enum EStaffRole
+    MaxSlots INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS Shift (
+    ShiftID INTEGER PRIMARY KEY AUTOINCREMENT,
+    ShiftDate TEXT NOT NULL, -- Store date as TEXT in "YYYY-MM-DD" format
+    ShiftNumber INTEGER NOT NULL,
+    bFull BOOLEAN NOT NULL, -- Store boolean as INTEGER type, 1 for true and 0 for false
+    NumChefs INTEGER NOT NULL,
+    CurChefs INTEGER NOT NULL,
+    NumCashiers INTEGER NOT NULL,
+    CurCashiers INTEGER NOT NULL,
+    NumWaiters INTEGER NOT NULL,
+    CurWaiters INTEGER NOT NULL
+);
+CREATE TABLE IF NOT EXISTS UserShift (
+    UserID INTEGER,
+    ShiftID INTEGER,
+    FOREIGN KEY(UserID) REFERENCES User(UserID),
+    FOREIGN KEY(ShiftID) REFERENCES Shift(ShiftID),
+    PRIMARY KEY(UserID, ShiftID)
+);
+CREATE TABLE IF NOT EXISTS Bid (
+    BidID INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserID INTEGER,
+    ShiftID INTEGER,
+    FOREIGN KEY(UserID) REFERENCES User(UserID),
+    FOREIGN KEY(ShiftID) REFERENCES Shift(ShiftID)
+);
+CREATE TABLE IF NOT EXISTS ShiftRoles (
+    ShiftID INTEGER,
+    UserID INTEGER,
+    UserRole TEXT NOT NULL, -- Can be 'Chef', 'Cashier', or 'Waiter'
+    FOREIGN KEY(ShiftID) REFERENCES Shift(ShiftID),
+    FOREIGN KEY(UserID) REFERENCES User(UserID),
+    PRIMARY KEY(ShiftID, UserID) -- Each user can only have one role per shift
+);

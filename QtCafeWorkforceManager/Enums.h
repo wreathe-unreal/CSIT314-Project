@@ -15,12 +15,12 @@ enum class EShiftStatus
     EBS_REJECTED
 };
 
-enum class EUserType
+enum class EUserProfile
 {
-    EUT_SysAdmin, //0
-    EUT_CafeOwner, //1
-    EUT_CafeManager, //2
-    EUT_CafeStaff //3
+    EUP_SysAdmin, //0
+    EUP_CafeOwner, //1
+    EUP_CafeManager, //2
+    EUP_CafeStaff //3
 };
 
 enum class EStaffRole
@@ -31,9 +31,9 @@ enum class EStaffRole
     ESR_Waiter //3
 };
 
-EUserType IntToEUserType(int input);
+EUserProfile IntToEUserType(int input);
 
-int EUserTypeToInt(EUserType UserType);
+int EUserTypeToInt(EUserProfile UserType);
 
 int EStaffRoleToInt(EStaffRole UserRole);
 

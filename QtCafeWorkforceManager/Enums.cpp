@@ -1,25 +1,25 @@
 #include "Enums.h"
 
-EUserType IntToEUserType(int input)
+EUserProfile IntToEUserType(int input)
 {
     switch(input)
     {
-    case 0: return EUserType::EUT_SysAdmin;
-    case 1: return EUserType::EUT_CafeOwner;
-    case 2: return EUserType::EUT_CafeManager;
-    case 3: return EUserType::EUT_CafeStaff;
+    case 0: return EUserProfile::EUP_SysAdmin;
+    case 1: return EUserProfile::EUP_CafeOwner;
+    case 2: return EUserProfile::EUP_CafeManager;
+    case 3: return EUserProfile::EUP_CafeStaff;
     default: throw std::invalid_argument("Invalid user type");
     }
 }
 
-int EUserTypeToInt(EUserType UserType)
+int EUserTypeToInt(EUserProfile UserType)
 {
     switch(UserType)
     {
-    case EUserType::EUT_SysAdmin: return 0;
-    case EUserType::EUT_CafeOwner: return 1;
-    case EUserType::EUT_CafeManager: return 2;
-    case EUserType::EUT_CafeStaff: return 3;
+    case EUserProfile::EUP_SysAdmin: return 0;
+    case EUserProfile::EUP_CafeOwner: return 1;
+    case EUserProfile::EUP_CafeManager: return 2;
+    case EUserProfile::EUP_CafeStaff: return 3;
     default: throw std::invalid_argument("Invalid user type");
     }
 }

@@ -59,7 +59,7 @@ void CSVSerializer::DeserializeUsers()
 
         std::getline(ss, item, ',');
         qDebug() << item;
-        EUserType userType = IntToEUserType(std::stoi(item));
+        EUserProfile userType = IntToEUserType(std::stoi(item));
 
         std::getline(ss, item, ',');
         int userID = stoi(item);
@@ -92,16 +92,16 @@ void CSVSerializer::DeserializeUsers()
 
         switch (userType) 
         {
-            case EUserType::EUT_SysAdmin:
+        case EUserProfile::EUP_SysAdmin:
             QApplicationGlobal::Users.push_back(new SysAdmin(userID, username, hashedPassword));
                 break;
-            case EUserType::EUT_CafeOwner:
+        case EUserProfile::EUP_CafeOwner:
                 QApplicationGlobal::Users.push_back(new CafeOwner(userID, username, hashedPassword));
                 break;
-            case EUserType::EUT_CafeManager:
+        case EUserProfile::EUP_CafeManager:
                 QApplicationGlobal::Users.push_back(new CafeManager(userID, username, hashedPassword));
                 break;
-            case EUserType::EUT_CafeStaff:
+        case EUserProfile::EUP_CafeStaff:
                 QApplicationGlobal::Users.push_back(new CafeStaff(userID, username, hashedPassword,  QApplicationGlobal::Shifts));
                 break;
         }

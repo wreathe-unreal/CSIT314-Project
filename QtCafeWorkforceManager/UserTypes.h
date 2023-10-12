@@ -14,17 +14,10 @@ using namespace std;
 class User
 {
     public:
-        EStaffRole Role;
-        string Username;
-        User(int userID, string username, string hashedPassword)
-        {
-            Role = EStaffRole::ESR_NonStaff;
-            UserID = userID;
-            Username = username;
-            HashedPassword = hashedPassword;
-        }
-        string HashedPassword;
         int UserID;
+        User()
+        {
+        }
         virtual ~User() {} // virtual destructor
     
 };
@@ -32,8 +25,7 @@ class User
 class SysAdmin : public User
 {
     public:
-        SysAdmin(int userID, string username, string hashedPassword)
-            : User(userID, username, hashedPassword) // This calls the base class constructor
+        SysAdmin(): User() // This calls the base class constructor
         {
         }
     private:
@@ -45,8 +37,7 @@ class SysAdmin : public User
 class CafeOwner : public User
 {
     public:
-        CafeOwner(int userID, string username, string hashedPassword)
-            : User(userID, username, hashedPassword) // This calls the base class constructor
+        CafeOwner(): User() // This calls the base class constructor
         {
         }
     private:
@@ -58,8 +49,7 @@ class CafeOwner : public User
 class CafeManager : public User
 {
     public:
-        CafeManager(int userID, string username, string hashedPassword)
-            : User(userID, username, hashedPassword) // This calls the base class constructor
+        CafeManager(): User() // This calls the base class constructor
         {
         }
     private:
@@ -73,16 +63,8 @@ class CafeManager : public User
 class CafeStaff : public User
 {
     public:
-
-        vector<Shift*> Shifts;
-
-        CafeStaff(int userID, string username, string hashedPassword, vector<Shift*> shifts)
-            : User(userID, username, hashedPassword) // This calls the base class constructor
+        CafeStaff() : User() // This calls the base class constructor
         {
-            for(auto& s: shifts)
-            {
-                Shifts.emplace_back(s);
-            }
         }
     private:
         void BidForShift(Shift shift);

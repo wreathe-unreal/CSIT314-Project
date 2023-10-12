@@ -25,7 +25,7 @@ class QApplicationGlobal : public QApplication
 
         static std::vector<User*> Users;
         static std::vector<Shift*> Shifts;
-        static Controller CmdController;
+        static Controller* CmdController;
 };
 
 #endif // QAPPLICATIONGLOBAL_H
