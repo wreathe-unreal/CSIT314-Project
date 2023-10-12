@@ -1,40 +1,59 @@
-﻿#pragma once
+﻿// Shift.h
 #ifndef SHIFT_H
 #define SHIFT_H
-#include "Enums.h"
-#include "Date.h"
-#include <vector>
-#include <string>
-#include <map>
-class CafeStaff;
+#include "Entity.h"
+#include <QDate>
 
-
-using namespace std;
-
-enum EStaffRoles : int;
-
-class Shift
+class Shift : public IEntity
 {
-    public:
-    bool bFull; //when all staff have been allocated this is true
-    string Date;
-    EShiftStatus Status;
-    Shift(string date, EShiftStatus status)
-    {
-        Date = date;
-        Status = status;
-    }
-    
-    //required staff
+
+public:
+    Shift();
+    ~Shift();
+
+    int getNumChefs() const;
+    void setNumChefs(int newNumChefs);
+
+    int getShiftID() const;
+
+    QDate getShiftDate() const;
+    void setShiftDate(const QDate &newShiftDate);
+
+    int getShiftNumber() const;
+    void setShiftNumber(int newShiftNumber);
+
+    bool getbFull() const;
+    void setbFull(bool newBFull);
+
+    int getCurChefs() const;
+    void setCurChefs(int newCurChefs);
+
+    int getNumbChefs() const;
+    void setNumbChefs(int newNumbChefs);
+
+    int getNumCashiers() const;
+    void setNumCashiers(int newNumCashiers);
+
+    int getCurCashiers() const;
+    void setCurCashiers(int newCurCashiers);
+
+    int getNumWaiters() const;
+    void setNumWaiters(int newNumWaiters);
+
+    int getCurWaiters() const;
+    void setCurWaiters(int newCurWaiters);
+
+private:
+    int ShiftID;
+    QDate ShiftDate;
+    int ShiftNumber;
+    bool bFull;
     int NumChefs;
-    int NumCashiers;
-    int NumWaiters;
-    
-    //current staff
     int CurChefs;
+    int NumCashiers;
     int CurCashiers;
+    int NumWaiters;
     int CurWaiters;
-    
 };
 
-#endif
+#endif // SHIFT_H

@@ -24,13 +24,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QtCafeWorkforceManager
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        Commands.cpp Controller.cpp Controller.h UserTypes.cpp UserTypes.h
+        Commands.cpp Controller.cpp Controller.h
         Bid.cpp Bid.h Shift.cpp Shift.h
         Commands.h
-
         CafeResources.qrc
-
-
         Enums.h
         Enums.cpp
         QApplicationGlobal.h
@@ -40,6 +37,11 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MainWindow.ui
         Entity.h
         Entity.cpp
+        User.h
+        User.cpp
+        UserDAO.h
+        ShiftDAO.h
+        BidDAO.h
 
 
     )

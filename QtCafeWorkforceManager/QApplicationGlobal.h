@@ -1,8 +1,12 @@
 #ifndef QAPPLICATIONGLOBAL_H
 #define QAPPLICATIONGLOBAL_H
-#include "UserTypes.h"
 #include <QApplication>
+#include "BidDAO.h"
 #include "Controller.h"
+#include "ShiftDAO.h"
+#include "UserDAO.h"
+#include <QSqlDatabase>
+
 
 class QApplicationGlobal : public QApplication
 {
@@ -10,22 +14,12 @@ class QApplicationGlobal : public QApplication
 
     public:
         QApplicationGlobal(int &argc, char **argv);
-        ~QApplicationGlobal()
-        {
-            for(auto u : Users)
-            {
-                delete u;
-            }
-            for(auto s : Shifts)
-            {
-                delete s;
-            }
-        }
-        // Add other methods or member variables you need
+        ~QApplicationGlobal();
 
-        static std::vector<User*> Users;
-        static std::vector<Shift*> Shifts;
-        static Controller* CmdController;
+        static QSqlDatabase CafeDB;
+        static UserDAO UserDataAccessObject;
+        static ShiftDAO ShiftDataAccessObject;
+        static BidDAO BidDataAccessObject;
 };
 
 #endif // QAPPLICATIONGLOBAL_H

@@ -1,15 +1,12 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <QSqlDatabase>
+#include "Enums.h"
 
 
-class Entity
+class IEntity
 {
-public:
-    Entity(const QString& path);
-private:
-    QSqlDatabase CafeDB;
+    virtual void ToString() = 0; //dummy function to make abstract
 };
 
 #endif // ENTITY_H

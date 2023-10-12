@@ -1,19 +1,30 @@
-﻿#pragma once
-#ifndef BID_H
+﻿#ifndef BID_H
 #define BID_H
 
+#include "Entity.h"
 
-#include "Shift.h"
-#include "UserTypes.h"
+#include <string>
 
-class Bid
+class Bid : public IEntity
 {
     public:
-        CafeStaff* StaffMember;
-        Shift* ShiftRequested;
-        EStaffRoles Role; //cannot bid for role which is already filled for a shift
-        void SetStatus();
-    
+        Bid();  // default constructor
+        ~Bid(); // destructor
+
+        // Getters
+        int getBidID() const { return BidID;}
+        const std::string& getUsername() const { return Username; }
+        int getShiftID() const {return ShiftID;}
+
+        // Setters
+        void setBidID(int bidID);
+        void setUsername(const std::string& username);
+        void setShiftID(int shiftID);
+
+    private:
+        int BidID;          // Unique identifier for the bid
+        std::string Username; // Username of the user who made the bid
+        int ShiftID;        // ID of the shift for which the bid is made
 };
 
-#endif
+#endif // BID_H

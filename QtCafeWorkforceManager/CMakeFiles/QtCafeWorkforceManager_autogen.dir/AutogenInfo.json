@@ -294,6 +294,12 @@
 			null
 		],
 		[
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/BidDAO.h",
+			"MU",
+			"EWIEGA46WW/moc_BidDAO.cpp",
+			null
+		],
+		[
 			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Commands.h",
 			"MU",
 			"EWIEGA46WW/moc_Commands.cpp",
@@ -336,9 +342,21 @@
 			null
 		],
 		[
-			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserTypes.h",
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/ShiftDAO.h",
 			"MU",
-			"EWIEGA46WW/moc_UserTypes.cpp",
+			"EWIEGA46WW/moc_ShiftDAO.cpp",
+			null
+		],
+		[
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/User.h",
+			"MU",
+			"EWIEGA46WW/moc_User.cpp",
+			null
+		],
+		[
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserDAO.h",
+			"MU",
+			"EWIEGA46WW/moc_UserDAO.cpp",
 			null
 		]
 	],
@@ -459,7 +477,7 @@
 			null
 		],
 		[
-			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserTypes.cpp",
+			"C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/User.cpp",
 			"MU",
 			null
 		],

@@ -1,5 +1,6 @@
 C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/EWIEGA46WW/moc_QApplicationGlobal.cpp: C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QApplicationGlobal.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/QtCafeWorkforceManager_autogen/moc_predefs.h \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/QDate \
   C:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
   C:/Qt/6.5.3/mingw_64/include/QtCore/QString \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
@@ -18,6 +19,7 @@ C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/
   C:/Qt/6.5.3/mingw_64/include/QtCore/qbytearrayalgorithms.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qbytearraylist.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qbytearrayview.h \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/qcalendar.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qcompare.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qcompare_impl.h \
@@ -33,6 +35,7 @@ C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/
   C:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qdarwinhelpers.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qdatastream.h \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/qdatetime.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qdebug.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qeventloop.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qexceptionhandling.h \
@@ -136,6 +139,11 @@ C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/
   C:/Qt/6.5.3/mingw_64/include/QtGui/qtransform.h \
   C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs_win.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/QSqlDatabase \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qsqldatabase.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qtsql-config.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qtsqlexports.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qtsqlglobal.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qapplication.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/qtwidgets-config.h \
@@ -339,9 +347,13 @@ C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/time.h \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/vadefs.h \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Bid.h \
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/BidDAO.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Commands.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Controller.h \
-  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Date.h \
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Entity.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Enums.h \
   C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/Shift.h \
-  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserTypes.h
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/ShiftDAO.h \
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/User.h \
+  C:/Users/ENA/My\ Drive/school/Software\ Development\ Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager/UserDAO.h

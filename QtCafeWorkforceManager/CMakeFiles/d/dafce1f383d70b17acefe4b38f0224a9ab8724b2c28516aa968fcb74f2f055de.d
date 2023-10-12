@@ -1,4 +1,5 @@
 QtCafeWorkforceManager_autogen/timestamp: \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/QDate \
   C:/Qt/6.5.3/mingw_64/include/QtCore/QDebug \
   C:/Qt/6.5.3/mingw_64/include/QtCore/QString \
   C:/Qt/6.5.3/mingw_64/include/QtCore/q20memory.h \
@@ -17,6 +18,7 @@ QtCafeWorkforceManager_autogen/timestamp: \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qbytearrayalgorithms.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qbytearraylist.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qbytearrayview.h \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/qcalendar.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qchar.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qcompare.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qcompare_impl.h \
@@ -32,6 +34,7 @@ QtCafeWorkforceManager_autogen/timestamp: \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qcoreevent.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qdarwinhelpers.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qdatastream.h \
+  C:/Qt/6.5.3/mingw_64/include/QtCore/qdatetime.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qdebug.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qeventloop.h \
   C:/Qt/6.5.3/mingw_64/include/QtCore/qexceptionhandling.h \
@@ -143,6 +146,11 @@ QtCafeWorkforceManager_autogen/timestamp: \
   C:/Qt/6.5.3/mingw_64/include/QtGui/qtransform.h \
   C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.5.3/mingw_64/include/QtGui/qwindowdefs_win.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/QSqlDatabase \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qsqldatabase.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qtsql-config.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qtsqlexports.h \
+  C:/Qt/6.5.3/mingw_64/include/QtSql/qtsqlglobal.h \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/QApplication \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/QMainWindow \
   C:/Qt/6.5.3/mingw_64/include/QtWidgets/QPushButton \
@@ -545,6 +553,7 @@ QtCafeWorkforceManager_autogen/timestamp: \
   AuthWindow.h \
   Bid.cpp \
   Bid.h \
+  BidDAO.h \
   CMakeFiles/3.24.2/CMakeCXXCompiler.cmake \
   CMakeFiles/3.24.2/CMakeRCCompiler.cmake \
   CMakeFiles/3.24.2/CMakeSystem.cmake \
@@ -554,7 +563,8 @@ QtCafeWorkforceManager_autogen/timestamp: \
   Commands.h \
   Controller.cpp \
   Controller.h \
-  Date.h \
+  Entity.cpp \
+  Entity.h \
   Enums.cpp \
   Enums.h \
   MainWindow.cpp \
@@ -564,8 +574,10 @@ QtCafeWorkforceManager_autogen/timestamp: \
   QtCafeWorkforceManager_autogen/moc_predefs.h \
   Shift.cpp \
   Shift.h \
-  UserTypes.cpp \
-  UserTypes.h \
+  ShiftDAO.h \
+  User.cpp \
+  User.h \
+  UserDAO.h \
   main.cpp \
   AuthWindow.ui \
   MainWindow.ui \

@@ -2,7 +2,6 @@
 #include "./ui_AuthWindow.h"
 #include <iostream>
 #include <string>
-#include "CSVSerializer.h"
 #include "Commands.h"
 #include "MainWindow.h"
 #include "QApplicationGlobal.h"
