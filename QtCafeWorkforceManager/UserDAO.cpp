@@ -35,13 +35,26 @@ Response UserDataAccessObject::Auth(QString username, QString password)
         // Compares the input password with the one stored in database
         if (password == storedPassword)
         {
+            //set global Username variable
             QApplicationGlobal::CurrentUsername = username.toStdString();
+
+            //query to get EUP info
             QSqlQuery query2(DATABASE);
             query2.prepare("SELECT EUP FROM User WHERE Username = :username");
             query2.bindValue(":username", username);
-            QJsonObject jsonEUP;
-            jsonEUP["EUP"] = query2.value(0).toInt();
-            return Response(ECommandResult::ECR_SUCCESS, jsonEUP);; // Authenticated
+
+            if (!query2.exec())
+            {
+                qWarning() << "ERROR: " << query.lastError().text();
+                return Response(ECommandResult::ECR_FAILURE);
+            }
+
+            if (query2.next()) // Position query on the first (and hopefully only) result record
+            {
+                QJsonObject jsonEUP;
+                jsonEUP["EUP"] = query2.value(0).toInt();
+                return Response(ECommandResult::ECR_SUCCESS, jsonEUP);; // Authenticated
+            }
         }
     }
 

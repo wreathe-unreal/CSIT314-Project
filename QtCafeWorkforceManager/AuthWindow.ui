@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>779</width>
+    <width>763</width>
     <height>389</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>280</x>
       <y>230</y>
       <width>201</width>
       <height>101</height>
@@ -26,6 +26,7 @@
     <property name="font">
      <font>
       <family>Calibri</family>
+      <pointsize>11</pointsize>
       <italic>false</italic>
       <bold>true</bold>
       <kerning>true</kerning>
@@ -34,18 +35,22 @@
     <property name="title">
      <string>Enter username and password:</string>
     </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
     <widget class="QLineEdit" name="QLE_Username">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
-       <width>171</width>
-       <height>16</height>
+       <y>26</y>
+       <width>181</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>Calibri</family>
+       <pointsize>11</pointsize>
        <italic>false</italic>
        <bold>true</bold>
        <kerning>true</kerning>
@@ -59,9 +64,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
-       <width>171</width>
-       <height>16</height>
+       <y>46</y>
+       <width>181</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -105,7 +110,7 @@
     <property name="geometry">
      <rect>
       <x>220</x>
-      <y>10</y>
+      <y>20</y>
       <width>311</width>
       <height>211</height>
      </rect>
@@ -126,7 +131,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>779</width>
+     <width>763</width>
      <height>21</height>
     </rect>
    </property>
