@@ -25,9 +25,7 @@ Response UserDataAccessObject::Auth(QString username, QString password)
     if (!query.exec())
     {
         qWarning() << "authenticate() ERROR: " << query.lastError().text();
-        QJsonObject jsonObj;
-        jsonObj["foo"] = 5;
-        return Response(ECommandResult::ECR_FAILURE, jsonObj);
+        return Response(ECommandResult::ECR_FAILURE);
     }
 
     if (query.next())
@@ -37,14 +35,16 @@ Response UserDataAccessObject::Auth(QString username, QString password)
         // Compares the input password with the one stored in database
         if (password == storedPassword)
         {
-            QJsonObject jsonObj;
-            jsonObj["foo"] = 5;
-            return Response(ECommandResult::ECR_SUCCESS, jsonObj);; // Authenticated
+            QApplicationGlobal::CurrentUsername = username.toStdString();
+            QSqlQuery query2(DATABASE);
+            query2.prepare("SELECT EUP FROM User WHERE Username = :username");
+            query2.bindValue(":username", username);
+            QJsonObject jsonEUP;
+            jsonEUP["EUP"] = query2.value(0).toInt();
+            return Response(ECommandResult::ECR_SUCCESS, jsonEUP);; // Authenticated
         }
     }
 
-    QJsonObject jsonObj;
-    jsonObj["foo"] = 5;
-    return Response(ECommandResult::ECR_FAILURE, jsonObj); // Not authenticated
+    return Response(ECommandResult::ECR_FAILURE); // Not authenticated
 
 }

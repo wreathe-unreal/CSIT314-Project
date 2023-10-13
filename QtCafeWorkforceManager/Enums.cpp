@@ -1,6 +1,6 @@
 #include "Enums.h"
 
-EUserProfile IntToEUserType(int input)
+EUserProfile IntToEUserProfile(int input)
 {
     switch(input)
     {
@@ -12,7 +12,7 @@ EUserProfile IntToEUserType(int input)
     }
 }
 
-int EUserTypeToInt(EUserProfile UserType)
+int EUserProfileToInt(EUserProfile UserType)
 {
     switch(UserType)
     {

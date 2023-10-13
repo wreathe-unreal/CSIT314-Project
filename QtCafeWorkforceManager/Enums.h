@@ -39,9 +39,9 @@ enum class EStaffRole
     ESR_Waiter //3
 };
 
-EUserProfile IntToEUserType(int input);
+EUserProfile IntToEUserProfile(int input);
 
-int EUserTypeToInt(EUserProfile UserType);
+int EUserProfileToInt(EUserProfile UserType);
 
 int EStaffRoleToInt(EStaffRole UserRole);
 

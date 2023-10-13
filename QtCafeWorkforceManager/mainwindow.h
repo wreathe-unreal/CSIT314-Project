@@ -2,10 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QPushButton>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class AuthWindow; }
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -17,7 +16,7 @@ class MainWindow : public QMainWindow
         ~MainWindow();
 
     private:
-        Ui::AuthWindow* ui;
+        Ui::MainWindow* ui;
 };
 
 #endif // MAINWINDOW_H

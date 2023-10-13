@@ -2,12 +2,16 @@
 #include "./ui_AuthWindow.h"
 #include <iostream>
 #include <string>
+#include "CafeStaffWindow.h"
 #include "Commands.h"
 #include "MainWindow.h"
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include "CafeManagerWindow.h"
+#include "CafeOwnerWindow.h"
 #include "QApplicationGlobal.h"
+#include "SysAdminWindow.h"
 
 AuthWindow::AuthWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::AuthWindow)
 {
@@ -68,12 +72,35 @@ void AuthWindow::on_LoginButton_clicked()
         ui->QLE_Username->setPalette(palette);
         ui->InvalidLoginLabel->setVisible(true);
     }
+
     if(AuthResponse.Result == ECommandResult::ECR_SUCCESS)
     {
         QJsonObject jsonObj = AuthResponse.getJsonObject();
-        qDebug() << jsonObj;
-        MainWindow* MainView = new MainWindow; // create a new second window
-        MainView->show(); // show the second window
+        EUserProfile UserProfile = IntToEUserProfile(jsonObj.value("EUP").toInt());
+
+        SysAdminWindow* SysAdminView = new SysAdminWindow;
+        CafeOwnerWindow* CafeOwnerView = new CafeOwnerWindow;
+        CafeManagerWindow* CafeManagerView = new CafeManagerWindow;
+        CafeStaffWindow* CafeStaffView = new CafeStaffWindow;
+
+        switch(UserProfile)
+        {
+            case EUserProfile::EUP_SysAdmin:
+                SysAdminView->show();
+                break;
+            case EUserProfile::EUP_CafeOwner:
+                CafeOwnerView->show();
+                break;
+            case EUserProfile::EUP_CafeManager:
+                CafeManagerView->show();
+                break;
+            case EUserProfile::EUP_CafeStaff:
+                CafeStaffView->show();
+                break;
+            default:
+                break;
+        }
+
         this->close(); // close the main window
     }
 }

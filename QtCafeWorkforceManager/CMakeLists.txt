@@ -32,9 +32,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Enums.cpp
         QApplicationGlobal.h
         QApplicationGlobal.cpp
-        MainWindow.cpp
-        MainWindow.h
-        MainWindow.ui
+
+
+
         Entity.h
         Entity.cpp
         User.h
@@ -43,6 +43,12 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ShiftDAO.h
         UserDAO.cpp
         Response.h
+        SysAdminWindow.h SysAdminWindow.cpp SysAdminWindow.ui
+        CafeOwnerWindow.h CafeOwnerWindow.cpp CafeOwnerWindow.ui
+        CafeManagerWindow.h CafeManagerWindow.cpp CafeManagerWindow.ui
+        CafeStaffWindow.h CafeStaffWindow.cpp CafeStaffWindow.ui
+
+
 
 
 
