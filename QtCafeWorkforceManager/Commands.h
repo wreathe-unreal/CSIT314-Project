@@ -1,3 +1,4 @@
+#include "Enums.h"
 #include <QString>
 #include <string>
 #include <QDebug>
@@ -8,34 +9,20 @@
 
 using namespace std;
 
-enum ECommandType
-{
-    ECT_Update,
-    ECT_Authorize,
-    ECT_Create,
-};
-
-
 class ICommand
 {
-    virtual void ToString() = 0; //dummy function to make abstract
-};
-
-class Update : public ICommand
-{
     public:
-        ECommandType CommandType = ECT_Update;
-        int UserID;
-        int AttributeID;
+    virtual ECommandType GetType() = 0;//dummy function to make abstract
+    virtual ~ICommand(){};
 };
 
 class Authorize : public ICommand
 {
     public:
-        ECommandType CommandType = ECT_Authorize;
+        virtual ECommandType GetType() override { return ECT_Authorize; }
+        virtual ~Authorize() override {};
         QString Username;
         QString Password;
-        virtual void ToString(){ qDebug() << Username.toStdString() << Password.toStdString(); };
 };
 
 #endif // COMMANDS_H

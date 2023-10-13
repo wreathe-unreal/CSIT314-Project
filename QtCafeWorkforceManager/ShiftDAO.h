@@ -20,6 +20,7 @@ public:
     std::vector<User> GetBidders(Shift shift);
     std::vector<Shift> GetByDate(QDate date);
     std::vector<Shift> GetByUser(std::string username);
+    std::vector<Shift> GetAllShifts();
 
 
 };

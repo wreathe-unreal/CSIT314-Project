@@ -23,6 +23,14 @@ enum class EUserProfile
     EUP_CafeStaff //3
 };
 
+enum ECommandType
+{
+    ECT_UnknownCommand,
+    ECT_Update,
+    ECT_Authorize,
+    ECT_Create,
+};
+
 enum class EStaffRole
 {
     ESR_NonStaff, //0

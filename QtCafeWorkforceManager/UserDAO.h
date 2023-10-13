@@ -2,6 +2,7 @@
 #define USERDAO_H
 #include "Enums.h"
 #include "User.h"
+#include "Response.h"
 #include <string>
 
 #define DATABASE QApplicationGlobal::CafeDB
@@ -14,9 +15,8 @@ class UserDataAccessObject
         ~UserDataAccessObject(){};
 
         //uncoded
-        ECommandResult Auth(QString username, QString Password);
         ECommandResult Insert(User user);
-        ECommandResult Upsert(User user);
+        ECommandResult UpdateOrInsert(User user);
         ECommandResult Delete(std::string username);
         ECommandResult SetESR(std::string username, EStaffRole role);
         ECommandResult SetEUP(std::string username, EUserProfile profile);
@@ -29,6 +29,7 @@ class UserDataAccessObject
         std::vector<User> GetByESR(EStaffRole role);
 
         //coded
+        Response Auth(QString username, QString password);
 };
 
 #endif // USERDAO_H

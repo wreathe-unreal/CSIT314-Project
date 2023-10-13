@@ -8,30 +8,30 @@
 
 class Command;
 
-ECommandResult Controller::HandleCommand(ICommand* cmd)
+Response Controller::HandleCommand(ICommand* cmd)
 {
-    ECommandResult result = ECommandResult::ECR_FAILURE;
+    Response response = Response(ECommandResult::ECR_FAILURE);
 
-    if(Update* UpdateCmd = dynamic_cast<Update*>(cmd))
+    if(cmd->GetType() == ECommandType::ECT_Update)
     {
         //HandleUpdate(arg1, arg2);
     }
 
-    if(Authorize* AuthorizeCmd = dynamic_cast<Authorize*>(cmd))
+    if(cmd->GetType() == ECommandType::ECT_Authorize)
     {
-        result = HandleAuthorize(AuthorizeCmd);
+        response = Response(HandleAuthorize(dynamic_cast<Authorize*>(cmd)));
     }
 
     delete cmd;
     cmd = nullptr;
-    return result; //return fail if no valid command
+    return response; //return fail if no valid command
 }
 
-ECommandResult Controller::HandleAuthorize(Authorize* cmd)
+Response Controller::HandleAuthorize(Authorize* cmd)
 {
     QByteArray passwordBytes = cmd->Password.toUtf8();
     QByteArray hashedPassword = QCryptographicHash::hash(passwordBytes, QCryptographicHash::Sha256);
-    QString hashedPassword0x = QString(hashedPassword.toHex());
+    QString hashedPasswordHex = QString(hashedPassword.toHex());
 
-    return QApplicationGlobal::UserDAO.Auth(cmd->Username, hashedPassword0x);
+    return QApplicationGlobal::UserDAO.Auth(cmd->Username, hashedPasswordHex);
 };

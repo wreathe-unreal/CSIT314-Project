@@ -4,6 +4,16 @@
 
 #include "Entity.h"
 #include <QString>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QDebug>
 
 class User : public IEntity
 {
@@ -36,6 +46,10 @@ class User : public IEntity
         int EUP; // Enum value EUserProfile
         int ESR; // Enum value EStaffRole
         int MaxSlots;
+
+        QString ToJSON();
+
+        virtual void ToString() override { qDebug() << this->getUsername();}
 };
 
 #endif // USER_H

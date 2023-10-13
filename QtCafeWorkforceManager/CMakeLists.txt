@@ -42,6 +42,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UserDAO.h
         ShiftDAO.h
         UserDAO.cpp
+        Response.h
+
 
 
 

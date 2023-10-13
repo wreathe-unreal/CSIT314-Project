@@ -4,7 +4,7 @@
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class AuthWindow; }
 QT_END_NAMESPACE
 
 class AuthWindow : public QMainWindow
@@ -12,7 +12,7 @@ class AuthWindow : public QMainWindow
         Q_OBJECT
 
     public:
-        AuthWindow(QWidget *parent = nullptr);
+        AuthWindow(QWidget *parent =     nullptr);
         ~AuthWindow();
 
     private slots:
@@ -23,6 +23,6 @@ class AuthWindow : public QMainWindow
         void on_QLE_Password_textEdited(const QString &arg1);
 
     private:
-        Ui::MainWindow *ui;
+        Ui::AuthWindow* ui;
 };
 #endif // AUTHWINDOW_H

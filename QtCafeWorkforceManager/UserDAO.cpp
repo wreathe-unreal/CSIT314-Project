@@ -2,27 +2,32 @@
 #include "QApplicationGlobal.h"
 #include "UserDAO.h"
 #include <QSqlQuery>
+#include "Response.h"
 #include <QSqlError>
 #include <string>
 
 
 
-ECommandResult UserDataAccessObject::Auth(QString username, QString password)
+Response UserDataAccessObject::Auth(QString username, QString password)
 {
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        return ECommandResult::ECR_FAILURE;
+        QJsonObject jsonObj;
+        jsonObj["foo"] = 5;
+        return Response(ECommandResult::ECR_FAILURE, jsonObj);
     }
 
     QSqlQuery query(DATABASE);
-    query.prepare("SELECT Password FROM User WHERE Username = :username");
+    query.prepare("SELECT Password FROM User WHERE Username = :username"); //needs sanitize implementation
     query.bindValue(":username", username);
 
     if (!query.exec())
     {
         qWarning() << "authenticate() ERROR: " << query.lastError().text();
-        return ECommandResult::ECR_FAILURE;
+        QJsonObject jsonObj;
+        jsonObj["foo"] = 5;
+        return Response(ECommandResult::ECR_FAILURE, jsonObj);
     }
 
     if (query.next())
@@ -30,13 +35,16 @@ ECommandResult UserDataAccessObject::Auth(QString username, QString password)
         QString storedPassword = query.value(0).toString(); // Gets the password from the query
 
         // Compares the input password with the one stored in database
-        // Please note this is a simple comparison, for real applications consider using a hashed password
         if (password == storedPassword)
         {
-            return ECommandResult::ECR_SUCCESS; // Authenticated
+            QJsonObject jsonObj;
+            jsonObj["foo"] = 5;
+            return Response(ECommandResult::ECR_SUCCESS, jsonObj);; // Authenticated
         }
     }
 
-    return ECommandResult::ECR_FAILURE; // Not authenticated
+    QJsonObject jsonObj;
+    jsonObj["foo"] = 5;
+    return Response(ECommandResult::ECR_FAILURE, jsonObj); // Not authenticated
 
 }

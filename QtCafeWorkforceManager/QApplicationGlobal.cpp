@@ -10,7 +10,6 @@ Controller* QApplicationGlobal::ControllerPtr = nullptr;
 
 QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(argc, argv)
 {
-
     CafeDB = QSqlDatabase::addDatabase("QSQLITE");
     CafeDB.setDatabaseName("../QtCafeWorkforceManager/CafeDB.db");
 
@@ -23,6 +22,7 @@ QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(ar
         qDebug() << "Database: connection ok on init";
     }
 }
+
 QApplicationGlobal::~QApplicationGlobal(){ delete ControllerPtr; }
 
 Controller* QApplicationGlobal::GetController()

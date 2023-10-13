@@ -3,13 +3,15 @@
 #define CONTROLLER_H
 #include "Enums.h"
 #include "Commands.h"
+#include "Response.h"
 
 class Controller
 {
     public:
-    ECommandResult HandleCommand(ICommand* cmd);
+    Response HandleCommand(ICommand* cmd);
     private:
-    ECommandResult HandleAuthorize(Authorize* cmd);
+    Response HandleAuthorize(Authorize* cmd);
+
 };
 
 #endif

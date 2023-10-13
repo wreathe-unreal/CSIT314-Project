@@ -4,9 +4,12 @@
 #include <string>
 #include "Commands.h"
 #include "MainWindow.h"
+#include <QDebug>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "QApplicationGlobal.h"
 
-AuthWindow::AuthWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
+AuthWindow::AuthWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::AuthWindow)
 {
     ui->setupUi(this);
     ui->InvalidLoginLabel->setVisible(false);
@@ -54,10 +57,10 @@ void AuthWindow::on_LoginButton_clicked()
     AuthCmd->Password = ui->QLE_Password->text();
 
     //create controller - handle command - delete controller
-    ECommandResult Authenticated = QApplicationGlobal::GetController()->HandleCommand(AuthCmd);
+    Response AuthResponse = QApplicationGlobal::GetController()->HandleCommand(AuthCmd);
     QApplicationGlobal::SafeDeleteController();
 
-    if(Authenticated == ECommandResult::ECR_FAILURE)
+    if(AuthResponse.Result == ECommandResult::ECR_FAILURE)
     {
         QPalette palette;
         palette.setColor(QPalette::Text, QColorConstants::Red);
@@ -65,8 +68,10 @@ void AuthWindow::on_LoginButton_clicked()
         ui->QLE_Username->setPalette(palette);
         ui->InvalidLoginLabel->setVisible(true);
     }
-    if(Authenticated == ECommandResult::ECR_SUCCESS)
+    if(AuthResponse.Result == ECommandResult::ECR_SUCCESS)
     {
+        QJsonObject jsonObj = AuthResponse.getJsonObject();
+        qDebug() << jsonObj;
         MainWindow* MainView = new MainWindow; // create a new second window
         MainView->show(); // show the second window
         this->close(); // close the main window
