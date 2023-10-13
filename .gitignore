@@ -3,3 +3,5 @@ QtCafeWorkforceManager/.qtc_clangd/
 QtCafeWorkforceManager/.cmake/
 QtCafeWorkforceManager/.qt/
 QtCafeWorkforceManager/Testing/
+QtCafeWorkforceManager/CMakeFiles/
+QtCafeWorkforceManager/QtCafeWorkforceManager_autogen
