@@ -1,7 +1,6 @@
 #ifndef QAPPLICATIONGLOBAL_H
 #define QAPPLICATIONGLOBAL_H
 #include <QApplication>
-#include "BidDAO.h"
 #include "Controller.h"
 #include "ShiftDAO.h"
 #include "UserDAO.h"
@@ -16,10 +15,14 @@ class QApplicationGlobal : public QApplication
         QApplicationGlobal(int &argc, char **argv);
         ~QApplicationGlobal();
 
+        static std::string CurrentUsername;
         static QSqlDatabase CafeDB;
-        static UserDAO UserDataAccessObject;
-        static ShiftDAO ShiftDataAccessObject;
-        static BidDAO BidDataAccessObject;
+        static Controller* ControllerPtr;
+        static UserDataAccessObject UserDAO;
+        static ShiftDataAccessObject ShiftDAO;
+
+        static Controller* GetController();
+        static void SafeDeleteController();
 };
 
 #endif // QAPPLICATIONGLOBAL_H

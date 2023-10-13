@@ -18,8 +18,6 @@ class AuthWindow : public QMainWindow
     private slots:
         void on_LoginButton_clicked();
 
-        void on_columnView_clicked(const QModelIndex &index);
-
         void on_QLE_Username_textChanged(const QString &arg1);
 
         void on_QLE_Password_textEdited(const QString &arg1);

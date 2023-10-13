@@ -49,34 +49,29 @@ AuthWindow::~AuthWindow()
 
 void AuthWindow::on_LoginButton_clicked()
 {
-    Authorize* Cmd = new Authorize();
-    Cmd->Username = ui->QLE_Username->text();
-    Cmd->Password = ui->QLE_Password->text();
-    //ECommandResult Authenticated = QApplicationGlobal::CmdController->HandleCommand(Cmd);
+    Authorize* AuthCmd = new Authorize();
+    AuthCmd->Username = ui->QLE_Username->text();
+    AuthCmd->Password = ui->QLE_Password->text();
 
-//    if(Authenticated == ECommandResult::ECR_FAILURE)
-//    {
-//        QPalette palette;
-//        palette.setColor(QPalette::Text, QColorConstants::Red);
-//        ui->QLE_Password->setPalette(palette);
-//        ui->QLE_Username->setPalette(palette);
-//        ui->InvalidLoginLabel->setVisible(true);
-//    }
-//    if(Authenticated == ECommandResult::ECR_SUCCESS)
-//    {
-//        MainWindow* MainView = new MainWindow; // create a new second window
-//        MainView->show(); // show the second window
-//        this->close(); // close the main window
-//    }
-    delete Cmd;
+    //create controller - handle command - delete controller
+    ECommandResult Authenticated = QApplicationGlobal::GetController()->HandleCommand(AuthCmd);
+    QApplicationGlobal::SafeDeleteController();
+
+    if(Authenticated == ECommandResult::ECR_FAILURE)
+    {
+        QPalette palette;
+        palette.setColor(QPalette::Text, QColorConstants::Red);
+        ui->QLE_Password->setPalette(palette);
+        ui->QLE_Username->setPalette(palette);
+        ui->InvalidLoginLabel->setVisible(true);
+    }
+    if(Authenticated == ECommandResult::ECR_SUCCESS)
+    {
+        MainWindow* MainView = new MainWindow; // create a new second window
+        MainView->show(); // show the second window
+        this->close(); // close the main window
+    }
 }
-
-
-void AuthWindow::on_columnView_clicked(const QModelIndex &index)
-{
-
-}
-
 
 void AuthWindow::on_QLE_Username_textChanged(const QString &arg1)
 {

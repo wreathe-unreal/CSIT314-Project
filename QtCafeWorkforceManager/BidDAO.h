@@ -3,11 +3,11 @@
 #include "Enums.h"
 #include "Bid.h"
 
-class BidDAO
+class BidDataAccessObject
 {
 public:
-    BidDAO(){};
-    ~BidDAO(){};
+    BidDataAccessObject(){};
+    ~BidDataAccessObject(){};
 
     ECommandResult InsertBid(const Bid& user);
 };

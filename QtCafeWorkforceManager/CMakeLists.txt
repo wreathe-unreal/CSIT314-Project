@@ -41,7 +41,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         User.cpp
         UserDAO.h
         ShiftDAO.h
-        BidDAO.h
+        UserDAO.cpp
+
 
 
     )

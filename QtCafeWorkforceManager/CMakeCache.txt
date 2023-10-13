@@ -35,13 +35,13 @@ CMAKE_CXX_COMPILER_AR:FILEPATH=C:/Qt/Tools/mingw1120_64/bin/gcc-ar.exe
 CMAKE_CXX_COMPILER_RANLIB:FILEPATH=C:/Qt/Tools/mingw1120_64/bin/gcc-ranlib.exe
 
 //Flags used by the CXX compiler during all build types.
-CMAKE_CXX_FLAGS:STRING=-DQT_QML_DEBUG
+CMAKE_CXX_FLAGS:STRING=
 
 //Flags used by the CXX compiler during DEBUG builds.
 CMAKE_CXX_FLAGS_DEBUG:STRING=-g
 
 //No help, variable specified on the command line.
-CMAKE_CXX_FLAGS_INIT:STRING=-DQT_QML_DEBUG
+CMAKE_CXX_FLAGS_INIT:STRING=
 
 //Flags used by the CXX compiler during MINSIZEREL builds.
 CMAKE_CXX_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
@@ -175,7 +175,7 @@ CMAKE_OBJCOPY:FILEPATH=C:/Qt/Tools/mingw1120_64/bin/objcopy.exe
 CMAKE_OBJDUMP:FILEPATH=C:/Qt/Tools/mingw1120_64/bin/objdump.exe
 
 //No help, variable specified on the command line.
-CMAKE_PREFIX_PATH:PATH=C:/Qt/6.5.3/mingw_64
+CMAKE_PREFIX_PATH:PATH=C:/Qt/6.6.0/mingw_64
 
 //Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
@@ -295,40 +295,40 @@ QT_ADDITIONAL_PACKAGES_PREFIX_PATH:STRING=
 QT_CREATOR_SKIP_PACKAGE_MANAGER_SETUP:BOOL=OFF
 
 //The directory containing a CMake configuration file for QT.
-QT_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6
+QT_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6
 
 //No help, variable specified on the command line.
-QT_QMAKE_EXECUTABLE:FILEPATH=C:/Qt/6.5.3/mingw_64/bin/qmake.exe
+QT_QMAKE_EXECUTABLE:FILEPATH=C:/Qt/6.6.0/mingw_64/bin/qmake.exe
 
 //The directory containing a CMake configuration file for Qt6CoreTools.
-Qt6CoreTools_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6CoreTools
+Qt6CoreTools_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6CoreTools
 
 //The directory containing a CMake configuration file for Qt6Core.
-Qt6Core_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6Core
+Qt6Core_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6Core
 
 //The directory containing a CMake configuration file for Qt6EntryPointPrivate.
-Qt6EntryPointPrivate_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6EntryPointPrivate
+Qt6EntryPointPrivate_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6EntryPointPrivate
 
 //The directory containing a CMake configuration file for Qt6GuiTools.
-Qt6GuiTools_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6GuiTools
+Qt6GuiTools_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6GuiTools
 
 //The directory containing a CMake configuration file for Qt6Gui.
-Qt6Gui_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6Gui
+Qt6Gui_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6Gui
 
 //The directory containing a CMake configuration file for Qt6Sql.
-Qt6Sql_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6Sql
+Qt6Sql_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6Sql
 
 //The directory containing a CMake configuration file for Qt6WidgetsTools.
-Qt6WidgetsTools_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6WidgetsTools
+Qt6WidgetsTools_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6WidgetsTools
 
 //The directory containing a CMake configuration file for Qt6Widgets.
-Qt6Widgets_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6Widgets
+Qt6Widgets_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6Widgets
 
 //The directory containing a CMake configuration file for Qt6ZlibPrivate.
-Qt6ZlibPrivate_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6ZlibPrivate
+Qt6ZlibPrivate_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6ZlibPrivate
 
 //The directory containing a CMake configuration file for Qt6.
-Qt6_DIR:PATH=C:/Qt/6.5.3/mingw_64/lib/cmake/Qt6
+Qt6_DIR:PATH=C:/Qt/6.6.0/mingw_64/lib/cmake/Qt6
 
 //Value Computed by CMake
 QtCafeWorkforceManager_BINARY_DIR:STATIC=C:/Users/ENA/My Drive/school/Software Development Methodologies/GroupProject/CSIT314-Project/QtCafeWorkforceManager
@@ -352,7 +352,7 @@ Vulkan_INCLUDE_DIR:PATH=Vulkan_INCLUDE_DIR-NOTFOUND
 Vulkan_LIBRARY:FILEPATH=Vulkan_LIBRARY-NOTFOUND
 
 //Path to a program.
-WINDEPLOYQT_EXECUTABLE:FILEPATH=C:/Qt/6.5.3/mingw_64/bin/windeployqt.exe
+WINDEPLOYQT_EXECUTABLE:FILEPATH=C:/Qt/6.6.0/mingw_64/bin/windeployqt.exe
 
 
 ########################
@@ -589,10 +589,6 @@ QT_FEATURE_avx512vl:INTERNAL=ON
 QT_FEATURE_backtrace:INTERNAL=OFF
 //Qt feature: buttongroup (from target Qt6::Widgets)
 QT_FEATURE_buttongroup:INTERNAL=ON
-//Qt feature: c11 (from target Qt6::Core)
-QT_FEATURE_c11:INTERNAL=ON
-//Qt feature: c99 (from target Qt6::Core)
-QT_FEATURE_c99:INTERNAL=ON
 //Qt feature: calendarwidget (from target Qt6::Widgets)
 QT_FEATURE_calendarwidget:INTERNAL=ON
 //Qt feature: cborstreamreader (from target Qt6::Core)
@@ -607,6 +603,8 @@ QT_FEATURE_clipboard:INTERNAL=ON
 QT_FEATURE_clock_gettime:INTERNAL=OFF
 //Qt feature: clock_monotonic (from target Qt6::Core)
 QT_FEATURE_clock_monotonic:INTERNAL=OFF
+//Qt feature: close_range (from target Qt6::Core)
+QT_FEATURE_close_range:INTERNAL=OFF
 //Qt feature: colordialog (from target Qt6::Widgets)
 QT_FEATURE_colordialog:INTERNAL=ON
 //Qt feature: colornames (from target Qt6::Gui)
@@ -637,18 +635,10 @@ QT_FEATURE_cssparser:INTERNAL=ON
 QT_FEATURE_ctf:INTERNAL=OFF
 //Qt feature: cursor (from target Qt6::Gui)
 QT_FEATURE_cursor:INTERNAL=ON
-//Qt feature: cxx11 (from target Qt6::Core)
-QT_FEATURE_cxx11:INTERNAL=ON
 //Qt feature: cxx11_future (from target Qt6::Core)
 QT_FEATURE_cxx11_future:INTERNAL=ON
-//Qt feature: cxx14 (from target Qt6::Core)
-QT_FEATURE_cxx14:INTERNAL=ON
-//Qt feature: cxx17 (from target Qt6::Core)
-QT_FEATURE_cxx17:INTERNAL=ON
 //Qt feature: cxx17_filesystem (from target Qt6::Core)
 QT_FEATURE_cxx17_filesystem:INTERNAL=ON
-//Qt feature: cxx1z (from target Qt6::Core)
-QT_FEATURE_cxx1z:INTERNAL=ON
 //Qt feature: cxx20 (from target Qt6::Core)
 QT_FEATURE_cxx20:INTERNAL=OFF
 //Qt feature: cxx2a (from target Qt6::Core)
@@ -933,6 +923,8 @@ QT_FEATURE_opengles31:INTERNAL=OFF
 QT_FEATURE_opengles32:INTERNAL=OFF
 //Qt feature: openssl (from target Qt6::Core)
 QT_FEATURE_openssl:INTERNAL=ON
+//Qt feature: openssl_hash (from target Qt6::Core)
+QT_FEATURE_openssl_hash:INTERNAL=OFF
 //Qt feature: openssl_linked (from target Qt6::Core)
 QT_FEATURE_openssl_linked:INTERNAL=OFF
 //Qt feature: opensslv11 (from target Qt6::Core)
@@ -946,7 +938,7 @@ QT_FEATURE_pcre2:INTERNAL=ON
 //Qt feature: pdf (from target Qt6::Gui)
 QT_FEATURE_pdf:INTERNAL=ON
 //Qt feature: permissions (from target Qt6::Core)
-QT_FEATURE_permissions:INTERNAL=OFF
+QT_FEATURE_permissions:INTERNAL=ON
 //Qt feature: picture (from target Qt6::Gui)
 QT_FEATURE_picture:INTERNAL=ON
 //Qt feature: pkg_config (from target Qt6::Core)
@@ -967,6 +959,10 @@ QT_FEATURE_poll_ppoll:INTERNAL=OFF
 QT_FEATURE_poll_select:INTERNAL=OFF
 //Qt feature: posix_fallocate (from target Qt6::Core)
 QT_FEATURE_posix_fallocate:INTERNAL=OFF
+//Qt feature: posix_sem (from target Qt6::Core)
+QT_FEATURE_posix_sem:INTERNAL=ON
+//Qt feature: posix_shm (from target Qt6::Core)
+QT_FEATURE_posix_shm:INTERNAL=OFF
 //Qt feature: precompile_header (from target Qt6::Core)
 QT_FEATURE_precompile_header:INTERNAL=ON
 //Qt feature: printsupport (from target Qt6::Core)
@@ -1129,6 +1125,10 @@ QT_FEATURE_system_zlib:INTERNAL=OFF
 QT_FEATURE_systemsemaphore:INTERNAL=ON
 //Qt feature: systemtrayicon (from target Qt6::Gui)
 QT_FEATURE_systemtrayicon:INTERNAL=ON
+//Qt feature: sysv_sem (from target Qt6::Core)
+QT_FEATURE_sysv_sem:INTERNAL=OFF
+//Qt feature: sysv_shm (from target Qt6::Core)
+QT_FEATURE_sysv_shm:INTERNAL=OFF
 //Qt feature: tabbar (from target Qt6::Widgets)
 QT_FEATURE_tabbar:INTERNAL=ON
 //Qt feature: tabletevent (from target Qt6::Gui)
