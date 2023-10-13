@@ -16,6 +16,7 @@
 AuthWindow::AuthWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::AuthWindow)
 {
     ui->setupUi(this);
+
     ui->InvalidLoginLabel->setVisible(false);
     ui->QLE_Password->setEchoMode(QLineEdit::Password);
 
@@ -78,23 +79,28 @@ void AuthWindow::on_LoginButton_clicked()
         QJsonObject jsonObj = AuthResponse.getJsonObject();
         EUserProfile UserProfile = IntToEUserProfile(jsonObj.value("EUP").toInt());
 
-        SysAdminWindow* SysAdminView = new SysAdminWindow;
-        CafeOwnerWindow* CafeOwnerView = new CafeOwnerWindow;
-        CafeManagerWindow* CafeManagerView = new CafeManagerWindow;
-        CafeStaffWindow* CafeStaffView = new CafeStaffWindow;
+        SysAdminWindow* SysAdminView;
+        CafeOwnerWindow* CafeOwnerView;
+        CafeManagerWindow* CafeManagerView;
+        CafeStaffWindow* CafeStaffView;
 
         switch(UserProfile)
         {
             case EUserProfile::EUP_SysAdmin:
+                SysAdminView = new SysAdminWindow;
+                SysAdminView->setStyleSheet("SysAdminWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
                 SysAdminView->show();
                 break;
             case EUserProfile::EUP_CafeOwner:
+                CafeOwnerView = new CafeOwnerWindow;
                 CafeOwnerView->show();
                 break;
             case EUserProfile::EUP_CafeManager:
+                CafeManagerView = new CafeManagerWindow;
                 CafeManagerView->show();
                 break;
             case EUserProfile::EUP_CafeStaff:
+                CafeStaffView = new CafeStaffWindow;
                 CafeStaffView->show();
                 break;
             default:

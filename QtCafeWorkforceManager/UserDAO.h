@@ -29,7 +29,7 @@ class UserDataAccessObject
         std::vector<User> GetByESR(EStaffRole role);
 
         //coded
-        Response Auth(QString username, QString password);
+        Response Auth(QString username, QString password); //response json = EUP
 };
 
 #endif // USERDAO_H
