@@ -1,0 +1,3 @@
+# Ignore .cmake and .qtc_clangd directories inside QtCafeWorkforceManager
+QtCafeWorkforceManager/.qtc_clangd/
+QtCafeWorkforceManager/.cmake/
