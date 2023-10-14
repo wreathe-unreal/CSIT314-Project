@@ -12,7 +12,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Sql) 
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Sql)
 
-
 set(PROJECT_SOURCES
         main.cpp
         AuthWindow.cpp
@@ -47,6 +46,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         CafeOwnerWindow.h CafeOwnerWindow.cpp CafeOwnerWindow.ui
         CafeManagerWindow.h CafeManagerWindow.cpp CafeManagerWindow.ui
         CafeStaffWindow.h CafeStaffWindow.cpp CafeStaffWindow.ui
+        NewShift.h
+        NewUser.h
 
 
 
@@ -64,7 +65,7 @@ else()
             ${PROJECT_SOURCES}
         )
 # Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+#    set(ANDROID_PARENT_SOURCE_DIR}/android")
     else()
         add_executable(QtCafeWorkforceManager
             ${PROJECT_SOURCES}

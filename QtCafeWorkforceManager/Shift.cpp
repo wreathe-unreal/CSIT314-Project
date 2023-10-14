@@ -1,50 +1,17 @@
 ﻿#include "Shift.h"
 
 
-int Shift::getNumChefs() const
+int Shift::getMaxChefs() const
 {
-    return NumChefs;
+    return MaxChefs;
 }
 
-void Shift::setNumChefs(int newNumChefs)
-{
-    NumChefs = newNumChefs;
-}
 
 int Shift::getShiftID() const
 {
     return ShiftID;
 }
 
-QDate Shift::getShiftDate() const
-{
-    return ShiftDate;
-}
-
-void Shift::setShiftDate(const QDate &newShiftDate)
-{
-    ShiftDate = newShiftDate;
-}
-
-int Shift::getShiftNumber() const
-{
-    return ShiftNumber;
-}
-
-void Shift::setShiftNumber(int newShiftNumber)
-{
-    ShiftNumber = newShiftNumber;
-}
-
-bool Shift::getbFull() const
-{
-    return bFull;
-}
-
-void Shift::setbFull(bool newBFull)
-{
-    bFull = newBFull;
-}
 
 int Shift::getCurChefs() const
 {
@@ -56,14 +23,9 @@ void Shift::setCurChefs(int newCurChefs)
     CurChefs = newCurChefs;
 }
 
-int Shift::getNumCashiers() const
+int Shift::getMaxCashiers() const
 {
-    return NumCashiers;
-}
-
-void Shift::setNumCashiers(int newNumCashiers)
-{
-    NumCashiers = newNumCashiers;
+    return MaxCashiers;
 }
 
 int Shift::getCurCashiers() const
@@ -76,15 +38,11 @@ void Shift::setCurCashiers(int newCurCashiers)
     CurCashiers = newCurCashiers;
 }
 
-int Shift::getNumWaiters() const
+int Shift::getMaxWaiters() const
 {
-    return NumWaiters;
+    return MaxWaiters;
 }
 
-void Shift::setNumWaiters(int newNumWaiters)
-{
-    NumWaiters = newNumWaiters;
-}
 
 int Shift::getCurWaiters() const
 {
@@ -96,3 +54,35 @@ void Shift::setCurWaiters(int newCurWaiters)
     CurWaiters = newCurWaiters;
 }
 
+
+
+bool Shift::isChefRoleFull() const
+{
+    return CurChefs == MaxChefs;
+}
+
+
+bool Shift::isWaiterRoleFull() const
+{
+    return CurWaiters == MaxWaiters;
+}
+
+bool Shift::isCashierRoleFull() const
+{
+    return CurCashiers == MaxCashiers;
+}
+
+bool Shift::isShiftFull() const
+{
+    return isChefRoleFull() && isWaiterRoleFull() && isCashierRoleFull();
+}
+
+QTime Shift::getStartTime() const
+{
+    return StartTime;
+}
+
+QTime Shift::getEndTime() const
+{
+    return EndTime;
+}

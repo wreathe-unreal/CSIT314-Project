@@ -7,53 +7,81 @@
 class Shift : public IEntity
 {
 
-public:
-    Shift();
-    ~Shift();
+    public:
+        Shift();
+        ~Shift();
 
-    int getNumChefs() const;
-    void setNumChefs(int newNumChefs);
+        int getShiftID() const;
 
-    int getShiftID() const;
+        QDate getShiftDate() const;
+        void setShiftDate(const QDate &newShiftDate);
 
-    QDate getShiftDate() const;
-    void setShiftDate(const QDate &newShiftDate);
+        int getMaxChefs() const;
 
-    int getShiftNumber() const;
-    void setShiftNumber(int newShiftNumber);
+        int getCurChefs() const;
+        void setCurChefs(int newCurChefs);
 
-    bool getbFull() const;
-    void setbFull(bool newBFull);
+        int getCurCashiers() const;
+        void setCurCashiers(int newCurCashiers);
 
-    int getCurChefs() const;
-    void setCurChefs(int newCurChefs);
+        int getMaxCashiers() const;
 
-    int getNumbChefs() const;
-    void setNumbChefs(int newNumbChefs);
+        int getCurWaiters() const;
+        void setCurWaiters(int newCurWaiters);
 
-    int getNumCashiers() const;
-    void setNumCashiers(int newNumCashiers);
+        int getMaxWaiters() const;
 
-    int getCurCashiers() const;
-    void setCurCashiers(int newCurCashiers);
+        bool isChefRoleFull() const;
+        bool isCashierRoleFull() const;
+        bool isWaiterRoleFull() const;
+        bool isShiftFull() const;
 
-    int getNumWaiters() const;
-    void setNumWaiters(int newNumWaiters);
+        QTime getStartTime() const;
 
-    int getCurWaiters() const;
-    void setCurWaiters(int newCurWaiters);
+        QTime getEndTime() const;
 
-private:
-    int ShiftID;
-    QDate ShiftDate;
-    int ShiftNumber;
-    bool bFull;
-    int NumChefs;
-    int CurChefs;
-    int NumCashiers;
-    int CurCashiers;
-    int NumWaiters;
-    int CurWaiters;
+
+        bool HasOverlap(Shift otherShift)
+        {
+            return RangeContainsStartInclusive(this->StartTime, this->EndTime, otherShift.StartTime)
+                || RangeContainsEndInclusive(this->StartTime, this->EndTime, otherShift.EndTime)
+                || RangeContainsStartInclusive(otherShift.StartTime, otherShift.EndTime, this->StartTime)
+                || RangeContainsEndInclusive(otherShift.StartTime, otherShift.EndTime, this->EndTime);
+        }
+
+        virtual void ToString() override { qDebug() << getShiftID();}
+
+    private:
+        int ShiftID;
+        QDate Date;
+        QTime StartTime;
+        QTime EndTime;
+        int MaxChefs;
+        int CurChefs;
+        int MaxCashiers;
+        int CurCashiers;
+        int MaxWaiters;
+        int CurWaiters;
+
+        Shift(QDate date, QTime startTime, QTime endTime) { this->Date = date; this->StartTime = startTime; this->EndTime = endTime;}
+
+        bool RangeContainsEndInclusive(QTime start, QTime end, QTime value)
+        {
+            if(value > start && value <= end)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool RangeContainsStartInclusive(QTime start, QTime end, QTime value)
+        {
+            if(value >= start && value < end)
+            {
+                return true;
+            }
+            return false;
+        }
 };
 
 #endif // SHIFT_H
