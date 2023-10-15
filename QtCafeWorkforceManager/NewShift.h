@@ -6,7 +6,7 @@
 #include <QTime>
 
 
-bool RangeContainsEndInclusive(QTime start, QTime end, QTime value)
+inline bool RangeContainsEndInclusive(QTime start, QTime end, QTime value)
 {
     if(value > start && value <= end)
     {
@@ -15,7 +15,7 @@ bool RangeContainsEndInclusive(QTime start, QTime end, QTime value)
     return false;
 }
 
-bool RangeContainsStartInclusive(QTime start, QTime end, QTime value)
+inline bool RangeContainsStartInclusive(QTime start, QTime end, QTime value)
 {
     if(value >= start && value < end)
     {
@@ -62,6 +62,7 @@ public:
                || RangeContainsEndInclusive(otherShift.getStartTime(), otherShift.getEndTime(), this->EndTime);
     }
 
+    virtual void ToString() override{ qDebug() << this->Date << " " << this->StartTime << " to " << this->EndTime;};
 };
 
 #endif // NEWSHIFT_H

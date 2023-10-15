@@ -48,6 +48,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         CafeStaffWindow.h CafeStaffWindow.cpp CafeStaffWindow.ui
         NewShift.h
         NewUser.h
+        ShiftDAO.cpp
 
 
 

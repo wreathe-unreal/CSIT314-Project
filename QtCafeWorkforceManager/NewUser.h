@@ -22,7 +22,6 @@ public:
     QString Password;
     int EUP; // Enum value EUserProfile
     int ESR; // Enum value EStaffRole
-    int MaxSlots;
 
 };
 

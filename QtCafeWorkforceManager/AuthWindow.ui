@@ -15,12 +15,15 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>280</x>
       <y>230</y>
       <width>201</width>
-      <height>101</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
@@ -36,6 +39,9 @@
      <string>Enter username and password:</string>
     </property>
     <property name="flat">
+     <bool>false</bool>
+    </property>
+    <property name="checkable">
      <bool>false</bool>
     </property>
     <widget class="QLineEdit" name="QLE_Username">
@@ -76,10 +82,10 @@
     <widget class="QPushButton" name="LoginButton">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>100</x>
        <y>70</y>
-       <width>80</width>
-       <height>21</height>
+       <width>91</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
@@ -92,10 +98,10 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>70</y>
-       <width>81</width>
-       <height>16</height>
+       <x>10</x>
+       <y>80</y>
+       <width>91</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">

@@ -23,8 +23,6 @@ QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(ar
     }
 }
 
-QApplicationGlobal::~QApplicationGlobal(){ delete ControllerPtr; }
-
 Controller* QApplicationGlobal::GetController()
 {
     if(!ControllerPtr)

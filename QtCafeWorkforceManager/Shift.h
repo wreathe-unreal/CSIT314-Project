@@ -8,8 +8,8 @@ class Shift : public IEntity
 {
 
     public:
-        Shift();
-        ~Shift();
+        Shift(){};
+        ~Shift(){};
 
         int getShiftID() const;
 
@@ -43,13 +43,29 @@ class Shift : public IEntity
 
         bool HasOverlap(Shift otherShift)
         {
-            return RangeContainsStartInclusive(this->StartTime, this->EndTime, otherShift.StartTime)
+            return (RangeContainsStartInclusive(this->StartTime, this->EndTime, otherShift.StartTime)
                 || RangeContainsEndInclusive(this->StartTime, this->EndTime, otherShift.EndTime)
                 || RangeContainsStartInclusive(otherShift.StartTime, otherShift.EndTime, this->StartTime)
-                || RangeContainsEndInclusive(otherShift.StartTime, otherShift.EndTime, this->EndTime);
+                || RangeContainsEndInclusive(otherShift.StartTime, otherShift.EndTime, this->EndTime))
+                && otherShift.ShiftID != this->ShiftID;
         }
 
-        virtual void ToString() override { qDebug() << getShiftID();}
+        virtual void ToString() override { qDebug() << getShiftID(); }
+
+        //full constructor
+        Shift(int ID, QDate date, QTime startTime, QTime endTime, int maxChefs, int curChefs, int  maxCashiers, int curCashiers, int  maxWaiters, int curWaiters)
+        {
+            this->ShiftID = ID;
+            this->Date = date;
+            this->StartTime = startTime;
+            this->EndTime = endTime;
+            this->MaxChefs = maxChefs;
+            this->CurChefs = curChefs;
+            this->MaxCashiers = maxCashiers;
+            this->CurCashiers = curCashiers;
+            this->MaxWaiters = maxWaiters;
+            this->CurWaiters = curWaiters;
+        };
 
     private:
         int ShiftID;
@@ -63,7 +79,6 @@ class Shift : public IEntity
         int MaxWaiters;
         int CurWaiters;
 
-        Shift(QDate date, QTime startTime, QTime endTime) { this->Date = date; this->StartTime = startTime; this->EndTime = endTime;}
 
         bool RangeContainsEndInclusive(QTime start, QTime end, QTime value)
         {

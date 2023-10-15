@@ -6,6 +6,7 @@
 #include "UserDAO.h"
 #include <QSqlDatabase>
 
+#define DATABASE QApplicationGlobal::CafeDB
 
 class QApplicationGlobal : public QApplication
 {
@@ -13,7 +14,12 @@ class QApplicationGlobal : public QApplication
 
     public:
         QApplicationGlobal(int &argc, char **argv);
-        ~QApplicationGlobal();
+
+        ~QApplicationGlobal()
+        {
+            this->SafeDeleteController();
+            this->CafeDB.close();
+        };
 
         static std::string CurrentUsername;
         static QSqlDatabase CafeDB;

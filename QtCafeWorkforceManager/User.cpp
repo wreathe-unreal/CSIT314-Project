@@ -8,6 +8,11 @@
 #include <QJsonObject>
 #include <QDebug>
 
+
+User::User(){};
+
+User::~User(){};
+
 QString User::ToJSON()
 {
     QJsonObject jsonObject;
