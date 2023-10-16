@@ -11,11 +11,13 @@ class Slot : public IEntity
         Slot(){};
         ~Slot(){};
 
+        void setSlotID(int slotID);
         int getSlotID() const;
 
-        QDate getSlotDate() const;
-        void setSlotDate(const QDate &newSlotDate);
+        QDate getDate() const;
+        void setDate(QDate newSlotDate);
 
+        void setMaxChefs(int maxChefs);
         int getMaxChefs() const;
 
         int getCurChefs() const;
@@ -25,10 +27,12 @@ class Slot : public IEntity
         void setCurCashiers(int newCurCashiers);
 
         int getMaxCashiers() const;
+        void setMaxCashiers(int maxCashiers);
 
         int getCurWaiters() const;
         void setCurWaiters(int newCurWaiters);
 
+        void setMaxWaiters(int maxWaiters);
         int getMaxWaiters() const;
 
         bool isChefRoleFull() const;
@@ -37,17 +41,18 @@ class Slot : public IEntity
         bool isSlotFull() const;
 
         QTime getStartTime() const;
+        void setStartTime(QTime time) { this->StartTime = time;}
 
         QTime getEndTime() const;
-
+        void setEndTime(QTime time) { this->EndTime = time;}
 
         bool HasOverlap(Slot otherSlot)
         {
             return (RangeContainsStartInclusive(this->StartTime, this->EndTime, otherSlot.StartTime)
-                || RangeContainsEndInclusive(this->StartTime, this->EndTime, otherSlot.EndTime)
-                || RangeContainsStartInclusive(otherSlot.StartTime, otherSlot.EndTime, this->StartTime)
-                || RangeContainsEndInclusive(otherSlot.StartTime, otherSlot.EndTime, this->EndTime))
-                && otherSlot.SlotID != this->SlotID;
+                ||  RangeContainsEndInclusive(this->StartTime, this->EndTime, otherSlot.EndTime)
+                ||  RangeContainsStartInclusive(otherSlot.StartTime, otherSlot.EndTime, this->StartTime)
+                ||  RangeContainsEndInclusive(otherSlot.StartTime, otherSlot.EndTime, this->EndTime))
+                &&  otherSlot.SlotID != this->SlotID;
         }
 
         virtual void ToString() override { qDebug() << getSlotID(); }

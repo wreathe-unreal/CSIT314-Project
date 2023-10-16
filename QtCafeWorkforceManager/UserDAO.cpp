@@ -3,12 +3,15 @@
 #include "UserDAO.h"
 #include <QSqlQuery>
 #include "NewUser.h"
+#include <QVector.h>
+#include "Slot.h"
 #include "User.h"
 #include "Response.h"
 #include <QSqlError>
 #include <string>
 
 
+class Slot;
 
 Response UserDataAccessObject::Auth(QString username, QString password)
 {
@@ -532,4 +535,65 @@ ECommandResult Delete(std::string username)
     }
 
     return ECommandResult::ECR_SUCCESS;
+}
+
+
+QVector<Slot> GetSlotsByUser(std::string username)
+{
+    QVector<Slot> associatedSlots;
+
+    if (!DATABASE.isOpen()) {
+        qWarning() << "Error: connection with database failed" << DATABASE.lastError();
+        return associatedSlots; // Return empty QVector
+    }
+
+    QSqlQuery query;
+
+    // First, get the UserID for the provided username from the User table
+    query.prepare("SELECT UserID FROM User WHERE Username = ?");
+    query.addBindValue(QString::fromStdString(username));
+    if (!query.exec() || !query.next()) {
+        qWarning() << "Failed to execute User query or user not found:" << query.lastError();
+        return associatedSlots;
+    }
+
+    int userID = query.value(0).toInt();
+
+    // Then, get the SlotIDs from the UserSlot table for the found UserID
+    query.prepare("SELECT SlotID FROM UserSlot WHERE UserID = ?");
+    query.addBindValue(userID);
+    if (!query.exec()) {
+        qWarning() << "Failed to execute UserSlot query:" << query.lastError();
+        return associatedSlots;
+    }
+
+    while (query.next()) {
+        int slotID = query.value(0).toInt();
+
+        // Then, for each SlotID, get the Slot details from the Slot table
+        QSqlQuery slotQuery;
+        slotQuery.prepare("SELECT * FROM Slot WHERE SlotID = ?");
+        slotQuery.addBindValue(slotID);
+        if (slotQuery.exec() && slotQuery.next()) {
+            Slot slot;
+            slot.setSlotID(slotQuery.value("SlotID").toInt());
+            slot.setDate(QDate::fromString(slotQuery.value("SlotDate").toString(), "yyyy-MM-dd"));
+            slot.setStartTime(QTime::fromString(slotQuery.value("SlotStart").toString(), "hh:mm:ss"));
+            slot.setEndTime(QTime::fromString(slotQuery.value("SlotEnd").toString(), "hh:mm:ss"));
+            slot.setMaxChefs(slotQuery.value("MaxChefs").toInt());
+            slot.setCurChefs(slotQuery.value("CurChefs").toInt());
+            slot.setMaxCashiers(slotQuery.value("MaxCashiers").toInt());
+            slot.setCurCashiers(slotQuery.value("CurCashiers").toInt());
+            slot.setMaxWaiters(slotQuery.value("MaxWaiters").toInt());
+            slot.setCurWaiters(slotQuery.value("CurWaiters").toInt());
+
+            associatedSlots.push_back(slot);
+        }
+        else
+        {
+            qWarning() << "Failed to execute Slot query or slot not found:" << slotQuery.lastError();
+        }
+    }
+
+    return associatedSlots;
 }

@@ -9,20 +9,21 @@
 
 class SlotDataAccessObject
 {
-public:
-    SlotDataAccessObject(){};
-    ~SlotDataAccessObject(){};
+    public:
+        SlotDataAccessObject(){};
+        ~SlotDataAccessObject(){};
 
-    //uncoded
-    QVector<Slot> GetAllSlots();
-    ECommandResult InsertSlot(NewSlot newSlot);
-    ECommandResult AssignStaff(Slot slot, User user);
-    Slot GetSlot(Slot slot);
-    std::vector<User> GetStaff(Slot slot);
-    std::vector<User> GetUnassignedStaff(Slot slot);
-    std::vector<User> GetBidders(Slot slot);
-    std::vector<Slot> GetByDate(QDate date);
-    std::vector<Slot> GetByUser(std::string username);
+        //uncoded
+        QVector<Slot> GetAllSlots();
+        ECommandResult InsertSlot(NewSlot newSlot);
+        ECommandResult AssignStaff(Slot slot, User user);
+        Slot GetSlot(Slot slot);
+        std::vector<User> GetStaff(Slot slot);
+        std::vector<User> GetUnassignedStaff(Slot slot);
+        std::vector<User> GetBidders(Slot slot);
+        std::vector<Slot> GetByDate(QDate date);
+        std::vector<Slot> GetByUser(std::string username);
+        std::vector<User> GetUsersBySlotID(int SlotID);
 
 };
 

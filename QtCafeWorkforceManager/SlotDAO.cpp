@@ -4,8 +4,8 @@
 #include "QApplicationGlobal.h"
 #include "SlotDAO.h"
 #include <QSqlQuery>
-#include "Response.h"
 #include <QSqlError>
+#include <QString>
 #include <string>
 
 QVector<Slot> SlotDataAccessObject::GetAllSlots()
@@ -65,4 +65,52 @@ ECommandResult SlotDataAccessObject::InsertSlot(NewSlot newSlot)
     }
 
     return ECommandResult::ECR_SUCCESS;
+}
+
+std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
+{
+    std::vector<User> users;
+
+    QSqlDatabase db = QSqlDatabase::database(); // Assumes you have a default database connection set up
+    if (!db.isOpen()) {
+        qWarning() << "Error: connection with database failed" << db.lastError();
+        return users; // Return empty vector
+    }
+
+    QSqlQuery query;
+
+    // First, get the UserIDs from the UserSlot table
+    query.prepare("SELECT UserID FROM UserSlot WHERE SlotID = ?");
+    query.addBindValue(SlotID);
+    if (!query.exec()) {
+        qWarning() << "Failed to execute UserSlot query:" << query.lastError();
+        return users;
+    }
+
+    while (query.next()) {
+        int userID = query.value(0).toInt();
+
+        // Then, for each UserID, get the User details from the User table
+        QSqlQuery userQuery;
+        userQuery.prepare("SELECT * FROM User WHERE UserID = ?");
+        userQuery.addBindValue(userID);
+        if (userQuery.exec() && userQuery.next())
+        {
+            User user;
+            user.setUserID(userQuery.value("UserID").toInt()); //since we do not have UserID setter
+            user.setUsername(userQuery.value("Username").toString());
+            user.setPassword(userQuery.value("Password").toString());
+            user.setEUP(userQuery.value("EUP").toInt());
+            user.setESR(userQuery.value("ESR").toInt());
+            user.setMaxSlots(userQuery.value("MaxSlots").toInt());
+
+            users.push_back(user);
+        }
+        else
+        {
+            qWarning() << "Failed to execute User query or user not found:" << userQuery.lastError();
+        }
+    }
+
+    return users;
 }

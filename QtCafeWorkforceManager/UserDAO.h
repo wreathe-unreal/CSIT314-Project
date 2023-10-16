@@ -28,6 +28,7 @@ class UserDataAccessObject
         ECommandResult SetEUP(std::string username, EUserProfile profile);
         ECommandResult SetESR(std::string username, EStaffRole role);
         ECommandResult Delete(std::string username);
+        QVector<Slot> GetSlotsByUser(std::string username);
 
 
 };

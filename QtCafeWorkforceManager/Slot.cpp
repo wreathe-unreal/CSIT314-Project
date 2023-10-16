@@ -6,10 +6,24 @@ int Slot::getMaxChefs() const
     return MaxChefs;
 }
 
+void Slot::setSlotID(int slotID)
+{
+    this->SlotID = slotID;
+}
+
+void Slot::setMaxChefs(int maxChefs)
+{
+    this->MaxChefs = maxChefs;
+}
 
 int Slot::getSlotID() const
 {
     return SlotID;
+}
+
+void Slot::setDate(QDate newSlotDate)
+{
+    this->Date = newSlotDate;
 }
 
 
@@ -26,6 +40,11 @@ void Slot::setCurChefs(int newCurChefs)
 int Slot::getMaxCashiers() const
 {
     return MaxCashiers;
+}
+
+void Slot::setMaxCashiers(int maxCashiers)
+{
+    this->MaxCashiers = maxCashiers;
 }
 
 int Slot::getCurCashiers() const
@@ -54,7 +73,10 @@ void Slot::setCurWaiters(int newCurWaiters)
     CurWaiters = newCurWaiters;
 }
 
-
+void Slot::setMaxWaiters(int maxWaiters)
+{
+    this->MaxWaiters = maxWaiters;
+}
 
 bool Slot::isChefRoleFull() const
 {

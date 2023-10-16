@@ -20,16 +20,17 @@ class User : public IEntity
 
     public:
         User();
+
         ~User();
 
+        void setUserID(int ID) { this->UserID = ID; }
         int getUserID() { return UserID; }
-        //no setter needed...auto-incremented
 
         QString getUsername() { return Username; }
-        void setUsername(const QString &username);
+        void setUsername(QString username);
 
         QString getPassword() const { return Password; }
-        void setPassword(const QString &password);
+        void setPassword(QString password);
 
         int getEUP() const { return EUP;}
         void setEUP(int eup);
