@@ -9,6 +9,7 @@
 #include "Response.h"
 #include <QSqlError>
 #include <string>
+#include <QJsonObject>
 
 
 class Slot;
@@ -40,6 +41,25 @@ Response UserDataAccessObject::Auth(QString username, QString password)
         {
             //set global Username variable
             QApplicationGlobal::CurrentUsername = username.toStdString();
+
+            QSqlQuery queryActive(DATABASE);
+            queryActive.prepare("SELECT bActive FROM User WHERE Username = :username");
+            queryActive.bindValue(":username", username);
+
+            if(!queryActive.exec())
+            {
+                qWarning() << "ERROR: " << queryActive.lastError().text();
+                return Response(ECommandResult::ECR_FAILURE);
+            }
+            if(queryActive.next())
+            {
+                bool bActive = queryActive.value(0).toBool();
+
+                if(!bActive)
+                {
+                    return Response(ECommandResult::ECR_FAILURE);
+                }
+            }
 
             //query to get EUP info
             QSqlQuery query2(DATABASE);
@@ -93,6 +113,7 @@ QVector<User> UserDataAccessObject::GetByEUP(EUserProfile profile)
             user.EUP = query.value("EUP").toInt();
             user.ESR = query.value("ESR").toInt();
             user.MaxSlots = query.value("MaxSlots").toInt();
+            user.bActive = query.value("bActive").toBool();
 
             users.push_back(user);
         }
@@ -132,6 +153,7 @@ QVector<User> UserDataAccessObject::GetByESR(EStaffRole role)
             user.EUP = query.value("EUP").toInt();
             user.ESR = query.value("ESR").toInt();
             user.MaxSlots = query.value("MaxSlots").toInt();
+            user.bActive = query.value("bActive").toBool();
 
             users.push_back(user);
         }
@@ -144,7 +166,7 @@ QVector<User> UserDataAccessObject::GetByESR(EStaffRole role)
     return users;
 }
 
-int UserDataAccessObject::GetUserMaxSlots(std::string username)
+int UserDataAccessObject::GetMaxSlots(std::string username)
 {
     int maxSlots = -1; // Initialized to -1 to indicate that the value wasn't found
 
@@ -173,7 +195,7 @@ int UserDataAccessObject::GetUserMaxSlots(std::string username)
     return maxSlots;
 }
 
-EStaffRole UserDataAccessObject::GetUserESR(std::string username)
+EStaffRole UserDataAccessObject::GetESR(std::string username)
 {
     EStaffRole esr = EStaffRole::ESR_NonStaff;
 
@@ -203,7 +225,7 @@ EStaffRole UserDataAccessObject::GetUserESR(std::string username)
 }
 
 
-EUserProfile UserDataAccessObject::GetUserEUP(std::string username)
+EUserProfile UserDataAccessObject::GetEUP(std::string username)
 {
     EUserProfile eup = EUserProfile::EUP_CafeStaff; // Assuming you have a DEFAULT_VALUE or similar in your EStaffRole enum
 
@@ -298,12 +320,13 @@ ECommandResult UserDataAccessObject::Insert(NewUser newUser)
 
     // Insert the new user
     QSqlQuery queryInsert;
-    queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots) VALUES (:username, :password, :eup, :esr, :maxslots)");
+    queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots, bActive) VALUES (:username, :password, :eup, :esr, :maxslots, :active)");
     queryInsert.bindValue(":username", newUser.Username);
     queryInsert.bindValue(":password", newUser.Password);
     queryInsert.bindValue(":eup", newUser.EUP);
     queryInsert.bindValue(":esr", newUser.ESR);
     queryInsert.bindValue(":maxslots", 0);
+    queryInsert.bindValue(":active", 1);
 
     if (queryInsert.exec())
     {
@@ -336,12 +359,13 @@ ECommandResult UserDataAccessObject::UpdateOrInsert(User user)
         {
             // User exists, proceed with update
             QSqlQuery queryUpdate;
-            queryUpdate.prepare("UPDATE User SET Password = :password, EUP = :eup, ESR = :esr, MaxSlots = :maxslots WHERE Username = :username");
+            queryUpdate.prepare("UPDATE User SET Password = :password, EUP = :eup, ESR = :esr, MaxSlots = :maxslots, bActive = :active WHERE Username = :username");
             queryUpdate.bindValue(":username", user.Username);
             queryUpdate.bindValue(":password", user.Password);
             queryUpdate.bindValue(":eup", user.EUP);
             queryUpdate.bindValue(":esr", user.ESR);
             queryUpdate.bindValue(":maxslots", user.MaxSlots);
+            queryUpdate.bindValue(":active", user.bActive);
 
             if (queryUpdate.exec())
             {
@@ -357,12 +381,13 @@ ECommandResult UserDataAccessObject::UpdateOrInsert(User user)
         {
             // User does not exist, proceed with insertion
             QSqlQuery queryInsert;
-            queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots) VALUES (:username, :password, :eup, :esr, :maxslots)");
+            queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots, bActive) VALUES (:username, :password, :eup, :esr, :maxslots, :active)");
             queryInsert.bindValue(":username", user.Username);
             queryInsert.bindValue(":password", user.Password);
             queryInsert.bindValue(":eup", user.EUP);
             queryInsert.bindValue(":esr", user.ESR);
             queryInsert.bindValue(":maxslots", user.MaxSlots);
+            queryInsert.bindValue(":active", user.bActive);
 
             if (queryInsert.exec())
             {
@@ -424,6 +449,64 @@ ECommandResult UserDataAccessObject::SetMaxSlots(const std::string username, int
     else
     {
         qWarning() << "Check user query failed: " << queryCheck.lastError().text();
+        return ECommandResult::ECR_FAILURE;
+    }
+}
+
+Response UserDataAccessObject::GetbActive(string username)
+{   if (!DATABASE.isOpen())
+    {
+        qWarning("Error: connection with database failed");
+        return Response(ECommandResult::ECR_FAILURE);
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT EUP FROM User WHERE Username = :username");
+    query.bindValue(":username", QString::fromStdString(username));
+
+    if (query.exec())
+    {
+        if (query.next())
+        {
+            QJsonObject IsActiveJson;
+            IsActiveJson["bActive"] = query.value(0).toJsonValue();
+
+            return Response(ECommandResult::ECR_FAILURE, IsActiveJson);
+        }
+    }
+    else
+    {
+        qWarning() << "GetUserEUP() ERROR: " << query.lastError().text();
+    }
+}
+
+ECommandResult UserDataAccessObject::SuspendUser(string username)
+{
+    if (!DATABASE.isOpen())
+    {
+        qWarning("Error: connection with database failed");
+        return ECommandResult::ECR_FAILURE;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT EUP FROM User WHERE Username = :username");
+    query.bindValue(":username", QString::fromStdString(username));
+
+    if (query.exec())
+    {
+        if (query.next())
+        {
+            // User exists, proceed with updating the EUP column
+            QSqlQuery queryUpdate;
+            queryUpdate.prepare("UPDATE User SET bActive = :active WHERE Username = :username");
+            queryUpdate.bindValue(":active", 0);
+
+            return ECommandResult::ECR_SUCCESS;
+        }
+    }
+    else
+    {
+        qWarning() << "GetUserEUP() ERROR: " << query.lastError().text();
         return ECommandResult::ECR_FAILURE;
     }
 }

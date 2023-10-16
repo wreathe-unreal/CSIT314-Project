@@ -41,12 +41,16 @@ class User : public IEntity
         int getMaxSlots() const {  return MaxSlots; }
         void setMaxSlots(int maxSlots);
 
+        bool getbActive() const { return bActive; }
+        void setbActive(bool bIsActive) { this->bActive = bIsActive;}
+
         int UserID;
         QString Username;
         QString Password;
         int EUP; // Enum value EUserProfile
         int ESR; // Enum value EStaffRole
         int MaxSlots;
+        bool bActive;
 
         QString ToJSON();
 

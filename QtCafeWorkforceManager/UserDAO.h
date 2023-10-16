@@ -19,9 +19,9 @@ class UserDataAccessObject
         QVector<User> GetByESR(EStaffRole role);
         QVector<User> GetByEUP(EUserProfile profile);
         Response Auth(QString username, QString password); //response json = EUP
-        int GetUserMaxSlots(std::string username);
-        EUserProfile GetUserEUP(std::string username);
-        EStaffRole GetUserESR(std::string username);
+        int GetMaxSlots(std::string username);
+        EUserProfile GetEUP(std::string username);
+        EStaffRole GetESR(std::string username);
         User GetUser(const std::string& username);
         ECommandResult UpdateOrInsert(User user);
         ECommandResult SetMaxSlots(std::string username, int maxSlots);
@@ -29,6 +29,8 @@ class UserDataAccessObject
         ECommandResult SetESR(std::string username, EStaffRole role);
         ECommandResult Delete(std::string username);
         QVector<Slot> GetSlotsByUser(std::string username);
+        Response GetbActive(std::string username);
+        ECommandResult SuspendUser(std::string username);
 
 
 };
