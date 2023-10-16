@@ -5,7 +5,7 @@
 std::string QApplicationGlobal::CurrentUsername;
 QSqlDatabase QApplicationGlobal::CafeDB;
 UserDataAccessObject QApplicationGlobal::UserDAO;
-ShiftDataAccessObject QApplicationGlobal::ShiftDAO;
+SlotDataAccessObject QApplicationGlobal::SlotDAO;
 Controller* QApplicationGlobal::ControllerPtr = nullptr;
 
 QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(argc, argv)

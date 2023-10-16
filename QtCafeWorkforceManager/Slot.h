@@ -1,20 +1,20 @@
-﻿// Shift.h
-#ifndef SHIFT_H
-#define SHIFT_H
+// Slot.h
+#ifndef SLOT_H
+#define SLOT_H
 #include "Entity.h"
 #include <QDate>
 
-class Shift : public IEntity
+class Slot : public IEntity
 {
 
     public:
-        Shift(){};
-        ~Shift(){};
+        Slot(){};
+        ~Slot(){};
 
-        int getShiftID() const;
+        int getSlotID() const;
 
-        QDate getShiftDate() const;
-        void setShiftDate(const QDate &newShiftDate);
+        QDate getSlotDate() const;
+        void setSlotDate(const QDate &newSlotDate);
 
         int getMaxChefs() const;
 
@@ -34,28 +34,28 @@ class Shift : public IEntity
         bool isChefRoleFull() const;
         bool isCashierRoleFull() const;
         bool isWaiterRoleFull() const;
-        bool isShiftFull() const;
+        bool isSlotFull() const;
 
         QTime getStartTime() const;
 
         QTime getEndTime() const;
 
 
-        bool HasOverlap(Shift otherShift)
+        bool HasOverlap(Slot otherSlot)
         {
-            return (RangeContainsStartInclusive(this->StartTime, this->EndTime, otherShift.StartTime)
-                || RangeContainsEndInclusive(this->StartTime, this->EndTime, otherShift.EndTime)
-                || RangeContainsStartInclusive(otherShift.StartTime, otherShift.EndTime, this->StartTime)
-                || RangeContainsEndInclusive(otherShift.StartTime, otherShift.EndTime, this->EndTime))
-                && otherShift.ShiftID != this->ShiftID;
+            return (RangeContainsStartInclusive(this->StartTime, this->EndTime, otherSlot.StartTime)
+                || RangeContainsEndInclusive(this->StartTime, this->EndTime, otherSlot.EndTime)
+                || RangeContainsStartInclusive(otherSlot.StartTime, otherSlot.EndTime, this->StartTime)
+                || RangeContainsEndInclusive(otherSlot.StartTime, otherSlot.EndTime, this->EndTime))
+                && otherSlot.SlotID != this->SlotID;
         }
 
-        virtual void ToString() override { qDebug() << getShiftID(); }
+        virtual void ToString() override { qDebug() << getSlotID(); }
 
         //full constructor
-        Shift(int ID, QDate date, QTime startTime, QTime endTime, int maxChefs, int curChefs, int  maxCashiers, int curCashiers, int  maxWaiters, int curWaiters)
+        Slot(int ID, QDate date, QTime startTime, QTime endTime, int maxChefs, int curChefs, int  maxCashiers, int curCashiers, int  maxWaiters, int curWaiters)
         {
-            this->ShiftID = ID;
+            this->SlotID = ID;
             this->Date = date;
             this->StartTime = startTime;
             this->EndTime = endTime;
@@ -68,7 +68,7 @@ class Shift : public IEntity
         };
 
     private:
-        int ShiftID;
+        int SlotID;
         QDate Date;
         QTime StartTime;
         QTime EndTime;
@@ -99,4 +99,4 @@ class Shift : public IEntity
         }
 };
 
-#endif // SHIFT_H
+#endif // SLOT_H

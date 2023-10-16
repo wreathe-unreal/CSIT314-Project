@@ -24,7 +24,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         Commands.cpp Controller.cpp Controller.h
-        Bid.cpp Bid.h Shift.cpp Shift.h
+        Bid.cpp Bid.h Slot.cpp Slot.h
         Commands.h
         CafeResources.qrc
         Enums.h
@@ -39,16 +39,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         User.h
         User.cpp
         UserDAO.h
-        ShiftDAO.h
+        SlotDAO.h
         UserDAO.cpp
         Response.h
         SysAdminWindow.h SysAdminWindow.cpp SysAdminWindow.ui
         CafeOwnerWindow.h CafeOwnerWindow.cpp CafeOwnerWindow.ui
         CafeManagerWindow.h CafeManagerWindow.cpp CafeManagerWindow.ui
         CafeStaffWindow.h CafeStaffWindow.cpp CafeStaffWindow.ui
-        NewShift.h
+        NewSlot.h
         NewUser.h
-        ShiftDAO.cpp
+        SlotDAO.cpp
 
 
 

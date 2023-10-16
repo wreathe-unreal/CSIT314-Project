@@ -2,7 +2,7 @@
 #define QAPPLICATIONGLOBAL_H
 #include <QApplication>
 #include "Controller.h"
-#include "ShiftDAO.h"
+#include "SlotDAO.h"
 #include "UserDAO.h"
 #include <QSqlDatabase>
 
@@ -25,7 +25,7 @@ class QApplicationGlobal : public QApplication
         static QSqlDatabase CafeDB;
         static Controller* ControllerPtr;
         static UserDataAccessObject UserDAO;
-        static ShiftDataAccessObject ShiftDAO;
+        static SlotDataAccessObject SlotDAO;
 
         static Controller* GetController();
         static void SafeDeleteController();

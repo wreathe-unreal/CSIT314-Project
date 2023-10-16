@@ -15,9 +15,7 @@ Response UserDataAccessObject::Auth(QString username, QString password)
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        QJsonObject jsonObj;
-        jsonObj["foo"] = 5;
-        return Response(ECommandResult::ECR_FAILURE, jsonObj);
+        return Response(ECommandResult::ECR_FAILURE);
     }
 
     QSqlQuery query(DATABASE);

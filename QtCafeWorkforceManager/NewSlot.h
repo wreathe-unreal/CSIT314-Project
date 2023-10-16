@@ -1,7 +1,7 @@
-// NewShift.h
-#ifndef NEWSHIFT_H
-#define NEWSHIFT_H
-#include "Shift.h"
+// NewSlot.h
+#ifndef NEWSLOT_H
+#define NEWSLOT_H
+#include "Slot.h"
 #include <QDate>
 #include <QTime>
 
@@ -24,12 +24,12 @@ inline bool RangeContainsStartInclusive(QTime start, QTime end, QTime value)
     return false;
 }
 
-class NewShift : public IEntity
+class NewSlot : public IEntity
 {
 
 public:
-    NewShift();
-    ~NewShift();
+    NewSlot();
+    ~NewSlot();
 
     QDate Date;
     QTime StartTime;
@@ -41,7 +41,7 @@ public:
     int MaxWaiters;
     int CurWaiters;
 
-    NewShift(QDate date, QTime startTime, QTime endTime, int maxChefs, int maxCashiers, int maxWaiters)
+    NewSlot(QDate date, QTime startTime, QTime endTime, int maxChefs, int maxCashiers, int maxWaiters)
     {
         this->Date = date;
         this->StartTime = startTime;
@@ -54,15 +54,15 @@ public:
         this->CurWaiters = 0;
     }
 
-    bool HasOverlap(Shift otherShift)
+    bool HasOverlap(Slot otherSlot)
     {
-        return RangeContainsStartInclusive(this->StartTime, this->EndTime, otherShift.getStartTime())
-               || RangeContainsEndInclusive(this->StartTime, this->EndTime, otherShift.getEndTime())
-               || RangeContainsStartInclusive(otherShift.getStartTime(), otherShift.getEndTime(), this->StartTime)
-               || RangeContainsEndInclusive(otherShift.getStartTime(), otherShift.getEndTime(), this->EndTime);
+        return RangeContainsStartInclusive(this->StartTime, this->EndTime, otherSlot.getStartTime())
+               || RangeContainsEndInclusive(this->StartTime, this->EndTime, otherSlot.getEndTime())
+               || RangeContainsStartInclusive(otherSlot.getStartTime(), otherSlot.getEndTime(), this->StartTime)
+               || RangeContainsEndInclusive(otherSlot.getStartTime(), otherSlot.getEndTime(), this->EndTime);
     }
 
     virtual void ToString() override{ qDebug() << this->Date << " " << this->StartTime << " to " << this->EndTime;};
 };
 
-#endif // NEWSHIFT_H
+#endif // NEWSLOT_H
