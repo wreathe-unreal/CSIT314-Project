@@ -10,13 +10,14 @@
 class SlotDataAccessObject
 {
     public:
+    EDatabaseResult Result;
         SlotDataAccessObject(){};
         ~SlotDataAccessObject(){};
 
         //uncoded
         QVector<Slot> GetAllSlots();
-        ECommandResult InsertSlot(NewSlot newSlot);
-        ECommandResult AssignStaff(Slot slot, User user);
+        void InsertSlot(NewSlot newSlot);
+        void AssignStaff(Slot slot, User user);
         Slot GetSlot(Slot slot);
         std::vector<User> GetStaff(Slot slot);
         std::vector<User> GetUnassignedStaff(Slot slot);

@@ -11,6 +11,12 @@
 QVector<Slot> SlotDataAccessObject::GetAllSlots()
 {
     QVector<Slot> Slots;
+
+    if (!DATABASE.isOpen()) {
+        qWarning() << "Error: connection with database failed" << DATABASE.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+    }
+
     QSqlQuery query("SELECT * FROM Slot");
     while (query.next())
     {
@@ -29,10 +35,11 @@ QVector<Slot> SlotDataAccessObject::GetAllSlots()
         Slots.push_back(Slot);
     }
 
+    this->Result = EDatabaseResult::EDR_SUCCESS;
     return Slots;
 }
 
-ECommandResult SlotDataAccessObject::InsertSlot(NewSlot newSlot)
+void SlotDataAccessObject::InsertSlot(NewSlot newSlot)
 {
     QVector<Slot> existingSlots = GetAllSlots();
     for (const Slot &existingSlot : existingSlots)
@@ -40,7 +47,7 @@ ECommandResult SlotDataAccessObject::InsertSlot(NewSlot newSlot)
         if (newSlot.HasOverlap(existingSlot))
         {
             qDebug() << "Error: The new Slot overlaps with an existing Slot.";
-            return ECommandResult::ECR_FAILURE;
+            this->Result = EDatabaseResult::EDR_FAILURE;
         }
     }
 
@@ -61,19 +68,19 @@ ECommandResult SlotDataAccessObject::InsertSlot(NewSlot newSlot)
     if (!query.exec())
     {
         qDebug() << "Error inserting Slot:" << query.lastError();
-        return ECommandResult::ECR_FAILURE;
+        this->Result = EDatabaseResult::EDR_FAILURE;
     }
 
-    return ECommandResult::ECR_SUCCESS;
+    this->Result = EDatabaseResult::EDR_SUCCESS;
 }
 
 std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
 {
     std::vector<User> users;
 
-    QSqlDatabase db = QSqlDatabase::database(); // Assumes you have a default database connection set up
-    if (!db.isOpen()) {
-        qWarning() << "Error: connection with database failed" << db.lastError();
+    if (!DATABASE.isOpen()) {
+        qWarning() << "Error: connection with database failed" << DATABASE.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
         return users; // Return empty vector
     }
 
@@ -84,6 +91,7 @@ std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
     query.addBindValue(SlotID);
     if (!query.exec()) {
         qWarning() << "Failed to execute UserSlot query:" << query.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
         return users;
     }
 
@@ -109,8 +117,10 @@ std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
         else
         {
             qWarning() << "Failed to execute User query or user not found:" << userQuery.lastError();
+            this->Result = EDatabaseResult::EDR_FAILURE;
+
         }
     }
-
+    this->Result = EDatabaseResult::EDR_SUCCESS;
     return users;
 }

@@ -11,8 +11,7 @@ using namespace std;
 
 class ICommand
 {
-    public:
-    virtual ECommandType GetType() = 0;//dummy function to make abstract
+    public:    virtual ECommandType GetType() = 0;//dummy function to make abstract
     virtual ~ICommand(){};
 };
 

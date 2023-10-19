@@ -17,18 +17,13 @@ class QApplicationGlobal : public QApplication
 
         ~QApplicationGlobal()
         {
-            this->SafeDeleteController();
             this->CafeDB.close();
         };
 
         static std::string CurrentUsername;
         static QSqlDatabase CafeDB;
-        static Controller* ControllerPtr;
         static UserDataAccessObject UserDAO;
         static SlotDataAccessObject SlotDAO;
-
-        static Controller* GetController();
-        static void SafeDeleteController();
 };
 
 #endif // QAPPLICATIONGLOBAL_H

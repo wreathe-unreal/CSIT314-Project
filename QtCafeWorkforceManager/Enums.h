@@ -2,10 +2,11 @@
 #define ENUMS_H
 #include <stdexcept>
 
-enum class ECommandResult
+enum class EDatabaseResult
 {
-    ECR_SUCCESS,
-    ECR_FAILURE
+    EDR_UNINITIALIZED,
+    EDR_SUCCESS,
+    EDR_FAILURE
 };
 
 enum class EShiftStatus

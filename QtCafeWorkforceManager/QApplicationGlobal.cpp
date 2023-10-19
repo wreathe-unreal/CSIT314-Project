@@ -6,7 +6,6 @@ std::string QApplicationGlobal::CurrentUsername;
 QSqlDatabase QApplicationGlobal::CafeDB;
 UserDataAccessObject QApplicationGlobal::UserDAO;
 SlotDataAccessObject QApplicationGlobal::SlotDAO;
-Controller* QApplicationGlobal::ControllerPtr = nullptr;
 
 QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(argc, argv)
 {
@@ -22,22 +21,3 @@ QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(ar
         qDebug() << "Database: connection ok on init";
     }
 }
-
-Controller* QApplicationGlobal::GetController()
-{
-    if(!ControllerPtr)
-    {
-        ControllerPtr = new Controller();
-    }
-    return ControllerPtr;
-}
-
-void QApplicationGlobal::SafeDeleteController()
-{
-    if(ControllerPtr != nullptr)
-    {
-        delete ControllerPtr;
-        ControllerPtr = nullptr;
-    }
-};
-

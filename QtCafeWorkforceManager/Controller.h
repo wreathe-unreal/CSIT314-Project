@@ -1,17 +1,29 @@
 ﻿#pragma once
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
-#include "Enums.h"
-#include "Commands.h"
-#include "Response.h"
 
-class Controller
+#include "Enums.h"
+#include <QString>
+
+class IController
 {
     public:
-    Response HandleCommand(ICommand* cmd);
-    private:
-    Response HandleAuthorize(Authorize* cmd);
+    IController(){};
+   ~IController(){};
+};
+
+class AuthorizeController : public IController
+{
+   public:
+    QString Username;
+    QString Password;
+
+   AuthorizeController(QString username, QString password)
+   {
+       Username = username;
+       Password = password;
+   }
+
+   EUserProfile Execute();
 
 };
 
-#endif
+

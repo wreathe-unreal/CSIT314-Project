@@ -23,17 +23,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(QtCafeWorkforceManager
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        Commands.cpp Controller.cpp Controller.h
+        Controller.cpp Controller.h
         Bid.cpp Bid.h Slot.cpp Slot.h
-        Commands.h
         CafeResources.qrc
         Enums.h
         Enums.cpp
         QApplicationGlobal.h
         QApplicationGlobal.cpp
-
-
-
         Entity.h
         Entity.cpp
         User.h
@@ -41,7 +37,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         UserDAO.h
         SlotDAO.h
         UserDAO.cpp
-        Response.h
         SysAdminWindow.h SysAdminWindow.cpp SysAdminWindow.ui
         CafeOwnerWindow.h CafeOwnerWindow.cpp CafeOwnerWindow.ui
         CafeManagerWindow.h CafeManagerWindow.cpp CafeManagerWindow.ui
@@ -49,12 +44,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         NewSlot.h
         NewUser.h
         SlotDAO.cpp
-
-
-
-
-
-
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET QtCafeWorkforceManager APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

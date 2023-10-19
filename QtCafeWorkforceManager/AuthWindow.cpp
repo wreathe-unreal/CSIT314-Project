@@ -1,3 +1,4 @@
+
 #include "AuthWindow.h"
 #include "./ui_AuthWindow.h"
 #include <iostream>
@@ -12,6 +13,7 @@
 #include "CafeOwnerWindow.h"
 #include "QApplicationGlobal.h"
 #include "SysAdminWindow.h"
+
 
 AuthWindow::AuthWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::AuthWindow)
 {
@@ -57,15 +59,10 @@ AuthWindow::~AuthWindow()
 
 void AuthWindow::on_LoginButton_clicked()
 {
-    Authorize* AuthCmd = new Authorize();
-    AuthCmd->Username = ui->QLE_Username->text();
-    AuthCmd->Password = ui->QLE_Password->text();
+    AuthorizeController AuthCtrl(ui->QLE_Username->text(), ui->QLE_Password->text());
+    EUserProfile userProfile = AuthCtrl.Execute();
 
-    //create controller - handle command - delete controller
-    Response AuthResponse = QApplicationGlobal::GetController()->HandleCommand(AuthCmd);
-    QApplicationGlobal::SafeDeleteController();
-
-    if(AuthResponse.Result == ECommandResult::ECR_FAILURE)
+    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_FAILURE)
     {
         QPalette palette;
         palette.setColor(QPalette::Text, QColorConstants::Red);
@@ -74,32 +71,28 @@ void AuthWindow::on_LoginButton_clicked()
         ui->InvalidLoginLabel->setVisible(true);
     }
 
-    if(AuthResponse.Result == ECommandResult::ECR_SUCCESS)
+    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        QJsonObject jsonObj = AuthResponse.getJsonObject();
-        EUserProfile UserProfile = IntToEUserProfile(jsonObj.value("EUP").toInt());
-
-        SysAdminWindow* SysAdminView;
-        CafeOwnerWindow* CafeOwnerView;
-        CafeManagerWindow* CafeManagerView;
-        CafeStaffWindow* CafeStaffView;
-
-        switch(UserProfile)
+        switch(userProfile)
         {
             case EUserProfile::EUP_SysAdmin:
+                SysAdminWindow* SysAdminView;
                 SysAdminView = new SysAdminWindow;
                 SysAdminView->setStyleSheet("SysAdminWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
                 SysAdminView->show();
                 break;
             case EUserProfile::EUP_CafeOwner:
+                CafeOwnerWindow* CafeOwnerView;
                 CafeOwnerView = new CafeOwnerWindow;
                 CafeOwnerView->show();
                 break;
             case EUserProfile::EUP_CafeManager:
+                CafeManagerWindow* CafeManagerView;
                 CafeManagerView = new CafeManagerWindow;
                 CafeManagerView->show();
                 break;
             case EUserProfile::EUP_CafeStaff:
+                CafeStaffWindow* CafeStaffView;
                 CafeStaffView = new CafeStaffWindow;
                 CafeStaffView->show();
                 break;
@@ -107,6 +100,7 @@ void AuthWindow::on_LoginButton_clicked()
                 break;
         }
 
+        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
         this->close(); // close the main window
     }
 }

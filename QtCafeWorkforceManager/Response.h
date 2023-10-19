@@ -1,47 +1,25 @@
-#ifndef RESPONSE_H
-#define RESPONSE_H
+#pragma once
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include "Enums.h"
+#include "User.h"
 #include <QString>
+#include <any>
+
 class Response
 {
     public:
-        ECommandResult Result;
-        QString Json;
-
-        Response(ECommandResult ecr)
-        {
-            Json = "";
-            Result = ecr;
-        }
-        Response(QString json)
-        {
-            Json = json;
-            Result = ECommandResult::ECR_SUCCESS;
-        }
-        Response(ECommandResult ecr, QJsonObject json)
-        {
-            Json = QJsonDocument(json).toJson();
-            Result = ecr;
-        }
-
-        ECommandResult getResult() const;
-        void setResult(ECommandResult newResult);
-        QJsonObject getJsonObject() const;
-        void setJson(const QString &newJson);
+        EDatabaseResult Result;
 };
 
-inline QJsonObject Response::getJsonObject() const
+class AuthorizeResponse : public Response
 {
-        return QJsonDocument::fromJson(Json.toUtf8()).object();
-}
-
-inline ECommandResult Response::getResult() const
-{
-        return Result;
-}
-
-
-
-#endif // RESPONSE_H
+    public:
+        EUserProfile Profile;
+        AuthorizeResponse (EDatabaseResult result, EUserProfile profile)
+        {
+            this->Result = result;
+            this->Profile = profile;
+        }
+};
