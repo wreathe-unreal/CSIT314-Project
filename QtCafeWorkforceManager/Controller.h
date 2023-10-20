@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Enums.h"
+#include "User.h"
 #include <QString>
 
 class IController
@@ -26,4 +27,11 @@ class AuthorizeController : public IController
 
 };
 
+
+class GetUsersController : public IController
+{
+   public:
+   QVector<User> Execute();
+
+};
 

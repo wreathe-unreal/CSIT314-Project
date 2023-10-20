@@ -1,5 +1,8 @@
+#pragma once
+
 #ifndef ENUMS_H
 #define ENUMS_H
+#include <QString>
 #include <stdexcept>
 
 enum class EDatabaseResult
@@ -9,7 +12,7 @@ enum class EDatabaseResult
     EDR_FAILURE
 };
 
-enum class EShiftStatus
+enum class EBidStatus
 {
     EBS_PENDING,
     EBS_APPROVED,
@@ -24,14 +27,6 @@ enum class EUserProfile
     EUP_CafeStaff //3
 };
 
-enum ECommandType
-{
-    ECT_UnknownCommand,
-    ECT_Update,
-    ECT_Authorize,
-    ECT_Create,
-};
-
 enum class EStaffRole
 {
     ESR_NonStaff, //0
@@ -39,6 +34,16 @@ enum class EStaffRole
     ESR_Cashier, //2
     ESR_Waiter //3
 };
+
+
+
+QString EDatabaseResultToQString(EDatabaseResult edr);
+
+QString EStaffRoleToQString(EStaffRole esr);
+
+QString EBidStatusToQString(EBidStatus ebs);
+
+QString EUserProfileToQString(EUserProfile eup);
 
 EUserProfile IntToEUserProfile(int input);
 
@@ -48,7 +53,7 @@ int EStaffRoleToInt(EStaffRole UserRole);
 
 EStaffRole IntToEStaffRole(int input);
 
-EShiftStatus IntToEShiftStatus(int input);
+EBidStatus IntToEShiftStatus(int input);
 
-int EShiftStatusToInt(EShiftStatus ShiftStatus);
+int EShiftStatusToInt(EBidStatus ShiftStatus);
 #endif // ENUMS_H

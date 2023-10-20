@@ -270,7 +270,7 @@ User UserDataAccessObject::GetUser(const std::string& username)
     }
 
     QSqlQuery query;
-    query.prepare("SELECT UserID, Username, Password, EUP, ESR, MaxSlots FROM User WHERE Username = :username");
+    query.prepare("SELECT UserID, Username, Password, EUP, ESR, MaxSlots, bActive FROM User WHERE Username = :username");
     query.bindValue(":username", QString::fromStdString(username));
 
     if (query.exec())
@@ -286,6 +286,7 @@ User UserDataAccessObject::GetUser(const std::string& username)
             user.EUP = query.value(3).toInt();
             user.ESR = query.value(4).toInt();
             user.MaxSlots = query.value(5).toInt();
+            user.bActive = query.value(6).toBool();
 
             return user;
         }
@@ -627,6 +628,44 @@ void UserDataAccessObject::Delete(std::string username)
     this->Result = EDatabaseResult::EDR_SUCCESS;
 }
 
+QVector<User> UserDataAccessObject::GetUsers()
+{
+    QVector<User> users; // Vector to store the retrieved User objects
+
+    if (!DATABASE.isOpen())
+    {
+        qWarning("Error: connection with database failed");
+        Result = EDatabaseResult::EDR_FAILURE;
+        return users; // Return the empty vector
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM User");
+
+    if (query.exec())
+    {
+        while (query.next())
+        {
+            User user;
+            user.UserID = query.value("UserID").toInt();
+            user.Username = query.value("Username").toString();
+            user.Password = query.value("Password").toString();
+            user.EUP = query.value("EUP").toInt();
+            user.ESR = query.value("ESR").toInt();
+            user.MaxSlots = query.value("MaxSlots").toInt();
+            user.bActive = query.value("bActive").toBool();
+
+            users.push_back(user);
+        }
+    }
+    else
+    {
+        Result = EDatabaseResult::EDR_FAILURE;
+        qWarning() << "GetUsers() ERROR: " << query.lastError().text();
+    }
+    Result = EDatabaseResult::EDR_SUCCESS;
+    return users;
+}
 
 QVector<Slot> UserDataAccessObject::GetSlotsByUser(std::string username)
 {

@@ -1,5 +1,4 @@
-﻿#include "Commands.h"
-#include "QApplicationGlobal.h"
+﻿#include "QApplicationGlobal.h"
 #include "qcryptographichash.h"
 #include <QString>
 
@@ -13,3 +12,8 @@ EUserProfile AuthorizeController::Execute()
 }
 
 
+
+QVector<User> GetUsersController::Execute()
+{
+    return QApplicationGlobal::UserDAO.GetUsers();
+}

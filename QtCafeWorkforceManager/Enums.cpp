@@ -1,4 +1,49 @@
 #include "Enums.h"
+QString EUserProfileToQString(EUserProfile eup)
+{
+    switch(eup)
+    {
+    case EUserProfile::EUP_CafeManager: return "Manager";
+    case EUserProfile::EUP_SysAdmin: return "SysAdmin";
+    case EUserProfile::EUP_CafeStaff: return "Staff";
+    case EUserProfile::EUP_CafeOwner: return "Owner";
+    default: return "Unknown";
+    }
+}
+
+QString EBidStatusToQString(EBidStatus ebs)
+{
+    switch(ebs)
+    {
+    case EBidStatus::EBS_APPROVED: return "Approved";
+    case EBidStatus::EBS_PENDING: return "Pending";
+    case EBidStatus::EBS_REJECTED: return "Rejected";
+    default: return "Unknown";
+    }
+}
+
+QString EStaffRoleToQString(EStaffRole esr)
+{
+    switch(esr)
+    {
+    case EStaffRole::ESR_Cashier: return "Cashier";
+    case EStaffRole::ESR_Chef: return "Chef";
+    case EStaffRole::ESR_Waiter: return "Waiter";
+    case EStaffRole::ESR_NonStaff: return "Non-Staff";
+    default: return "Unknown";
+    }
+}
+
+QString EDatabaseResultToQString(EDatabaseResult edr)
+{
+    switch(edr)
+    {
+    case EDatabaseResult::EDR_FAILURE: return "Failure";
+    case EDatabaseResult::EDR_SUCCESS: return "Success";
+    case EDatabaseResult::EDR_UNINITIALIZED: return "Uninitialized";
+    default: return "Unknown";
+    }
+}
 
 EUserProfile IntToEUserProfile(int input)
 {
@@ -48,24 +93,24 @@ EStaffRole IntToEStaffRole(int input)
     }
 }
 
-EShiftStatus IntToEShiftStatus(int input)
+EBidStatus IntToEShiftStatus(int input)
 {
     switch(input)
     {
-    case 0: return EShiftStatus::EBS_PENDING;
-    case 1: return EShiftStatus::EBS_APPROVED;
-    case 2: return EShiftStatus::EBS_REJECTED;
+    case 0: return EBidStatus::EBS_PENDING;
+    case 1: return EBidStatus::EBS_APPROVED;
+    case 2: return EBidStatus::EBS_REJECTED;
     default: throw std::invalid_argument("Invalid shift status");
     }
 }
 
-int EShiftStatusToInt(EShiftStatus ShiftStatus)
+int EShiftStatusToInt(EBidStatus ShiftStatus)
 {
     switch(ShiftStatus)
     {
-    case EShiftStatus::EBS_PENDING: return 0;
-    case EShiftStatus::EBS_APPROVED: return 1;
-    case EShiftStatus::EBS_REJECTED: return 2;
+    case EBidStatus::EBS_PENDING: return 0;
+    case EBidStatus::EBS_APPROVED: return 1;
+    case EBidStatus::EBS_REJECTED: return 2;
     default: throw std::invalid_argument("Invalid user type");
     }
 }

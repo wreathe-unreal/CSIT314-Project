@@ -4,8 +4,6 @@
 #include <iostream>
 #include <string>
 #include "CafeStaffWindow.h"
-#include "Commands.h"
-#include "MainWindow.h"
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -21,33 +19,6 @@ AuthWindow::AuthWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::AuthWin
 
     ui->InvalidLoginLabel->setVisible(false);
     ui->QLE_Password->setEchoMode(QLineEdit::Password);
-
-//    ui->tableWidget->setColumnCount(4);
-
-//    QStringList headers;
-//    headers << "User ID" << "Username" << "Hashed Password" << "Role";
-
-//    ui->tableWidget->setHorizontalHeaderLabels(headers);
-
-//    CSVSerializer::DeserializeUsers();
-
-//    for (const auto& user : QApplicationGlobal::Users)
-//    {
-//        int row = ui->tableWidget->rowCount();
-//        ui->tableWidget->insertRow(row); // Insert a new row
-
-//        // Create a new item for each piece of data/*
-//        QTableWidgetItem *idItem = new QTableWidgetItem(QString::number(user->UserID));
-//        QTableWidgetItem *usernameItem = new QTableWidgetItem(QString::fromStdString(user->Username));
-//        QTableWidgetItem *passwordItem = new QTableWidgetItem(QString::fromStdString(user->HashedPassword));
-//        QTableWidgetItem *roleItem = new QTableWidgetItem(QString::number(EStaffRoleToInt(user->Role)));*/
-
-//        // Add those items to the table
-//        ui->tableWidget->setItem(row, 0, idItem); // 0 is the column number for the UserID
-//        ui->tableWidget->setItem(row, 1, usernameItem); // 1 is the column number for the Username
-//        ui->tableWidget->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
-//        ui->tableWidget->setItem(row, 3, roleItem); // 3 is the column number for the Role
-//    }
 
 }
 

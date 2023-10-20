@@ -28,6 +28,7 @@ class UserDataAccessObject
     void SetEUP(std::string username, EUserProfile profile);
     void SetESR(std::string username, EStaffRole role);
     void Delete(std::string username);
+    QVector<User> GetUsers();
 
     QVector<Slot> GetSlotsByUser(std::string username);
     bool GetbActive(std::string username);
