@@ -19,6 +19,9 @@ AuthWindow::AuthWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::AuthWin
 
     ui->InvalidLoginLabel->setVisible(false);
     ui->QLE_Password->setEchoMode(QLineEdit::Password);
+    ui->LoginButton->setDefault(true);
+    ui->LoginButton->setAutoDefault(true);
+    ui->LoginButton->setFocusPolicy(Qt::StrongFocus);
 
 }
 

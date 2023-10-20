@@ -35,7 +35,9 @@ enum class EStaffRole
     ESR_Waiter //3
 };
 
-
+EStaffRole QStringToEStaffRole(QString esr);
+EBidStatus QStringToEBidStatus(QString ebs);
+EUserProfile QStringToEUserProfile(QString eup);
 
 QString EDatabaseResultToQString(EDatabaseResult edr);
 

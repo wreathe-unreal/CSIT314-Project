@@ -2,7 +2,6 @@
 #include "QApplicationGlobal.h"
 #include "UserDAO.h"
 #include <QSqlQuery>
-#include "NewUser.h"
 #include <QVector.h>
 #include "Slot.h"
 #include "User.h"
@@ -93,7 +92,7 @@ EUserProfile UserDataAccessObject::Authorize(QString username, QString password)
 }
 
 
-QVector<User> UserDataAccessObject::GetByEUP(EUserProfile profile)
+QVector<User> UserDataAccessObject::SearchByEUP(EUserProfile profile)
 {
     int eup = EUserProfileToInt(profile);
 
@@ -102,6 +101,7 @@ QVector<User> UserDataAccessObject::GetByEUP(EUserProfile profile)
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
+        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_FAILURE;
         return users; // Return the empty vector
     }
 
@@ -114,7 +114,6 @@ QVector<User> UserDataAccessObject::GetByEUP(EUserProfile profile)
         while (query.next())
         {
             User user;
-            user.UserID = query.value("UserID").toInt();
             user.Username = query.value("Username").toString();
             user.Password = query.value("Password").toString();
             user.EUP = query.value("EUP").toInt();
@@ -128,12 +127,14 @@ QVector<User> UserDataAccessObject::GetByEUP(EUserProfile profile)
     else
     {
         qWarning() << "getUsersByEUP() ERROR: " << query.lastError().text();
-    }
+        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_FAILURE;
 
+    }
+    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_SUCCESS;
     return users;
 }
 
-QVector<User> UserDataAccessObject::GetByESR(EStaffRole role)
+QVector<User> UserDataAccessObject::SearchByESR(EStaffRole role)
 {
     int esr = EStaffRoleToInt(role);
 
@@ -154,7 +155,6 @@ QVector<User> UserDataAccessObject::GetByESR(EStaffRole role)
         while (query.next())
         {
             User user;
-            user.UserID = query.value("UserID").toInt();
             user.Username = query.value("Username").toString();
             user.Password = query.value("Password").toString();
             user.EUP = query.value("EUP").toInt();
@@ -270,7 +270,7 @@ User UserDataAccessObject::GetUser(const std::string& username)
     }
 
     QSqlQuery query;
-    query.prepare("SELECT UserID, Username, Password, EUP, ESR, MaxSlots, bActive FROM User WHERE Username = :username");
+    query.prepare("SELECT Username, Password, EUP, ESR, MaxSlots, bActive FROM User WHERE Username = :username");
     query.bindValue(":username", QString::fromStdString(username));
 
     if (query.exec())
@@ -280,13 +280,12 @@ User UserDataAccessObject::GetUser(const std::string& username)
             User user;
 
             // Assuming you have public or friend access, or setters for these members in the User class
-            user.UserID = query.value(0).toInt();
-            user.Username = query.value(1).toString();
-            user.Password = query.value(2).toString();
-            user.EUP = query.value(3).toInt();
-            user.ESR = query.value(4).toInt();
-            user.MaxSlots = query.value(5).toInt();
-            user.bActive = query.value(6).toBool();
+            user.Username = query.value(0).toString();
+            user.Password = query.value(1).toString();
+            user.EUP = query.value(2).toInt();
+            user.ESR = query.value(3).toInt();
+            user.MaxSlots = query.value(4).toInt();
+            user.bActive = query.value(5).toBool();
 
             return user;
         }
@@ -299,7 +298,7 @@ User UserDataAccessObject::GetUser(const std::string& username)
     return User(); // Return a default User object if the username is not found or there's an error
 }
 
-void UserDataAccessObject::Insert(NewUser newUser)
+void UserDataAccessObject::Insert(User user)
 {
     if (!DATABASE.isOpen())
     {
@@ -310,7 +309,7 @@ void UserDataAccessObject::Insert(NewUser newUser)
     // Check if the username already exists
     QSqlQuery queryCheck;
     queryCheck.prepare("SELECT COUNT(*) FROM User WHERE Username = :username");
-    queryCheck.bindValue(":username", newUser.Username);
+    queryCheck.bindValue(":username", user.Username);
 
     if (queryCheck.exec())
     {
@@ -329,12 +328,12 @@ void UserDataAccessObject::Insert(NewUser newUser)
     // Insert the new user
     QSqlQuery queryInsert;
     queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots, bActive) VALUES (:username, :password, :eup, :esr, :maxslots, :active)");
-    queryInsert.bindValue(":username", newUser.Username);
-    queryInsert.bindValue(":password", newUser.Password);
-    queryInsert.bindValue(":eup", newUser.EUP);
-    queryInsert.bindValue(":esr", newUser.ESR);
+    queryInsert.bindValue(":username", user.Username);
+    queryInsert.bindValue(":password", user.Password);
+    queryInsert.bindValue(":eup", user.EUP);
+    queryInsert.bindValue(":esr", user.ESR);
     queryInsert.bindValue(":maxslots", 0);
-    queryInsert.bindValue(":active", 1);
+    queryInsert.bindValue(":active", user.bActive);
 
     if (queryInsert.exec())
     {
@@ -348,7 +347,7 @@ void UserDataAccessObject::Insert(NewUser newUser)
 }
 
 
-void UserDataAccessObject::UpdateOrInsert(User user)
+void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdate)
 {
     if (!DATABASE.isOpen())
     {
@@ -359,7 +358,7 @@ void UserDataAccessObject::UpdateOrInsert(User user)
     // Check if the user already exists
     QSqlQuery queryCheck;
     queryCheck.prepare("SELECT COUNT(*) FROM User WHERE Username = :username");
-    queryCheck.bindValue(":username", user.Username);
+    queryCheck.bindValue(":username", usernameBeforeUpdate);
 
     if (queryCheck.exec())
     {
@@ -367,8 +366,9 @@ void UserDataAccessObject::UpdateOrInsert(User user)
         {
             // User exists, proceed with update
             QSqlQuery queryUpdate;
-            queryUpdate.prepare("UPDATE User SET Password = :password, EUP = :eup, ESR = :esr, MaxSlots = :maxslots, bActive = :active WHERE Username = :username");
-            queryUpdate.bindValue(":username", user.Username);
+            queryUpdate.prepare("UPDATE User SET Username = :newUsername, Password = :password, EUP = :eup, ESR = :esr, MaxSlots = :maxslots, bActive = :active WHERE Username = :username");
+            queryUpdate.bindValue(":newUsername", user.Username);
+            queryUpdate.bindValue(":username", usernameBeforeUpdate);
             queryUpdate.bindValue(":password", user.Password);
             queryUpdate.bindValue(":eup", user.EUP);
             queryUpdate.bindValue(":esr", user.ESR);
@@ -597,7 +597,7 @@ void UserDataAccessObject::SetESR(std::string username, EStaffRole role)
     this->Result = EDatabaseResult::EDR_SUCCESS;
 }
 
-void UserDataAccessObject::Delete(std::string username)
+void UserDataAccessObject::Delete(QString username)
 {
 
     if (!DATABASE.open())
@@ -611,7 +611,7 @@ void UserDataAccessObject::Delete(std::string username)
     // Prepare SQL statement to delete user with the given username
     query.prepare("DELETE FROM User WHERE Username = :username");
 
-    query.bindValue(":username", QString::fromStdString(username));
+    query.bindValue(":username", username);
 
     if (!query.exec())
     {
@@ -624,8 +624,10 @@ void UserDataAccessObject::Delete(std::string username)
         qDebug() << "No user found with the provided username.";
         this->Result = EDatabaseResult::EDR_FAILURE;
     }
-
-    this->Result = EDatabaseResult::EDR_SUCCESS;
+    else
+    {
+        this->Result = EDatabaseResult::EDR_SUCCESS;
+    }
 }
 
 QVector<User> UserDataAccessObject::GetUsers()
@@ -647,7 +649,6 @@ QVector<User> UserDataAccessObject::GetUsers()
         while (query.next())
         {
             User user;
-            user.UserID = query.value("UserID").toInt();
             user.Username = query.value("Username").toString();
             user.Password = query.value("Password").toString();
             user.EUP = query.value("EUP").toInt();

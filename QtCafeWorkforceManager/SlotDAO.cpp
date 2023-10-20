@@ -88,7 +88,7 @@ std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
 
     // First, get the UserIDs from the UserSlot table
     query.prepare("SELECT UserID FROM UserSlot WHERE SlotID = ?");
-    query.addBindValue(SlotID);
+    query.addBindValue("SlotID");
     if (!query.exec()) {
         qWarning() << "Failed to execute UserSlot query:" << query.lastError();
         this->Result = EDatabaseResult::EDR_FAILURE;
@@ -105,7 +105,6 @@ std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
         if (userQuery.exec() && userQuery.next())
         {
             User user;
-            user.setUserID(userQuery.value("UserID").toInt()); //since we do not have UserID setter
             user.setUsername(userQuery.value("Username").toString());
             user.setPassword(userQuery.value("Password").toString());
             user.setEUP(userQuery.value("EUP").toInt());

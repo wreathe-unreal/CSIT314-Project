@@ -42,7 +42,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         CafeManagerWindow.h CafeManagerWindow.cpp CafeManagerWindow.ui
         CafeStaffWindow.h CafeStaffWindow.cpp CafeStaffWindow.ui
         NewSlot.h
-        NewUser.h
+
         SlotDAO.cpp
     )
 # Define target properties for Android with Qt 6 as:
