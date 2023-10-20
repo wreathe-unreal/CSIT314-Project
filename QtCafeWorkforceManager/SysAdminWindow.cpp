@@ -8,6 +8,17 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->roleCombo->addItem("Non-Staff");
+    ui->roleCombo->addItem("Cashier");
+    ui->roleCombo->addItem("Waiter");
+    ui->roleCombo->addItem("Chef");
+
+    ui->profileCombo->addItem("SysAdmin");
+    ui->profileCombo->addItem("Cafe Manager");
+    ui->profileCombo->addItem("Cafe Owner");
+    ui->profileCombo->addItem("Cafe Staff");
+
+
     ui->userTable->setColumnCount(6);
     ui->userTable->columnWidth(450);
     ui->userTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -69,6 +80,9 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
         int row = index.row();
 
         UsernameBeforeEdit = ui->userTable->item(row, 0)->text();
+        //we must store the username before edit so we can update the user in the table
+        //since we must lookup the table by the old username
+
         // Retrieve the items from the table
         QTableWidgetItem *usernameItem = ui->userTable->item(row, 0);
         QTableWidgetItem *passwordItem = ui->userTable->item(row, 1);
@@ -83,5 +97,6 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
         // Set the text of the QLineEdit widgets to match the text of the table items
         ui->usernameEdit->setText(usernameItem->text());
         ui->passwordEdit->setText(passwordItem->text());
+        ui->activeCheckBox->setChecked(!static_cast<bool>(bActiveItem->text().toInt()));
 }
 

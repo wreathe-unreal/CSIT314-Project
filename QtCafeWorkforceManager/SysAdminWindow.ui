@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>470</x>
-      <y>10</y>
-      <width>311</width>
-      <height>211</height>
+      <y>40</y>
+      <width>271</width>
+      <height>181</height>
      </rect>
     </property>
     <property name="text">
@@ -68,7 +68,7 @@
      <widget class="QPushButton" name="editButton">
       <property name="geometry">
        <rect>
-        <x>20</x>
+        <x>10</x>
         <y>140</y>
         <width>121</width>
         <height>31</height>
@@ -182,7 +182,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>241</y>
+      <y>270</y>
       <width>741</width>
       <height>261</height>
      </rect>
