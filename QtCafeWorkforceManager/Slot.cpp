@@ -1,20 +1,11 @@
 ﻿#include "Slot.h"
 
 
-int Slot::getMaxChefs() const
-{
-    return MaxChefs;
-}
-
 void Slot::setSlotID(int slotID)
 {
     this->SlotID = slotID;
 }
 
-void Slot::setMaxChefs(int maxChefs)
-{
-    this->MaxChefs = maxChefs;
-}
 
 int Slot::getSlotID() const
 {
@@ -37,15 +28,7 @@ void Slot::setCurChefs(int newCurChefs)
     CurChefs = newCurChefs;
 }
 
-int Slot::getMaxCashiers() const
-{
-    return MaxCashiers;
-}
 
-void Slot::setMaxCashiers(int maxCashiers)
-{
-    this->MaxCashiers = maxCashiers;
-}
 
 int Slot::getCurCashiers() const
 {
@@ -57,10 +40,6 @@ void Slot::setCurCashiers(int newCurCashiers)
     CurCashiers = newCurCashiers;
 }
 
-int Slot::getMaxWaiters() const
-{
-    return MaxWaiters;
-}
 
 
 int Slot::getCurWaiters() const
@@ -73,30 +52,15 @@ void Slot::setCurWaiters(int newCurWaiters)
     CurWaiters = newCurWaiters;
 }
 
-void Slot::setMaxWaiters(int maxWaiters)
+QDate Slot::getDate() const
 {
-    this->MaxWaiters = maxWaiters;
+    return this->Date;
 }
 
-bool Slot::isChefRoleFull() const
-{
-    return CurChefs == MaxChefs;
-}
-
-
-bool Slot::isWaiterRoleFull() const
-{
-    return CurWaiters == MaxWaiters;
-}
-
-bool Slot::isCashierRoleFull() const
-{
-    return CurCashiers == MaxCashiers;
-}
 
 bool Slot::isSlotFull() const
 {
-    return isChefRoleFull() && isWaiterRoleFull() && isCashierRoleFull();
+    return CurChefs >=1 && CurCashiers >= 1 && CurWaiters >= 1;
 }
 
 QTime Slot::getStartTime() const

@@ -37,7 +37,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
     ui->activeCheckBox->setEnabled(false);
     ui->editButton->setEnabled(false);
 
-
+    ui->userTable->setSortingEnabled(true);
     ui->userTable->setColumnCount(6);
     ui->userTable->columnWidth(450);
     ui->userTable->setSelectionBehavior(QAbstractItemView::SelectRows);

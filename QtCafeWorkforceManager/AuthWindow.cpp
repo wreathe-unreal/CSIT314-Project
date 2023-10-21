@@ -58,16 +58,19 @@ void AuthWindow::on_LoginButton_clicked()
             case EUserProfile::EUP_CafeOwner:
                 CafeOwnerWindow* CafeOwnerView;
                 CafeOwnerView = new CafeOwnerWindow;
+                CafeOwnerView->setStyleSheet("CafeOwnerWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
                 CafeOwnerView->show();
                 break;
             case EUserProfile::EUP_CafeManager:
                 CafeManagerWindow* CafeManagerView;
                 CafeManagerView = new CafeManagerWindow;
+                CafeManagerView->setStyleSheet("CafeManagerWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
                 CafeManagerView->show();
                 break;
             case EUserProfile::EUP_CafeStaff:
                 CafeStaffWindow* CafeStaffView;
                 CafeStaffView = new CafeStaffWindow;
+                CafeStaffView->setStyleSheet("CafeStaffWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
                 CafeStaffView->show();
                 break;
             default:
