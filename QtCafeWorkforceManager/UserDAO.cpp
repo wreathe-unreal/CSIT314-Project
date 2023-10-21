@@ -712,14 +712,11 @@ QVector<Slot> UserDataAccessObject::GetSlotsByUser(std::string username)
         if (slotQuery.exec() && slotQuery.next()) {
             Slot slot;
             slot.setSlotID(slotQuery.value("SlotID").toInt());
-            slot.setDate(QDate::fromString(slotQuery.value("SlotDate").toString(), "yyyy-MM-dd"));
-            slot.setStartTime(QTime::fromString(slotQuery.value("SlotStart").toString(), "hh:mm:ss"));
-            slot.setEndTime(QTime::fromString(slotQuery.value("SlotEnd").toString(), "hh:mm:ss"));
-            slot.setMaxChefs(slotQuery.value("MaxChefs").toInt());
+            slot.setDate(QDate::fromString(slotQuery.value("SlotDate").toString()));
+            slot.setStartTime(QTime::fromString(slotQuery.value("SlotStart").toString()));
+            slot.setEndTime(QTime::fromString(slotQuery.value("SlotEnd").toString()));
             slot.setCurChefs(slotQuery.value("CurChefs").toInt());
-            slot.setMaxCashiers(slotQuery.value("MaxCashiers").toInt());
             slot.setCurCashiers(slotQuery.value("CurCashiers").toInt());
-            slot.setMaxWaiters(slotQuery.value("MaxWaiters").toInt());
             slot.setCurWaiters(slotQuery.value("CurWaiters").toInt());
 
             associatedSlots.push_back(slot);

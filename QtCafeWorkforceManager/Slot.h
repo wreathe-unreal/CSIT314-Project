@@ -17,23 +17,15 @@ class Slot : public IEntity
         QDate getDate() const;
         void setDate(QDate newSlotDate);
 
-        void setMaxChefs(int maxChefs);
-        int getMaxChefs() const;
-
         int getCurChefs() const;
         void setCurChefs(int newCurChefs);
 
         int getCurCashiers() const;
         void setCurCashiers(int newCurCashiers);
 
-        int getMaxCashiers() const;
-        void setMaxCashiers(int maxCashiers);
 
         int getCurWaiters() const;
         void setCurWaiters(int newCurWaiters);
-
-        void setMaxWaiters(int maxWaiters);
-        int getMaxWaiters() const;
 
         bool isChefRoleFull() const;
         bool isCashierRoleFull() const;
@@ -48,43 +40,53 @@ class Slot : public IEntity
 
         bool HasOverlap(Slot otherSlot)
         {
-            return (RangeContainsStartInclusive(this->StartTime, this->EndTime, otherSlot.StartTime)
+            if(this->Date != otherSlot.Date)
+            {
+                return false;
+            }
+
+            return RangeContainsStartInclusive(this->StartTime, this->EndTime, otherSlot.StartTime)
                 ||  RangeContainsEndInclusive(this->StartTime, this->EndTime, otherSlot.EndTime)
                 ||  RangeContainsStartInclusive(otherSlot.StartTime, otherSlot.EndTime, this->StartTime)
-                ||  RangeContainsEndInclusive(otherSlot.StartTime, otherSlot.EndTime, this->EndTime))
-                &&  otherSlot.SlotID != this->SlotID;
+                ||  RangeContainsEndInclusive(otherSlot.StartTime, otherSlot.EndTime, this->EndTime);
         }
 
         virtual void ToString() override { qDebug() << getSlotID(); }
 
         //full constructor
-        Slot(int ID, QDate date, QTime startTime, QTime endTime, int maxChefs, int curChefs, int  maxCashiers, int curCashiers, int  maxWaiters, int curWaiters)
+        Slot(int ID, QDate date, QTime startTime, QTime endTime, int curChefs,int curCashiers, int curWaiters)
         {
             this->SlotID = ID;
             this->Date = date;
             this->StartTime = startTime;
             this->EndTime = endTime;
-            this->MaxChefs = maxChefs;
             this->CurChefs = curChefs;
-            this->MaxCashiers = maxCashiers;
             this->CurCashiers = curCashiers;
-            this->MaxWaiters = maxWaiters;
             this->CurWaiters = curWaiters;
         };
 
-    private:
+        //full constructor
+        Slot(QDate date, QTime startTime, QTime endTime)
+        {
+            this->SlotID = 0;
+            this->Date = date;
+            this->StartTime = startTime;
+            this->EndTime = endTime;
+            this->CurChefs = 0;
+            this->CurCashiers = 0;
+            this->CurWaiters = 0;
+        };
+
         int SlotID;
         QDate Date;
         QTime StartTime;
         QTime EndTime;
-        int MaxChefs;
         int CurChefs;
-        int MaxCashiers;
         int CurCashiers;
-        int MaxWaiters;
         int CurWaiters;
 
 
+    private:
         bool RangeContainsEndInclusive(QTime start, QTime end, QTime value)
         {
             if(value > start && value <= end)

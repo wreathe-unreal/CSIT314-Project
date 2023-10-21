@@ -15,6 +15,18 @@ public:
     explicit CafeOwnerWindow(QWidget *parent = nullptr);
     ~CafeOwnerWindow();
 
+private slots:
+
+    void on_createButton_clicked();
+
+    void on_deleteButton_clicked();
+
+    void on_slotTable_clicked(const QModelIndex &index);
+
+    void on_editButton_clicked();
+
+    void on_searchButton_clicked();
+
 private:
     Ui::CafeOwnerWindow *ui;
 };

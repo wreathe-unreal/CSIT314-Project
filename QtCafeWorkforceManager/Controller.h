@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Enums.h"
+#include "Slot.h"
 #include "User.h"
 #include <QString>
 
@@ -90,3 +91,55 @@ class SearchByEUPController : public IController
        QVector<User> Execute();
 };
 
+
+class CreateSlotController: public IController
+{
+   public:
+       Slot NewSlot;
+       CreateSlotController(Slot newslot)
+       {
+            this->NewSlot = newslot;
+       }
+
+       QVector<Slot> Execute();
+};
+
+class GetSlotsController: public IController
+{
+   public:
+    QVector<Slot> Execute();
+};
+
+class DeleteSlotController: public IController
+{
+    public:
+        int SlotID;
+        DeleteSlotController(int slotID)
+        {
+            this->SlotID = slotID;
+        }
+        void Execute();
+};
+
+class UpdateSlotController: public IController
+{
+    public:
+        Slot SlotToEdit;
+        UpdateSlotController(Slot slotToEdit)
+        {
+            this->SlotToEdit = slotToEdit;
+        }
+
+        QVector<Slot> Execute();
+};
+
+class SearchSlotByDayController : public IController
+{
+    public:
+        QDate Date;
+        SearchSlotByDayController(QDate date)
+        {
+            this->Date = date;
+        }
+        QVector<Slot> Execute();
+};

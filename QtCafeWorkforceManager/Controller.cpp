@@ -47,3 +47,29 @@ QVector<User> SearchByEUPController::Execute()
 {
     return QApplicationGlobal::UserDAO.SearchByEUP(this->profile);
 }
+
+QVector<Slot> CreateSlotController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.CreateSlot(this->NewSlot);
+}
+
+QVector<Slot> GetSlotsController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.GetAllSlots();
+
+}
+
+void DeleteSlotController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.DeleteSlot(this->SlotID);
+}
+
+QVector<Slot> UpdateSlotController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.UpdateSlot(this->SlotToEdit);
+}
+
+QVector<Slot> SearchSlotByDayController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.SearchDate(this->Date);
+}
