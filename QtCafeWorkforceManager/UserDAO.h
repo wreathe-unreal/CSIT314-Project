@@ -10,10 +10,15 @@ class UserDataAccessObject
     public:
     EDatabaseResult Result;
 
-    UserDataAccessObject(){};
+    UserDataAccessObject()
+    {
+        Result = EDatabaseResult::EDR_UNINITIALIZED;
+
+    };
     ~UserDataAccessObject(){};
 
     //coded
+    void IsUserActive(QString username);
     void Insert(User user);
     QVector<User> SearchByESR(EStaffRole role);
     QVector<User> SearchByEUP(EUserProfile profile);

@@ -28,6 +28,7 @@ EUserProfile UserDataAccessObject::Authorize(QString username, QString password)
 
     if (!query.exec())
     {
+        qDebug() << "authenticate() ERROR FINDING USER: " << query.lastError().text();
         qWarning() << "authenticate() ERROR FINDING USER: " << query.lastError().text();
         this->Result = EDatabaseResult::EDR_FAILURE;
         return EUserProfile::EUP_CafeStaff;
@@ -40,48 +41,25 @@ EUserProfile UserDataAccessObject::Authorize(QString username, QString password)
         // Compares the input password with the one stored in database
         if (password == storedPassword)
         {
+            //query to get EUP info
+            QSqlQuery query2(DATABASE);
+            query2.prepare("SELECT EUP FROM User WHERE Username = :username");
+            query2.bindValue(":username", username);
 
-            QSqlQuery queryActive(DATABASE);
-            queryActive.prepare("SELECT bActive FROM User WHERE Username = :username");
-            queryActive.bindValue(":username", username);
-
-            if(!queryActive.exec())
+            if (!query2.exec())
             {
-                qWarning() << "ERROR GETTING bACTIVE: " << queryActive.lastError().text();
+                qDebug() << "ERROR GETTING EUP: " << query.lastError().text();
+                qWarning() << "ERROR GETTING EUP: " << query.lastError().text();
                 this->Result = EDatabaseResult::EDR_FAILURE;
                 return EUserProfile::EUP_CafeStaff;
             }
 
-            if(queryActive.next())
+            if (query2.next()) // Position query on the first (and hopefully only) result record
             {
-                bActive = queryActive.value(0).toBool();
-
-                if(!bActive)
-                {
-                    this->Result = EDatabaseResult::EDR_FAILURE;
-                    return EUserProfile::EUP_CafeStaff;
-                }
-
-                //query to get EUP info
-                QSqlQuery query2(DATABASE);
-                query2.prepare("SELECT EUP FROM User WHERE Username = :username");
-                query2.bindValue(":username", username);
-
-                if (!query2.exec())
-                {
-                    qWarning() << "ERROR GETTING EUP: " << query.lastError().text();
-                    this->Result = EDatabaseResult::EDR_FAILURE;
-                    return EUserProfile::EUP_CafeStaff;
-                }
-
-                if (query2.next()) // Position query on the first (and hopefully only) result record
-                {
-
-                    //set global Username variable
-                    QApplicationGlobal::CurrentUsername = username.toStdString();
-                    this->Result = EDatabaseResult::EDR_SUCCESS;
-                    return static_cast<EUserProfile>(query2.value(0).toInt()); // Authenticated
-                }
+                //set global Username variable
+                QApplicationGlobal::CurrentUsername = username;
+                this->Result = EDatabaseResult::EDR_SUCCESS;
+                return static_cast<EUserProfile>(query2.value(0).toInt()); // Authenticated
             }
         }
     }
@@ -299,6 +277,42 @@ User UserDataAccessObject::GetUser(const std::string& username)
     }
 
     return User(); // Return a default User object if the username is not found or there's an error
+}
+
+void UserDataAccessObject::IsUserActive(QString username)
+{
+    if (!DATABASE.isOpen())
+    {
+        qWarning("Error: connection with database failed");
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return;
+    }
+
+    QSqlQuery query(DATABASE);
+    query.prepare("SELECT bActive FROM User WHERE Username = :username");
+    query.bindValue(":username", username);
+
+    if (!query.exec())
+    {
+        qDebug() << "IsUserActive() ERROR FINDING USER: " << query.lastError().text();
+        qWarning() << "IsUserActive() ERROR FINDING USER: " << query.lastError().text();\
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return;
+    }
+
+    if(query.next())
+    {
+        bool bActive = query.value(0).toBool();
+        if(bActive)
+        {
+            this->Result = EDatabaseResult::EDR_SUCCESS;
+            return;
+        }
+
+    }
+
+    this->Result = EDatabaseResult::EDR_FAILURE;
+    return;
 }
 
 void UserDataAccessObject::Insert(User user)

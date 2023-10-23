@@ -20,7 +20,7 @@ class QApplicationGlobal : public QApplication
             this->CafeDB.close();
         };
 
-        static std::string CurrentUsername;
+        static QString CurrentUsername;
         static QSqlDatabase CafeDB;
         static UserDataAccessObject UserDAO;
         static SlotDataAccessObject SlotDAO;

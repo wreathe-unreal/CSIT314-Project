@@ -41,6 +41,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
     ui->userTable->setColumnCount(7);
     ui->userTable->columnWidth(450);
     ui->userTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->userTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // Get the horizontal header of the table widget
     QHeaderView* horizontalHeader = ui->userTable->horizontalHeader();
@@ -72,7 +73,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
             QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
 
             // Add those items to the table
-            ui->userTable->setItem(row, 0, fullNameItem);
+            ui->userTable->setItem(row, 0, fullNameItem); //0 is the column number for full name
             ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
             ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
             ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
@@ -102,9 +103,8 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
 
          ui->tabWidget->setCurrentIndex(0);
 
+        //since we must lookup the database by the old username we store it on the window's class every time the table is clicked
         UsernameBeforeEdit = ui->userTable->item(row, 1)->text();
-        //we must store the username before edit so we can update the user in the table
-        //since we must lookup the table by the old username
 
         // Retrieve the items from the table
         QTableWidgetItem *fullNameItem = ui->userTable->item(row, 0);
@@ -128,13 +128,6 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
             return;
         }
 
-        ui->fullNameEdit->setEnabled(true);
-        ui->usernameEdit->setEnabled(true);
-        ui->passwordEdit->setEnabled(true);
-        ui->profileCombo->setEnabled(true);
-        ui->roleCombo->setEnabled(true);
-        ui->activeCheckBox->setEnabled(true);
-        ui->editButton->setEnabled(true);
 
         // Set the text of the QLineEdit widgets to match the text of the table items
         ui->fullNameEdit->setText(fullNameItem->text());
@@ -161,6 +154,14 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
             ui->roleCombo->setEnabled(true);
             ui->roleCombo->setCurrentIndex(static_cast<int>(QStringToEStaffRole(roleItem->text()))-1);
         }
+
+        ui->fullNameEdit->setEnabled(true);
+        ui->usernameEdit->setEnabled(true);
+        ui->passwordEdit->setEnabled(true);
+        ui->profileCombo->setEnabled(true);
+        ui->roleCombo->setEnabled(true);
+        ui->activeCheckBox->setEnabled(true);
+        ui->editButton->setEnabled(true);
 }
 
 
@@ -412,7 +413,7 @@ void SysAdminWindow::on_deleteButton_clicked()
     // Check which button was clicked
     if (reply == QMessageBox::Yes)
     {
-        QString UsernameToDelete = ui->userTable->item(ui->userTable->currentRow(), 0)->text();
+        QString UsernameToDelete = ui->userTable->item(ui->userTable->currentRow(), 1)->text();
 
         DeleteUserController(UsernameToDelete).Execute();
 

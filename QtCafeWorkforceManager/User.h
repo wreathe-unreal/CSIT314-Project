@@ -49,8 +49,6 @@ class User : public IEntity
         bool bActive;
         QString FullName;
 
-        QString ToJSON();
-
         virtual void ToString() override { qDebug() << this->getUsername();}
         QString getFullName() const;
         void setFullName(QString newFullName);

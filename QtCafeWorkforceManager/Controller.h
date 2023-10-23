@@ -143,3 +143,14 @@ class SearchSlotByDayController : public IController
         }
         QVector<Slot> Execute();
 };
+
+class IsUserActiveController : public IController
+{
+    public:
+        QString Username;
+        IsUserActiveController(QString username)
+        {
+            this->Username = username;
+        }
+        void Execute();
+};

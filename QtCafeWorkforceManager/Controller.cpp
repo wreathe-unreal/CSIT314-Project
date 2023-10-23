@@ -20,18 +20,17 @@ QVector<User> GetUsersController::Execute()
 
 void UpdateUserController::Execute()
 {
+     //if the password did not change, simply update the user info
     QApplicationGlobal::UserDAO.Authorize(this->UsernameBeforeUpdate, UpdatedUser.getPassword());
-
-    //if the password did not change, simply update the user info
     if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
     {
+        qDebug() << "no pw change, updating, current password: " << UpdatedUser.getPassword();
         QApplicationGlobal::UserDAO.UpdateOrInsert(this->UpdatedUser, this->UsernameBeforeUpdate);
         return;
     }
 
-
+    qDebug() << "pw change, updating, current password: " << UpdatedUser.getPassword();
     //if the password has changed, rehash the new plaint text password, and update
-
     QByteArray passwordBytes = UpdatedUser.getPassword().toUtf8();
     QByteArray hashedPassword = QCryptographicHash::hash(passwordBytes, QCryptographicHash::Sha256);
     QString hashedPasswordHex = QString(hashedPassword.toHex());
@@ -84,4 +83,9 @@ QVector<Slot> UpdateSlotController::Execute()
 QVector<Slot> SearchSlotByDayController::Execute()
 {
     return QApplicationGlobal::SlotDAO.SearchDate(this->Date);
+}
+
+void IsUserActiveController::Execute()
+{
+    return QApplicationGlobal::UserDAO.IsUserActive(this->Username);
 }

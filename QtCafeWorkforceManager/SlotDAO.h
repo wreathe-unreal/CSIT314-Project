@@ -11,22 +11,25 @@ class SlotDataAccessObject
 {
     public:
     EDatabaseResult Result;
-        SlotDataAccessObject(){};
-        ~SlotDataAccessObject(){};
+    SlotDataAccessObject()
+    {
+        Result = EDatabaseResult::EDR_UNINITIALIZED;
+    };
+    ~SlotDataAccessObject(){};
 
-        //uncoded
-        QVector<Slot> GetAllSlots();
-        QVector<Slot> CreateSlot(Slot newSlot);
-        void AssignStaff(Slot slot, User user);
-        Slot GetSlot(Slot slot);
-        std::vector<User> GetStaff(Slot slot);
-        std::vector<User> GetUnassignedStaff(Slot slot);
-        std::vector<User> GetBidders(Slot slot);
-        QVector<Slot> SearchDate(QDate date);
-        std::vector<Slot> GetByUser(std::string username);
-        std::vector<User> GetUsersBySlotID(int SlotID);
-        void DeleteSlot(int SlotID);
-        QVector<Slot> UpdateSlot(Slot editedSlot);
+    //uncoded
+    QVector<Slot> GetAllSlots();
+    QVector<Slot> CreateSlot(Slot newSlot);
+    void AssignStaff(Slot slot, User user);
+    Slot GetSlot(Slot slot);
+    std::vector<User> GetStaff(Slot slot);
+    std::vector<User> GetUnassignedStaff(Slot slot);
+    std::vector<User> GetBidders(Slot slot);
+    QVector<Slot> SearchDate(QDate date);
+    std::vector<Slot> GetByUser(std::string username);
+    std::vector<User> GetUsersBySlotID(int SlotID);
+    void DeleteSlot(int SlotID);
+    QVector<Slot> UpdateSlot(Slot editedSlot);
 
 };
 

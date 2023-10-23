@@ -21,6 +21,8 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     ui->slotTable->setSortingEnabled(true);
     ui->slotTable->setColumnCount(7);
     ui->slotTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->slotTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 
     // Get the horizontal header of the table widget
     QHeaderView* horizontalHeader = ui->slotTable->horizontalHeader();
