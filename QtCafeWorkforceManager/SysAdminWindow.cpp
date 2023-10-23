@@ -353,7 +353,7 @@ void SysAdminWindow::on_createButton_clicked()
     ui->fullNameCreate->clear();
     ui->usernameCreate->clear();
     ui->passwordCreate->clear();
-    ui->activeCheckBoxCreate->setChecked(false);
+    ui->activeCheckBoxCreate->setChecked(true);
     ui->roleComboCreate->setCurrentIndex(0);
     ui->profileComboCreate->setCurrentIndex(0);
 
