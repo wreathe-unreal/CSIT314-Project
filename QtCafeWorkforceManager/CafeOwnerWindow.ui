@@ -278,8 +278,20 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLogout"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLogout">
+   <property name="text">
+    <string>Logout</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="CafeResources.qrc"/>

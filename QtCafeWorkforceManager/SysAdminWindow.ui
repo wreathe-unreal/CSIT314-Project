@@ -50,6 +50,9 @@
       <string>Edit User</string>
      </attribute>
      <widget class="QCheckBox" name="activeCheckBox">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>310</x>

@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Cafe Log-in</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox">
     <property name="enabled">
@@ -26,6 +29,18 @@
       <height>111</height>
      </rect>
     </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
     <property name="font">
      <font>
       <family>Calibri</family>
@@ -34,6 +49,12 @@
       <bold>true</bold>
       <kerning>true</kerning>
      </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QGroupBox { 
+     border: 3px solid gray; 
+     border-radius: 5px; 
+ } </string>
     </property>
     <property name="title">
      <string>Enter username and password:</string>

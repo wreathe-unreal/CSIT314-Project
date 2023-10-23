@@ -1,3 +1,4 @@
+#include "AuthWindow.h"
 #include "CafeOwnerWindow.h"
 #include "Controller.h"
 #include "QApplicationGlobal.h"
@@ -72,6 +73,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
         }
     }
 
+    connect(ui->actionLogout, &QAction::triggered, this, &CafeOwnerWindow::OnLogoutTriggered);
     QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
 
 }
@@ -418,5 +420,14 @@ void CafeOwnerWindow::on_searchButton_clicked()
     }
 
     QApplicationGlobal::SlotDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+}
+
+void CafeOwnerWindow::OnLogoutTriggered()
+{
+    AuthWindow* AuthView;
+    AuthView = new AuthWindow;
+    AuthView->setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
+    AuthView->show();
+    this->close();
 }
 

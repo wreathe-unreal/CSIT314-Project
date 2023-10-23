@@ -29,6 +29,8 @@ class CafeOwnerWindow : public QMainWindow
 
     private:
         Ui::CafeOwnerWindow *ui;
+
+        void OnLogoutTriggered();
 };
 
 #endif // CAFEOWNERWINDOW_H

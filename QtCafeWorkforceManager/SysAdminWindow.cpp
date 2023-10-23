@@ -1,6 +1,7 @@
 #include "SysAdminWindow.h"
 #include "QApplicationGlobal.h"
 #include "ui_SysAdminWindow.h"
+#include "AuthWindow.h"
 
 #include <QMessageBox>
 
@@ -36,6 +37,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
     ui->roleCombo->setEnabled(false);
     ui->activeCheckBox->setEnabled(false);
     ui->editButton->setEnabled(false);
+    ui->deleteButton->setEnabled(false);
 
     ui->userTable->setSortingEnabled(true);
     ui->userTable->setColumnCount(7);
@@ -83,6 +85,8 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
         }
     }
 
+    connect(ui->actionLogout, &QAction::triggered, this, &SysAdminWindow::OnLogoutTriggered);
+
     QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
 
 }
@@ -125,6 +129,7 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
             ui->roleCombo->setEnabled(false);
             ui->activeCheckBox->setEnabled(false);
             ui->editButton->setEnabled(false);
+            ui->deleteButton->setEnabled(false);
             return;
         }
 
@@ -162,6 +167,8 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
         ui->roleCombo->setEnabled(true);
         ui->activeCheckBox->setEnabled(true);
         ui->editButton->setEnabled(true);
+        ui->deleteButton->setEnabled(true);
+
 }
 
 
@@ -269,6 +276,8 @@ void SysAdminWindow::on_editButton_clicked()
     ui->activeCheckBox->setEnabled(false);
     ui->profileCombo->setEnabled(false);
     ui->roleCombo->setEnabled(false);
+    ui->deleteButton->setEnabled(false);
+
 }
 
 
@@ -521,5 +530,14 @@ void SysAdminWindow::on_searchButton_clicked()
     }
 
     QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+}
+
+void SysAdminWindow::OnLogoutTriggered()
+{
+    AuthWindow* AuthView;
+    AuthView = new AuthWindow;
+    AuthView->setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
+    AuthView->show();
+    this->close();
 }
 

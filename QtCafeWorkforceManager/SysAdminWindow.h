@@ -32,7 +32,7 @@ private slots:
 
 
     void on_searchButton_clicked();
-
+    void OnLogoutTriggered();
 private:
     Ui::SysAdminWindow *ui;
 };

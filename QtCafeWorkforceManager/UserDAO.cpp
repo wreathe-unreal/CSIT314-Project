@@ -308,7 +308,6 @@ void UserDataAccessObject::IsUserActive(QString username)
             this->Result = EDatabaseResult::EDR_SUCCESS;
             return;
         }
-
     }
 
     this->Result = EDatabaseResult::EDR_FAILURE;
