@@ -45,7 +45,7 @@
      <attribute name="title">
       <string>My Bids</string>
      </attribute>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>0</x>
@@ -143,9 +143,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>271</width>
-      <height>241</height>
+      <y>20</y>
+      <width>211</width>
+      <height>181</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -155,13 +155,26 @@
      <attribute name="title">
       <string>My Info</string>
      </attribute>
+     <widget class="QPushButton" name="editInfoButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>110</y>
+        <width>111</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Apply Changes</string>
+      </property>
+     </widget>
      <widget class="QWidget" name="">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>221</width>
-        <height>151</height>
+        <x>10</x>
+        <y>10</y>
+        <width>185</width>
+        <height>97</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -172,26 +185,12 @@
            <item>
             <widget class="QLabel" name="label_5">
              <property name="text">
-              <string>First Name:</string>
+              <string>Full Name:</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QLineEdit" name="firstNameText"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string>Last Name:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="lastNameText"/>
            </item>
           </layout>
          </item>
@@ -209,7 +208,14 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="roleCombo"/>
+            <widget class="QComboBox" name="roleCombo">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -234,19 +240,6 @@
         </layout>
        </item>
       </layout>
-     </widget>
-     <widget class="QPushButton" name="editInfoButton">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>180</y>
-        <width>111</width>
-        <height>24</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Apply Changes</string>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_5">
