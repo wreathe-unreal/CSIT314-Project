@@ -7,6 +7,7 @@
 #include <QSqlError>
 #include <QString>
 #include <string>
+#include <QMessageBox>
 
 QVector<Slot> SlotDataAccessObject::GetAllSlots()
 {
@@ -43,6 +44,14 @@ QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
     if (newSlot.StartTime == newSlot.EndTime)
     {
         qDebug() << "Error: The work slot has no duration.";
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!"); // Set the window title
+        errorMsgBox.setText("The work slot has no duration."); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        errorMsgBox.exec();
+
         this->Result = EDatabaseResult::EDR_FAILURE;
         return existingSlots;
     }
@@ -51,6 +60,13 @@ QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
     {
         if (newSlot.HasOverlap(existingSlot))
         {
+            QMessageBox errorMsgBox;
+            errorMsgBox.setWindowTitle("Error!"); // Set the window title
+            errorMsgBox.setText("The work slot overlaps with an existing work slot."); // Set the text to display
+            errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+            // Show the message box as a modal dialog
+            errorMsgBox.exec();
             qDebug() << "Error: The new work slot overlaps with an existing Slot.";
             this->Result = EDatabaseResult::EDR_FAILURE;
             return existingSlots;

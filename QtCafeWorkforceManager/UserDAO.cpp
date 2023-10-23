@@ -120,6 +120,7 @@ QVector<User> UserDataAccessObject::SearchByEUP(EUserProfile profile)
             user.ESR = query.value("ESR").toInt();
             user.MaxSlots = query.value("MaxSlots").toInt();
             user.bActive = query.value("bActive").toBool();
+            user.FullName = query.value("FullName").toString();
 
             users.push_back(user);
         }
@@ -161,6 +162,7 @@ QVector<User> UserDataAccessObject::SearchByESR(EStaffRole role)
             user.ESR = query.value("ESR").toInt();
             user.MaxSlots = query.value("MaxSlots").toInt();
             user.bActive = query.value("bActive").toBool();
+            user.FullName = query.value("FullName").toString();
 
             users.push_back(user);
         }
@@ -270,7 +272,7 @@ User UserDataAccessObject::GetUser(const std::string& username)
     }
 
     QSqlQuery query;
-    query.prepare("SELECT Username, Password, EUP, ESR, MaxSlots, bActive FROM User WHERE Username = :username");
+    query.prepare("SELECT Username, Password, EUP, ESR, MaxSlots, bActive, FullName FROM User WHERE Username = :username");
     query.bindValue(":username", QString::fromStdString(username));
 
     if (query.exec())
@@ -286,6 +288,7 @@ User UserDataAccessObject::GetUser(const std::string& username)
             user.ESR = query.value(3).toInt();
             user.MaxSlots = query.value(4).toInt();
             user.bActive = query.value(5).toBool();
+            user.FullName = query.value(6).toString();
 
             return user;
         }
@@ -327,13 +330,14 @@ void UserDataAccessObject::Insert(User user)
 
     // Insert the new user
     QSqlQuery queryInsert;
-    queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots, bActive) VALUES (:username, :password, :eup, :esr, :maxslots, :active)");
+    queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots, bActive, FullName) VALUES (:username, :password, :eup, :esr, :maxslots, :active, :fullname)");
     queryInsert.bindValue(":username", user.Username);
     queryInsert.bindValue(":password", user.Password);
     queryInsert.bindValue(":eup", user.EUP);
     queryInsert.bindValue(":esr", user.ESR);
     queryInsert.bindValue(":maxslots", 0);
     queryInsert.bindValue(":active", user.bActive);
+    queryInsert.bindValue(":fullname", user.FullName);
 
     if (queryInsert.exec())
     {
@@ -366,7 +370,7 @@ void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdat
         {
             // User exists, proceed with update
             QSqlQuery queryUpdate;
-            queryUpdate.prepare("UPDATE User SET Username = :newUsername, Password = :password, EUP = :eup, ESR = :esr, MaxSlots = :maxslots, bActive = :active WHERE Username = :username");
+            queryUpdate.prepare("UPDATE User SET Username = :newUsername, Password = :password, EUP = :eup, ESR = :esr, MaxSlots = :maxslots, bActive = :active, FullName = :fullname WHERE Username = :username");
             queryUpdate.bindValue(":newUsername", user.Username);
             queryUpdate.bindValue(":username", usernameBeforeUpdate);
             queryUpdate.bindValue(":password", user.Password);
@@ -374,6 +378,7 @@ void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdat
             queryUpdate.bindValue(":esr", user.ESR);
             queryUpdate.bindValue(":maxslots", user.MaxSlots);
             queryUpdate.bindValue(":active", user.bActive);
+            queryUpdate.bindValue(":fullname", user.FullName);
 
             if (queryUpdate.exec())
             {
@@ -389,13 +394,14 @@ void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdat
         {
             // User does not exist, proceed with insertion
             QSqlQuery queryInsert;
-            queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots, bActive) VALUES (:username, :password, :eup, :esr, :maxslots, :active)");
+            queryInsert.prepare("INSERT INTO User (Username, Password, EUP, ESR, MaxSlots, bActive, FullName) VALUES (:username, :password, :eup, :esr, :maxslots, :active, :fullname)");
             queryInsert.bindValue(":username", user.Username);
             queryInsert.bindValue(":password", user.Password);
             queryInsert.bindValue(":eup", user.EUP);
             queryInsert.bindValue(":esr", user.ESR);
             queryInsert.bindValue(":maxslots", user.MaxSlots);
             queryInsert.bindValue(":active", user.bActive);
+            queryInsert.bindValue(":fullname", user.FullName);
 
             if (queryInsert.exec())
             {
@@ -655,6 +661,7 @@ QVector<User> UserDataAccessObject::GetUsers()
             user.ESR = query.value("ESR").toInt();
             user.MaxSlots = query.value("MaxSlots").toInt();
             user.bActive = query.value("bActive").toBool();
+            user.FullName = query.value("FullName").toString();
 
             users.push_back(user);
         }

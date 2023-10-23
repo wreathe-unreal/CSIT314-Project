@@ -20,6 +20,18 @@ QVector<User> GetUsersController::Execute()
 
 void UpdateUserController::Execute()
 {
+    QApplicationGlobal::UserDAO.Authorize(this->UsernameBeforeUpdate, UpdatedUser.getPassword());
+
+    //if the password did not change, simply update the user info
+    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    {
+        QApplicationGlobal::UserDAO.UpdateOrInsert(this->UpdatedUser, this->UsernameBeforeUpdate);
+        return;
+    }
+
+
+    //if the password has changed, rehash the new plaint text password, and update
+
     QByteArray passwordBytes = UpdatedUser.getPassword().toUtf8();
     QByteArray hashedPassword = QCryptographicHash::hash(passwordBytes, QCryptographicHash::Sha256);
     QString hashedPasswordHex = QString(hashedPassword.toHex());

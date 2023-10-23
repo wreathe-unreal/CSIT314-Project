@@ -88,18 +88,6 @@ void CafeOwnerWindow::on_createButton_clicked()
     Slot newSlot(date, start, end);
     QVector<Slot> slotVector = CreateSlotController(newSlot).Execute();
 
-    if(start == end || start >= end)
-    {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("The work slot has no duration."); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
-        return;
-    }
-
     if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
@@ -259,6 +247,7 @@ void CafeOwnerWindow::on_slotTable_clicked(const QModelIndex &index)
     // Get the selected row
     int row = index.row();
 
+    ui->tabWidget->setCurrentIndex(1);
     // Retrieve the items from the table
     QTableWidgetItem *slotID = ui->slotTable->item(row, 0);
     QTableWidgetItem *date = ui->slotTable->item(row, 1);

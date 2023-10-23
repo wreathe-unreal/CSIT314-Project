@@ -53,7 +53,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -82,7 +82,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>390</x>
@@ -172,7 +172,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>390</x>
@@ -212,7 +212,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>350</x>
@@ -225,7 +225,7 @@
        <item>
         <widget class="QPushButton" name="editButton">
          <property name="text">
-          <string>Edit Workslot</string>
+          <string>Update</string>
          </property>
         </widget>
        </item>

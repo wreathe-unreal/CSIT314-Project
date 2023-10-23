@@ -47,10 +47,13 @@ class User : public IEntity
         int ESR; // Enum value EStaffRole
         int MaxSlots;
         bool bActive;
+        QString FullName;
 
         QString ToJSON();
 
         virtual void ToString() override { qDebug() << this->getUsername();}
+        QString getFullName() const;
+        void setFullName(QString newFullName);
 };
 
 #endif // USER_H

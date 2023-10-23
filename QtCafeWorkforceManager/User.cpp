@@ -33,4 +33,14 @@ void User::setESR(int esr)
 void User::setMaxSlots(int maxSlots)
 {
     this->MaxSlots = maxSlots;
+}
+
+QString User::getFullName() const
+{
+    return FullName;
+}
+
+void User::setFullName(QString newFullName)
+{
+    FullName = newFullName;
 };

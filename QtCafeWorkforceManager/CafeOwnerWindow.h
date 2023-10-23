@@ -9,26 +9,26 @@ class CafeOwnerWindow;
 
 class CafeOwnerWindow : public QMainWindow
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    explicit CafeOwnerWindow(QWidget *parent = nullptr);
-    ~CafeOwnerWindow();
+    public:
+        explicit CafeOwnerWindow(QWidget *parent = nullptr);
+        ~CafeOwnerWindow();
 
-private slots:
+    private slots:
 
-    void on_createButton_clicked();
+        void on_createButton_clicked();
 
-    void on_deleteButton_clicked();
+        void on_deleteButton_clicked();
 
-    void on_slotTable_clicked(const QModelIndex &index);
+        void on_slotTable_clicked(const QModelIndex &index);
 
-    void on_editButton_clicked();
+        void on_editButton_clicked();
 
-    void on_searchButton_clicked();
+        void on_searchButton_clicked();
 
-private:
-    Ui::CafeOwnerWindow *ui;
+    private:
+        Ui::CafeOwnerWindow *ui;
 };
 
 #endif // CAFEOWNERWINDOW_H

@@ -39,11 +39,11 @@
       <x>20</x>
       <y>30</y>
       <width>401</width>
-      <height>211</height>
+      <height>181</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -52,8 +52,8 @@
      <widget class="QCheckBox" name="activeCheckBox">
       <property name="geometry">
        <rect>
-        <x>300</x>
-        <y>140</y>
+        <x>310</x>
+        <y>110</y>
         <width>71</width>
         <height>22</height>
        </rect>
@@ -69,7 +69,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>140</y>
+        <y>110</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -83,7 +83,7 @@
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>361</width>
+        <width>191</width>
         <height>26</height>
        </rect>
       </property>
@@ -105,7 +105,7 @@
        <rect>
         <x>10</x>
         <y>50</y>
-        <width>361</width>
+        <width>191</width>
         <height>26</height>
        </rect>
       </property>
@@ -125,9 +125,9 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>80</y>
-        <width>361</width>
+        <x>210</x>
+        <y>20</y>
+        <width>171</width>
         <height>26</height>
        </rect>
       </property>
@@ -140,16 +140,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="profileCombo"/>
+        <widget class="QComboBox" name="profileCombo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>110</y>
-        <width>361</width>
+        <x>210</x>
+        <y>50</y>
+        <width>171</width>
         <height>26</height>
        </rect>
       </property>
@@ -162,9 +169,51 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="roleCombo"/>
+        <widget class="QComboBox" name="roleCombo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="layoutWidget_6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>80</y>
+        <width>371</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
+       <item>
+        <widget class="QLabel" name="label_11">
+         <property name="text">
+          <string>Full Name:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="fullNameEdit"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QPushButton" name="deleteButton">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>110</y>
+        <width>81</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete User</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
@@ -176,7 +225,7 @@
        <rect>
         <x>20</x>
         <y>10</y>
-        <width>361</width>
+        <width>171</width>
         <height>26</height>
        </rect>
       </property>
@@ -198,7 +247,7 @@
        <rect>
         <x>20</x>
         <y>40</y>
-        <width>361</width>
+        <width>171</width>
         <height>26</height>
        </rect>
       </property>
@@ -218,9 +267,9 @@
      <widget class="QWidget" name="layoutWidget_4">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>70</y>
-        <width>361</width>
+        <x>200</x>
+        <y>10</y>
+        <width>191</width>
         <height>26</height>
        </rect>
       </property>
@@ -233,16 +282,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="profileComboCreate"/>
+        <widget class="QComboBox" name="profileComboCreate">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="layoutWidget_5">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>100</y>
-        <width>361</width>
+        <x>200</x>
+        <y>40</y>
+        <width>191</width>
         <height>26</height>
        </rect>
       </property>
@@ -255,15 +311,22 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="roleComboCreate"/>
+        <widget class="QComboBox" name="roleComboCreate">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
      <widget class="QCheckBox" name="activeCheckBoxCreate">
       <property name="geometry">
        <rect>
-        <x>300</x>
-        <y>140</y>
+        <x>320</x>
+        <y>100</y>
         <width>71</width>
         <height>22</height>
        </rect>
@@ -279,7 +342,7 @@
       <property name="geometry">
        <rect>
         <x>20</x>
-        <y>130</y>
+        <y>110</y>
         <width>121</width>
         <height>31</height>
        </rect>
@@ -288,23 +351,27 @@
        <string>Create User</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QWidget" name="tab_3">
-     <attribute name="title">
-      <string>Delete User</string>
-     </attribute>
-     <widget class="QPushButton" name="deleteButton">
+     <widget class="QWidget" name="layoutWidget_7">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>20</x>
         <y>70</y>
-        <width>161</width>
-        <height>41</height>
+        <width>371</width>
+        <height>26</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Delete Selected User</string>
-      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>Full Name:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="fullNameCreate"/>
+       </item>
+      </layout>
      </widget>
     </widget>
     <widget class="QWidget" name="tab_4">
@@ -314,8 +381,8 @@
      <widget class="QPushButton" name="searchButton">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>100</y>
+        <x>160</x>
+        <y>40</y>
         <width>80</width>
         <height>24</height>
        </rect>
@@ -327,8 +394,8 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>60</y>
+        <x>40</x>
+        <y>10</y>
         <width>291</width>
         <height>26</height>
        </rect>
