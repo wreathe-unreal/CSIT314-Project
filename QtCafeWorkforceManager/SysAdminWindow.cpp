@@ -263,6 +263,7 @@ void SysAdminWindow::on_editButton_clicked()
 
     QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
 
+
     ui->fullNameEdit->clear();
     ui->usernameEdit->clear();
     ui->passwordEdit->clear();
@@ -277,6 +278,7 @@ void SysAdminWindow::on_editButton_clicked()
     ui->profileCombo->setEnabled(false);
     ui->roleCombo->setEnabled(false);
     ui->deleteButton->setEnabled(false);
+    ui->editButton->setEnabled(false);
 
 }
 
@@ -478,7 +480,21 @@ void SysAdminWindow::on_deleteButton_clicked()
             // Show the message box as a modal dialog
             errorMsgBox.exec();
         }
-
+        ui->fullNameEdit->clear();
+        ui->usernameEdit->clear();
+        ui->passwordEdit->clear();
+        ui->activeCheckBox->setChecked(false);
+        ui->roleCombo->setCurrentIndex(0);
+        ui->profileCombo->setCurrentIndex(0);
+        ui->userTable->setCurrentIndex(QModelIndex());
+        ui->fullNameEdit->setEnabled(false);
+        ui->usernameEdit->setEnabled(false);
+        ui->passwordEdit->setEnabled(false);
+        ui->activeCheckBox->setEnabled(false);
+        ui->profileCombo->setEnabled(false);
+        ui->roleCombo->setEnabled(false);
+        ui->deleteButton->setEnabled(false);
+        ui->editButton->setEnabled(false);
         QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
     }
 }
