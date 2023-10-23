@@ -352,6 +352,18 @@ void UserDataAccessObject::Insert(User user)
     queryInsert.bindValue(":active", user.bActive);
     queryInsert.bindValue(":fullname", user.FullName);
 
+    //give a user 1 default workslot if they are a staff member
+    if(user.EUP >= 2)
+    {
+        queryInsert.bindValue(":maxslots", 1);
+
+    }
+    if(user.EUP < 2)
+    {
+        queryInsert.bindValue(":maxslots", 0);
+
+    }
+
     if (queryInsert.exec())
     {
         this->Result = EDatabaseResult::EDR_SUCCESS;
