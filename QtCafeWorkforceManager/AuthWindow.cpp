@@ -35,7 +35,6 @@ void AuthWindow::on_LoginButton_clicked()
 {
     EUserProfile userProfile = AuthorizeController(ui->QLE_Username->text(), ui->QLE_Password->text()).Execute();
     bool bUserAuthd = QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS ? true : false;
-    qDebug() << "auth: " << bUserAuthd;
 
     //if user info is correct, check if user is active
     if(bUserAuthd)

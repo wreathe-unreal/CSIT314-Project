@@ -24,12 +24,10 @@ void UpdateUserController::Execute()
     QApplicationGlobal::UserDAO.Authorize(this->UsernameBeforeUpdate, UpdatedUser.getPassword());
     if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        qDebug() << "no pw change, updating, current password: " << UpdatedUser.getPassword();
         QApplicationGlobal::UserDAO.UpdateOrInsert(this->UpdatedUser, this->UsernameBeforeUpdate);
         return;
     }
 
-    qDebug() << "pw change, updating, current password: " << UpdatedUser.getPassword();
     //if the password has changed, rehash the new plaint text password, and update
     QByteArray passwordBytes = UpdatedUser.getPassword().toUtf8();
     QByteArray hashedPassword = QCryptographicHash::hash(passwordBytes, QCryptographicHash::Sha256);
