@@ -145,7 +145,7 @@
       <x>10</x>
       <y>20</y>
       <width>211</width>
-      <height>181</height>
+      <height>171</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -168,7 +168,7 @@
        <string>Apply Changes</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -203,12 +203,15 @@
            <item>
             <widget class="QLabel" name="label_7">
              <property name="text">
-              <string>Select Role: </string>
+              <string>Role: </string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QComboBox" name="roleCombo">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -258,8 +261,20 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLogout"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLogout">
+   <property name="text">
+    <string>Logout</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

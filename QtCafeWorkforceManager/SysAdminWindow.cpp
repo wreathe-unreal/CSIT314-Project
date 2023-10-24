@@ -153,18 +153,18 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
         else
         {
             ui->roleCombo->clear();
+            ui->roleCombo->addItem("Non-Staff");
             ui->roleCombo->addItem("Chef");
             ui->roleCombo->addItem("Cashier");
             ui->roleCombo->addItem("Waiter");
-            ui->roleCombo->setEnabled(true);
-            ui->roleCombo->setCurrentIndex(static_cast<int>(QStringToEStaffRole(roleItem->text()))-1);
+            ui->roleCombo->setEnabled(false);
+            ui->roleCombo->setCurrentIndex(static_cast<int>(QStringToEStaffRole(roleItem->text())));
         }
 
         ui->fullNameEdit->setEnabled(true);
         ui->usernameEdit->setEnabled(true);
         ui->passwordEdit->setEnabled(true);
         ui->profileCombo->setEnabled(true);
-        ui->roleCombo->setEnabled(true);
         ui->activeCheckBox->setEnabled(true);
         ui->editButton->setEnabled(true);
         ui->deleteButton->setEnabled(true);
@@ -276,7 +276,6 @@ void SysAdminWindow::on_editButton_clicked()
     ui->passwordEdit->setEnabled(false);
     ui->activeCheckBox->setEnabled(false);
     ui->profileCombo->setEnabled(false);
-    ui->roleCombo->setEnabled(false);
     ui->deleteButton->setEnabled(false);
     ui->editButton->setEnabled(false);
 
@@ -365,10 +364,11 @@ void SysAdminWindow::on_profileCombo_currentIndexChanged(int index)
     if(ui->profileCombo->currentText() == "Cafe Staff")
     {
         ui->roleCombo->clear();
+        ui->roleCombo->addItem("Non-Staff");
         ui->roleCombo->addItem("Chef");
         ui->roleCombo->addItem("Cashier");
         ui->roleCombo->addItem("Waiter");
-        ui->roleCombo->setEnabled(true);
+
     }
     else
     {
@@ -387,6 +387,7 @@ void SysAdminWindow::on_profileComboCreate_currentIndexChanged(int index)
     {
         ui->roleComboCreate->setEnabled(true);
         ui->roleComboCreate->clear();
+        ui->roleComboCreate->addItem("Non-Staff");
         ui->roleComboCreate->addItem("Chef");
         ui->roleComboCreate->addItem("Cashier");
         ui->roleComboCreate->addItem("Waiter");

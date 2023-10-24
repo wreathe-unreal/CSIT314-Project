@@ -87,3 +87,28 @@ void IsUserActiveController::Execute()
 {
     return QApplicationGlobal::UserDAO.IsUserActive(this->Username);
 }
+
+QVector<Slot> SearchSlotsByUserIDController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.SearchByUserID(this->UserID);
+}
+
+int GetUserIDController::Execute()
+{
+    return QApplicationGlobal::UserDAO.GetUserID(this->Username);
+}
+
+EUserProfile GetEUPController::Execute()
+{
+    return QApplicationGlobal::UserDAO.GetEUP(this->Username);
+}
+
+EStaffRole GetESRController::Execute()
+{
+    return QApplicationGlobal::UserDAO.GetESR(this->Username);
+}
+
+void SetESRController::Execute()
+{
+    return QApplicationGlobal::UserDAO.SetESR(this->Username, this->NewESR);
+}

@@ -154,3 +154,66 @@ class IsUserActiveController : public IController
         }
         void Execute();
 };
+
+class GetUserIDController : public IController
+{
+    public:
+        QString Username;
+        GetUserIDController(QString username)
+        {
+            this->Username = username;
+        }
+        int Execute();
+};
+
+class SearchSlotsByUserIDController : public IController
+{
+    public:
+        int UserID;
+        SearchSlotsByUserIDController(int userID)
+        {
+            this->UserID = userID;
+        }
+        QVector<Slot> Execute();
+};
+
+class GetEUPController : public IController
+{
+    public:
+        QString Username;
+
+        GetEUPController(QString username)
+        {
+            this->Username = username;
+        }
+        EUserProfile Execute();
+
+};
+
+
+class GetESRController : public IController
+
+{
+    public:
+        QString Username;
+
+        GetESRController(QString username)
+        {
+            this->Username = username;
+        }
+        EStaffRole Execute();
+};
+
+class SetESRController : public IController
+{
+    public:
+        QString Username;
+        EStaffRole NewESR;
+
+        SetESRController(QString username, EStaffRole newESR)
+        {
+            this->Username = username;
+            this->NewESR = newESR;
+        }
+        void Execute();
+};
