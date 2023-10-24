@@ -272,14 +272,27 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
 
 QVector<Slot> SlotDataAccessObject::SearchByUserID(int userID)
 {
-    QVector<Slot> Slots;
+    QVector<Slot> userSlots;
 
-    if (!DATABASE.isOpen()) {
+    if (!DATABASE.isOpen())
+    {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
         this->Result = EDatabaseResult::EDR_FAILURE;
+        return userSlots;
     }
 
-    QSqlQuery query("SELECT * FROM Slot WHERE UserID");
+    QSqlQuery query("SELECT * FROM Slot WHERE SlotID IN (SELECT SlotID FROM UserSlot WHERE UserID = ?)");
+    query.addBindValue(userID);
+
+    // Error checking after query execution
+    if(!query.exec())
+    {
+        qDebug() << query.lastQuery();
+        qWarning() << "Database query error:" << query.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return userSlots;  // return the empty QVector or handle the error as appropriate
+    }
+
     while (query.next())
     {
         int id = query.value("SlotID").toInt();
@@ -290,10 +303,10 @@ QVector<Slot> SlotDataAccessObject::SearchByUserID(int userID)
         int curCashiers = query.value("CurCashiers").toInt();
         int curWaiters = query.value("CurWaiters").toInt();
 
-        Slot Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
-        Slots.push_back(Slot);
+        Slot userSlot = Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
+        userSlots.push_back(userSlot);
     }
 
     this->Result = EDatabaseResult::EDR_SUCCESS;
-    return Slots;
+    return userSlots;
 }

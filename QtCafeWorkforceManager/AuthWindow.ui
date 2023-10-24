@@ -51,7 +51,8 @@
      </font>
     </property>
     <property name="styleSheet">
-     <string notr="true">QGroupBox { 
+     <string notr="true">QGroupBox
+ { 
      border: 3px solid gray; 
      border-radius: 5px; 
  } </string>

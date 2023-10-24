@@ -724,6 +724,30 @@ QVector<User> UserDataAccessObject::GetUsers()
     return users;
 }
 
+QString UserDataAccessObject::GetName(QString username)
+{
+    if (!DATABASE.isOpen()) {
+        qWarning() << "Error: connection with database failed" << DATABASE.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return ""; // Return empty QVector
+    }
+
+    QSqlQuery query;
+
+    // First, get the UserID for the provided username from the User table
+    query.prepare("SELECT FullName FROM User WHERE Username = ?");
+    query.addBindValue(username);
+    if (!query.exec() || !query.next())
+    {
+        qWarning() << "Failed to execute User query or user not found:" << query.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return "";
+    }
+
+    this->Result = EDatabaseResult::EDR_SUCCESS;
+    return query.value(0).toString();
+}
+
 QVector<Slot> UserDataAccessObject::GetSlotsByUser(QString username)
 {
     QVector<Slot> associatedSlots;

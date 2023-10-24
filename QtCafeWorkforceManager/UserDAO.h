@@ -33,6 +33,7 @@ class UserDataAccessObject
     void SetESR(QString username, EStaffRole role);
     void Delete(QString username);
     QVector<User> GetUsers();
+    QString GetName(QString username);
 
     QVector<Slot> GetSlotsByUser(QString username);
     bool GetbActive(std::string username);

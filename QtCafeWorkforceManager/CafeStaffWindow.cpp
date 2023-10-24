@@ -5,6 +5,8 @@
 #include "ui_CafeStaffWindow.h"
 
 #include <QMessageBox>
+
+
 void ReloadSlots(Ui::CafeStaffWindow* ui)
 {
     int userID = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
@@ -20,6 +22,7 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
     }
     if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
     {
+        qDebug() << slotVector.size();
         for (auto& slot : slotVector)
         {
             int row = ui->assignedTable->rowCount();
@@ -28,8 +31,8 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
             // Create a new item for each piece of data/*
             QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString());
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
 
             // Add those items to the table
             ui->assignedTable->setItem(row, 0, slotID); // 1 is the column number for the Username
@@ -48,9 +51,7 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
 }
 
 
-CafeStaffWindow::CafeStaffWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::CafeStaffWindow)
+CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::CafeStaffWindow)
 {
     ui->setupUi(this);
     connect(ui->actionLogout, &QAction::triggered, this, &CafeStaffWindow::OnLogoutTriggered);
@@ -64,7 +65,7 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :
     QHeaderView* horizontalHeader = ui->assignedTable->horizontalHeader();
 
     // Set the stretchLastSection property
-    horizontalHeader->setStretchLastSection(true);
+    horizontalHeader->setStretchLastSection(false);
 
     QStringList headers;
     headers << "Slot ID" << "Date" << "Start Time" << "End Time";
@@ -80,9 +81,10 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :
         msgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
         msgBox.setText("Logging out. Please speak to Sys Admin.");
         msgBox.exec();
-        delete this;
+        OnLogoutTriggered();
     }
 
+    //handle first login
     if(esr == EStaffRole::ESR_NonStaff)
     {
 
@@ -106,6 +108,8 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :
         SetESRController(QApplicationGlobal::CurrentUsername, newESR).Execute();
     }
 
+
+    ui->firstNameText->setText(GetNameController(QApplicationGlobal::CurrentUsername).Execute());
     ui->roleCombo->clear();
     ui->roleCombo->addItem("Non-Staff");
     ui->roleCombo->addItem("Chef");

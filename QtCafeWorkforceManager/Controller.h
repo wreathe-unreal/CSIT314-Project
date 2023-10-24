@@ -217,3 +217,14 @@ class SetESRController : public IController
         }
         void Execute();
 };
+
+class GetNameController : public IController
+{
+    public:
+        QString Username;
+        GetNameController(QString username)
+        {
+            this->Username = username;
+        }
+        QString Execute();
+};

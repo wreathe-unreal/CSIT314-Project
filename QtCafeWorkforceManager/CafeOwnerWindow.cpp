@@ -56,8 +56,8 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
             // Create a new item for each piece of data/*
             QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString());
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
             QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
             QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
@@ -113,8 +113,8 @@ void CafeOwnerWindow::on_createButton_clicked()
             // Create a new item for each piece of data/*
             QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString());
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
             QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
             QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
@@ -202,8 +202,8 @@ void CafeOwnerWindow::on_deleteButton_clicked()
                     // Create a new item for each piece of data/*
                     QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
                     QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-                    QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString());
-                    QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString());
+                    QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+                    QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
                     QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
                     QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
                     QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
@@ -329,8 +329,8 @@ void CafeOwnerWindow::on_editButton_clicked()
             // Create a new item for each piece of data/*
             QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString());
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
             QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
             QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
@@ -386,8 +386,8 @@ void CafeOwnerWindow::on_searchButton_clicked()
             // Create a new item for each piece of data/*
             QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString());
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
             QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
             QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));

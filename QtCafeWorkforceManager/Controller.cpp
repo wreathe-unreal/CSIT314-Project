@@ -112,3 +112,8 @@ void SetESRController::Execute()
 {
     return QApplicationGlobal::UserDAO.SetESR(this->Username, this->NewESR);
 }
+
+QString GetNameController::Execute()
+{
+    return QApplicationGlobal::UserDAO.GetName(this->Username);
+}
