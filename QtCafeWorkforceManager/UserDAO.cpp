@@ -240,7 +240,8 @@ EStaffRole UserDataAccessObject::GetESR(QString username)
     return esr;
 }
 
-User UserDataAccessObject::GetUser(const std::string& username)
+
+User UserDataAccessObject::GetUser(QString username)
 {
     if (!DATABASE.isOpen())
     {
@@ -250,7 +251,7 @@ User UserDataAccessObject::GetUser(const std::string& username)
 
     QSqlQuery query;
     query.prepare("SELECT Username, Password, EUP, ESR, MaxSlots, bActive, FullName FROM User WHERE Username = :username");
-    query.bindValue(":username", QString::fromStdString(username));
+    query.bindValue(":username", username);
 
     if (query.exec())
     {
@@ -267,14 +268,17 @@ User UserDataAccessObject::GetUser(const std::string& username)
             user.bActive = query.value(5).toBool();
             user.FullName = query.value(6).toString();
 
+            this->Result = EDatabaseResult::EDR_SUCCESS;
             return user;
         }
     }
     else
     {
         qWarning() << "GetUser() ERROR: " << query.lastError().text();
+        this->Result = EDatabaseResult::EDR_FAILURE;
     }
 
+    this->Result = EDatabaseResult::EDR_FAILURE;
     return User(); // Return a default User object if the username is not found or there's an error
 }
 
@@ -445,7 +449,7 @@ void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdat
     }
 }
 
-void UserDataAccessObject::SetMaxSlots(const std::string username, int maxSlots)
+void UserDataAccessObject::SetMaxSlots(QString username, int maxSlots)
 {
     if(!DATABASE.isOpen())
     {
@@ -453,40 +457,18 @@ void UserDataAccessObject::SetMaxSlots(const std::string username, int maxSlots)
         this->Result = EDatabaseResult::EDR_FAILURE;
     }
 
-    // Check if the user already exists
-    QSqlQuery queryCheck;
-    queryCheck.prepare("SELECT COUNT(*) FROM User WHERE Username = :username");
-    queryCheck.bindValue(":username", QString::fromStdString(username));
+    QSqlQuery queryUpdate;
+    queryUpdate.prepare("UPDATE User SET MaxSlots = :maxslots WHERE Username = :username");
+    queryUpdate.bindValue(":username", username);
+    queryUpdate.bindValue(":maxslots", maxSlots);
 
-    if (queryCheck.exec())
+    if (queryUpdate.exec())
     {
-        if (queryCheck.next() && queryCheck.value(0).toInt() > 0)
-        {
-            // User exists, proceed with updating the MaxSlots column
-            QSqlQuery queryUpdate;
-            queryUpdate.prepare("UPDATE User SET MaxSlots = :maxslots WHERE Username = :username");
-            queryUpdate.bindValue(":username", QString::fromStdString(username));
-            queryUpdate.bindValue(":maxslots", maxSlots);
-
-            if (queryUpdate.exec())
-            {
-                this->Result = EDatabaseResult::EDR_SUCCESS;
-            }
-            else
-            {
-                qWarning() << "Update MaxSlots failed: " << queryUpdate.lastError().text();
-                this->Result = EDatabaseResult::EDR_FAILURE;
-            }
-        }
-        else
-        {
-            qWarning("Error: User not found");
-            this->Result = EDatabaseResult::EDR_FAILURE;
-        }
+        this->Result = EDatabaseResult::EDR_SUCCESS;
     }
     else
     {
-        qWarning() << "Check user query failed: " << queryCheck.lastError().text();
+        qWarning() << "Update MaxSlots failed: " << queryUpdate.lastError().text();
         this->Result = EDatabaseResult::EDR_FAILURE;
     }
 }
@@ -746,6 +728,32 @@ QString UserDataAccessObject::GetName(QString username)
 
     this->Result = EDatabaseResult::EDR_SUCCESS;
     return query.value(0).toString();
+}
+
+void UserDataAccessObject::SetName(QString username, QString newName)
+{
+    if (!DATABASE.isOpen()) {
+        qWarning() << "Error: connection with database failed" << DATABASE.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return; // Return empty QVector
+    }
+
+    QSqlQuery query;
+
+    // First, get the UserID for the provided username from the User table
+    query.prepare("UPDATE User SET FullName = :name WHERE Username = :username");
+
+    query.bindValue(":name", newName);
+    query.bindValue(":username", username);
+    if (!query.exec() || !query.next())
+    {
+        qWarning() << "Failed to execute query or user not found:" << query.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return;
+    }
+
+    this->Result = EDatabaseResult::EDR_SUCCESS;
+    return;
 }
 
 QVector<Slot> UserDataAccessObject::GetSlotsByUser(QString username)

@@ -27,6 +27,8 @@ class CafeOwnerWindow : public QMainWindow
 
         void on_searchButton_clicked();
 
+        void on_showAllButton_clicked();
+
     private:
         Ui::CafeOwnerWindow *ui;
 

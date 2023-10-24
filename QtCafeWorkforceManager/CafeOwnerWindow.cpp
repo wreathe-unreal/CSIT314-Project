@@ -46,7 +46,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     ui->slotTable->setColumnWidth(waitersColumnIndex, smallerWidth);
 
     QVector<Slot> slotVector = GetSlotsController().Execute();
-    if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         for (auto& slot : slotVector)
         {
@@ -74,8 +74,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     }
 
     connect(ui->actionLogout, &QAction::triggered, this, &CafeOwnerWindow::OnLogoutTriggered);
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
-
+    ResetUserDAOResult().Execute();
 }
 
 CafeOwnerWindow::~CafeOwnerWindow()
@@ -90,9 +89,10 @@ void CafeOwnerWindow::on_createButton_clicked()
     QTime start = ui->startEdit->time();
     QTime end = ui->endEdit->time();
     Slot newSlot(date, start, end);
+
     QVector<Slot> slotVector = CreateSlotController(newSlot).Execute();
 
-    if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -140,7 +140,7 @@ void CafeOwnerWindow::on_createButton_clicked()
         errorMsgBox.exec();
     }
 
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetUserDAOResult().Execute();
 }
 
 
@@ -177,7 +177,7 @@ void CafeOwnerWindow::on_deleteButton_clicked()
 
         DeleteSlotController(slotIDToDelete).Execute();
 
-        if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
+        if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
         {
             QMessageBox successMsgBox;
             successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -189,7 +189,7 @@ void CafeOwnerWindow::on_deleteButton_clicked()
 
             QVector<Slot> slotVector = GetSlotsController().Execute();
 
-            if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
+            if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
             {
                 ui->slotTable->setRowCount(0);
 
@@ -230,7 +230,7 @@ void CafeOwnerWindow::on_deleteButton_clicked()
             errorMsgBox.exec();
         }
 
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+        ResetUserDAOResult().Execute();
     }
 }
 
@@ -262,13 +262,18 @@ void CafeOwnerWindow::on_slotTable_clicked(const QModelIndex &index)
     QTableWidgetItem *curWaiters = ui->slotTable->item(row, 6);
 
     ui->slotIDEdit->setText(slotID->text());
+
     ui->calendarEdit->setEnabled(true);
     ui->calendarEdit->setSelectedDate(QDate::fromString(date->text()));
+
     ui->startEditEdit->setEnabled(true);
-    ui->startEditEdit->setTime(QTime::fromString(startTime->text()));
+    ui->startEditEdit->setTime(QTime::fromString(startTime->text(), "hh:mm:ss AP"));
+
     ui->endEditEdit->setEnabled(true);
-    ui->endEditEdit->setTime(QTime::fromString(endTime->text()));
+    ui->endEditEdit->setTime(QTime::fromString(endTime->text(), "hh:mm:ss AP"));
+
     ui->editButton->setEnabled(true);
+
     ui->deleteButton->setEnabled(true);
 
 }
@@ -276,6 +281,17 @@ void CafeOwnerWindow::on_slotTable_clicked(const QModelIndex &index)
 
 void CafeOwnerWindow::on_editButton_clicked()
 {
+    if(ui->startEditEdit->time() >= ui->endEditEdit->time())
+    {
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!"); // Set the window title
+        errorMsgBox.setText("Work slot has no duration!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        errorMsgBox.exec();
+        return;
+    }
     if(ui->slotTable->currentRow() == -1)
     {
         QMessageBox errorMsgBox;
@@ -301,7 +317,7 @@ void CafeOwnerWindow::on_editButton_clicked()
 
     QVector<Slot> slotVector = UpdateSlotController(slotChanged).Execute();
 
-    if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -357,7 +373,7 @@ void CafeOwnerWindow::on_editButton_clicked()
         errorMsgBox.exec();
     }
 
-    QApplicationGlobal::SlotDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetSlotDAOResult().Execute();
 }
 
 
@@ -365,7 +381,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
 {
     QVector<Slot> FoundSlots = SearchSlotByDayController(ui->calendarSearch->selectedDate()).Execute();
 
-    if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS && FoundSlots.size() > 0)
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS && FoundSlots.size() > 0)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -410,7 +426,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
         warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
         warning.exec();
     }
-    if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_FAILURE)
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
     {
         QMessageBox warning;
         warning.setWindowTitle("Error"); // Set the window title
@@ -419,7 +435,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
         warning.exec();
     }
 
-    QApplicationGlobal::SlotDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetSlotDAOResult().Execute();
 }
 
 void CafeOwnerWindow::OnLogoutTriggered()
@@ -429,5 +445,38 @@ void CafeOwnerWindow::OnLogoutTriggered()
     AuthView->setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
     AuthView->show();
     this->close();
+}
+
+
+void CafeOwnerWindow::on_showAllButton_clicked()
+{
+    ui->slotTable->setRowCount(0);
+    QVector<Slot> slotVector = GetSlotsController().Execute();
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    {
+        for (auto& slot : slotVector)
+        {
+            int row = ui->slotTable->rowCount();
+            ui->slotTable->insertRow(row); // Insert a new row
+
+            // Create a new item for each piece of data/*
+            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
+            QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
+            QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
+
+            // Add those items to the table
+            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
+            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
+            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            ui->slotTable->setItem(row, 4, curChefs);
+            ui->slotTable->setItem(row, 5, curCashiers);
+            ui->slotTable->setItem(row, 6, curWaiters);
+        }
+    }
 }
 

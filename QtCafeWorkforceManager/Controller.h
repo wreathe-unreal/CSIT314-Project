@@ -228,3 +228,86 @@ class GetNameController : public IController
         }
         QString Execute();
 };
+
+class SetNameController : public IController
+{
+    public:
+        QString Username;
+        QString NewName;
+        SetNameController(QString username, QString newName)
+        {
+            this->Username = username;
+            this->NewName = newName;
+        }
+
+        void Execute();
+};
+
+class SetMaxSlotsController : public IController
+{
+    public:
+        QString Username;
+        int MaxSlots;
+        SetMaxSlotsController(QString username, int maxSlots)
+        {
+            this->Username = username;
+            this->MaxSlots = maxSlots;
+        }
+
+        void Execute();
+};
+
+class GetUserController : public IController
+{
+    public:
+        QString Username;
+
+        GetUserController(QString username)
+        {
+            this->Username = username;
+        }
+
+        User Execute();
+};
+
+class GetUserDAOResult : public IController
+{
+    public:
+        GetUserDAOResult()
+        {
+
+        }
+
+        EDatabaseResult Execute();
+};
+
+class GetSlotDAOResult : public IController
+{
+    public:
+        GetSlotDAOResult()
+        {
+
+        }
+
+        EDatabaseResult Execute();
+};
+
+class ResetUserDAOResult : public IController
+{
+    public:
+        ResetUserDAOResult()
+        {
+
+        }
+        void Execute();
+};
+
+class ResetSlotDAOResult : public IController
+{
+    public:
+        ResetSlotDAOResult()
+        {
+
+        }
+        void Execute();
+};

@@ -45,10 +45,7 @@ class Slot : public IEntity
                 return false;
             }
 
-            return RangeContainsStartInclusive(this->StartTime, this->EndTime, otherSlot.StartTime)
-                ||  RangeContainsEndInclusive(this->StartTime, this->EndTime, otherSlot.EndTime)
-                ||  RangeContainsStartInclusive(otherSlot.StartTime, otherSlot.EndTime, this->StartTime)
-                ||  RangeContainsEndInclusive(otherSlot.StartTime, otherSlot.EndTime, this->EndTime);
+            return (this->StartTime < otherSlot.EndTime) && (this->EndTime > otherSlot.StartTime);
         }
 
         virtual void ToString() override { qDebug() << getSlotID(); }
@@ -85,25 +82,6 @@ class Slot : public IEntity
         int CurCashiers;
         int CurWaiters;
 
-
-    private:
-        bool RangeContainsEndInclusive(QTime start, QTime end, QTime value)
-        {
-            if(value > start && value <= end)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool RangeContainsStartInclusive(QTime start, QTime end, QTime value)
-        {
-            if(value >= start && value < end)
-            {
-                return true;
-            }
-            return false;
-        }
 };
 
 #endif // SLOT_H

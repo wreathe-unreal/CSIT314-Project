@@ -40,7 +40,7 @@ QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
 {
     QVector<Slot> existingSlots = GetAllSlots();
 
-    if (newSlot.StartTime == newSlot.EndTime)
+    if (newSlot.StartTime >= newSlot.EndTime)
     {
         qDebug() << "Error: The work slot has no duration.";
         QMessageBox errorMsgBox;
@@ -223,6 +223,13 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
     if (editedSlot.StartTime == editedSlot.EndTime)
     {
         qDebug() << "Error: The work slot has no duration.";
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!"); // Set the window title
+        errorMsgBox.setText("The work slot has no duration."); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        errorMsgBox.exec();
         this->Result = EDatabaseResult::EDR_FAILURE;
         return existingSlots;
     }
@@ -232,6 +239,13 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
         if (editedSlot.HasOverlap(existingSlot) && editedSlot.SlotID != existingSlot.SlotID)
         {
             qDebug() << "Error: The new work slot overlaps with an existing Slot.";
+            QMessageBox errorMsgBox;
+            errorMsgBox.setWindowTitle("Error!"); // Set the window title
+            errorMsgBox.setText("The work slot overlaps with an existing work slot."); // Set the text to display
+            errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+            // Show the message box as a modal dialog
+            errorMsgBox.exec();
             this->Result = EDatabaseResult::EDR_FAILURE;
             return existingSlots;
         }

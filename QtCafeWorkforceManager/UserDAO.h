@@ -26,15 +26,15 @@ class UserDataAccessObject
     int GetMaxSlots(std::string username);
     EUserProfile GetEUP(QString username);
     EStaffRole GetESR(QString username);
-    User GetUser(const std::string& username);
+    User GetUser(QString username);
     void UpdateOrInsert(User user, QString usernameBeforeUpdate);
-    void SetMaxSlots(std::string username, int maxSlots);
+    void SetMaxSlots(QString username, int maxSlots);
     void SetEUP(QString username, EUserProfile profile);
     void SetESR(QString username, EStaffRole role);
     void Delete(QString username);
     QVector<User> GetUsers();
     QString GetName(QString username);
-
+    void SetName(QString username, QString newName);
     QVector<Slot> GetSlotsByUser(QString username);
     bool GetbActive(std::string username);
     void SuspendUser(std::string username);

@@ -4,6 +4,7 @@
 #include "QApplicationGlobal.h"
 #include "ui_CafeStaffWindow.h"
 
+#include <QDebug>
 #include <QMessageBox>
 
 
@@ -11,18 +12,17 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
 {
     int userID = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
     QVector<Slot> slotVector;
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         slotVector = SearchSlotsByUserIDController(userID).Execute();
     }
     else
     {
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+        ResetUserDAOResult().Execute();
         return;
     }
-    if(QApplicationGlobal::SlotDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
-        qDebug() << slotVector.size();
         for (auto& slot : slotVector)
         {
             int row = ui->assignedTable->rowCount();
@@ -43,12 +43,13 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
     }
     else
     {
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+        ResetUserDAOResult().Execute();
         return;
     }
 
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetUserDAOResult().Execute();
 }
+
 
 
 CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::CafeStaffWindow)
@@ -72,9 +73,9 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
 
     ui->assignedTable->setHorizontalHeaderLabels(headers);
 
-    EStaffRole esr = QApplicationGlobal::UserDAO.GetESR(QApplicationGlobal::CurrentUsername);
+    EStaffRole esr = GetESRController(QApplicationGlobal::CurrentUsername).Execute();
 
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_FAILURE)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
     {
         QMessageBox msgBox;
         msgBox.setWindowTitle("Failed to find Staff Role."); // Set the window title
@@ -135,3 +136,46 @@ void CafeStaffWindow::OnLogoutTriggered()
     AuthView->show();
     this->close();
 }
+
+void CafeStaffWindow::on_editInfoButton_clicked()
+{
+    User updatedUser = GetUserController(QApplicationGlobal::CurrentUsername).Execute();
+    updatedUser.FullName = ui->firstNameText->text();
+    updatedUser.MaxSlots = ui->maxSlotsBox->value();
+
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    {
+        UpdateUserController(updatedUser, QApplicationGlobal::CurrentUsername).Execute();
+    }
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Update Failed");
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowFlags(msgBox.windowFlags() & ~Qt::WindowCloseButtonHint);
+        msgBox.setText("Update user information failed, invalid user.");
+        msgBox.exec();
+        return;
+    }
+
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Update Failed");
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.setWindowFlags(msgBox.windowFlags() & ~Qt::WindowCloseButtonHint);
+        msgBox.setText("Update user information failed, user not found.");
+        msgBox.exec();
+        return;
+    }
+
+    QMessageBox successMsgBox;
+    successMsgBox.setWindowTitle("Success!"); // Set the window title
+    successMsgBox.setText("Your info has been updated."); // Set the text to display
+    successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+
+    // Show the message box as a modal dialog
+    successMsgBox.exec();
+    return;
+}
+

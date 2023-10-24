@@ -57,7 +57,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
     ui->userTable->setHorizontalHeaderLabels(headers);
 
     QVector<User> Users = GetUsersController().Execute();
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         for (auto& user : Users)
         {
@@ -87,7 +87,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
 
     connect(ui->actionLogout, &QAction::triggered, this, &SysAdminWindow::OnLogoutTriggered);
 
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetUserDAOResult().Execute();
 
 }
 
@@ -206,7 +206,7 @@ void SysAdminWindow::on_editButton_clicked()
 
     UpdateUserController(user, UsernameBeforeEdit).Execute();
 
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -227,11 +227,11 @@ void SysAdminWindow::on_editButton_clicked()
         errorMsgBox.exec();
     }
 
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetUserDAOResult().Execute();
 
     QVector<User> Users = GetUsersController().Execute();
 
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         ui->userTable->setRowCount(0);
 
@@ -261,7 +261,7 @@ void SysAdminWindow::on_editButton_clicked()
         }
     }
 
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetUserDAOResult().Execute();
 
 
     ui->fullNameEdit->clear();
@@ -295,7 +295,7 @@ void SysAdminWindow::on_createButton_clicked()
     user.setESR(static_cast<int>(QStringToEStaffRole(ui->roleComboCreate->currentText())));
 
     CreateUserController(user).Execute();
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -307,7 +307,7 @@ void SysAdminWindow::on_createButton_clicked()
 
         QVector<User> Users = GetUsersController().Execute();
 
-        if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+        if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
         {
                 ui->userTable->setRowCount(0);
 
@@ -348,7 +348,7 @@ void SysAdminWindow::on_createButton_clicked()
         errorMsgBox.exec();
     }
 
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetUserDAOResult().Execute();
     ui->fullNameCreate->clear();
     ui->usernameCreate->clear();
     ui->passwordCreate->clear();
@@ -429,7 +429,7 @@ void SysAdminWindow::on_deleteButton_clicked()
 
         DeleteUserController(UsernameToDelete).Execute();
 
-        if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+        if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
         {
             QMessageBox successMsgBox;
             successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -441,7 +441,7 @@ void SysAdminWindow::on_deleteButton_clicked()
 
             QVector<User> Users = GetUsersController().Execute();
 
-            if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+            if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
             {
                     ui->userTable->setRowCount(0);
 
@@ -496,7 +496,7 @@ void SysAdminWindow::on_deleteButton_clicked()
         ui->roleCombo->setEnabled(false);
         ui->deleteButton->setEnabled(false);
         ui->editButton->setEnabled(false);
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+        ResetUserDAOResult().Execute();
     }
 }
 
@@ -506,7 +506,7 @@ void SysAdminWindow::on_searchButton_clicked()
 {
     QVector<User> Users = SearchByEUPController(IntToEUserProfile(ui->searchCombo->currentIndex())).Execute();
 
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS && Users.size() > 0)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS && Users.size() > 0)
     {
         ui->userTable->setRowCount(0);
 
@@ -546,7 +546,7 @@ void SysAdminWindow::on_searchButton_clicked()
         errorMsgBox.exec();
     }
 
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+    ResetUserDAOResult().Execute();
 }
 
 void SysAdminWindow::OnLogoutTriggered()

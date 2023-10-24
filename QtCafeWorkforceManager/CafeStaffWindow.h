@@ -15,6 +15,9 @@ public:
     explicit CafeStaffWindow(QWidget *parent = nullptr);
     ~CafeStaffWindow();
 
+private slots:
+    void on_editInfoButton_clicked();
+
 private:
     Ui::CafeStaffWindow *ui;
     void OnLogoutTriggered();

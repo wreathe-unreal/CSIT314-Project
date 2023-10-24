@@ -266,6 +266,19 @@
        </rect>
       </property>
      </widget>
+     <widget class="QPushButton" name="showAllButton">
+      <property name="geometry">
+       <rect>
+        <x>360</x>
+        <y>140</y>
+        <width>131</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Show All Workslots</string>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>

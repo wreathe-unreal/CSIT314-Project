@@ -117,3 +117,39 @@ QString GetNameController::Execute()
 {
     return QApplicationGlobal::UserDAO.GetName(this->Username);
 }
+
+void SetNameController::Execute()
+{
+    return QApplicationGlobal::UserDAO.SetName(this->Username, this->NewName);
+}
+
+void SetMaxSlotsController::Execute()
+{
+    return QApplicationGlobal::UserDAO.SetMaxSlots(this->Username, this->MaxSlots);
+}
+
+User GetUserController::Execute()
+{
+    return QApplicationGlobal::UserDAO.GetUser(this->Username);
+}
+
+
+EDatabaseResult GetUserDAOResult::Execute()
+{
+    return QApplicationGlobal::UserDAO.Result;
+}
+
+EDatabaseResult GetSlotDAOResult::Execute()
+{
+    return QApplicationGlobal::SlotDAO.Result;
+}
+
+void ResetUserDAOResult::Execute()
+{
+    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+}
+
+void ResetSlotDAOResult::Execute()
+{
+    QApplicationGlobal::SlotDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+}

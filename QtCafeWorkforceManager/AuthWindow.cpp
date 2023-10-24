@@ -34,7 +34,7 @@ AuthWindow::~AuthWindow()
 void AuthWindow::on_LoginButton_clicked()
 {
     EUserProfile userProfile = AuthorizeController(ui->QLE_Username->text(), ui->QLE_Password->text()).Execute();
-    bool bUserAuthd = QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS ? true : false;
+    bool bUserAuthd = GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS ? true : false;
 
     //if user info is correct, check if user is active
     if(bUserAuthd)
@@ -42,18 +42,18 @@ void AuthWindow::on_LoginButton_clicked()
         IsUserActiveController(ui->QLE_Username->text()).Execute();
     }
 
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_FAILURE)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
     {
         QPalette palette;
         palette.setColor(QPalette::Text, QColorConstants::Red);
         ui->QLE_Password->setPalette(palette);
         ui->QLE_Username->setPalette(palette);
         ui->InvalidLoginLabel->setVisible(true);
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+        ResetUserDAOResult().Execute();
         return;
     }
 
-    if(QApplicationGlobal::UserDAO.Result == EDatabaseResult::EDR_SUCCESS)
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
     {
         switch(userProfile)
         {
@@ -85,7 +85,7 @@ void AuthWindow::on_LoginButton_clicked()
                 break;
         }
 
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+        ResetUserDAOResult().Execute();
         this->close(); // close the main window
     }
 }

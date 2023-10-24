@@ -17,8 +17,8 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>329</y>
+      <x>10</x>
+      <y>330</y>
       <width>761</width>
       <height>241</height>
      </rect>
@@ -34,10 +34,33 @@
       <property name="geometry">
        <rect>
         <x>5</x>
-        <y>10</y>
+        <y>40</y>
         <width>741</width>
-        <height>191</height>
+        <height>161</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="workslotText">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>10</y>
+        <width>51</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>61</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Workslots:</string>
       </property>
      </widget>
     </widget>
@@ -143,9 +166,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>10</y>
       <width>211</width>
-      <height>171</height>
+      <height>201</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -159,7 +182,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>140</y>
         <width>111</width>
         <height>24</height>
        </rect>
