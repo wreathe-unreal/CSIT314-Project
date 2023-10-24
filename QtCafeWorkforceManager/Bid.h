@@ -13,17 +13,18 @@ class Bid : public IEntity
 
         // Getters
         int getBidID() const { return BidID;}
-        const std::string& getUsername() const { return Username; }
         int getShiftID() const {return ShiftID;}
 
         // Setters
         void setBidID(int bidID);
-        void setUsername(const std::string& username);
         void setShiftID(int shiftID);
+
+        int getUserID() const;
+        void setUserID(int newUserID);
 
     private:
         int BidID;          // Unique identifier for the bid
-        std::string Username; // Username of the user who made the bid
+        int UserID;
         int ShiftID;        // ID of the shift for which the bid is made
 };
 

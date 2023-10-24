@@ -11,55 +11,112 @@
 void ReloadSlots(Ui::CafeStaffWindow* ui)
 {
     int userID = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
-    QVector<Slot> slotVector;
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
-    {
-        slotVector = SearchSlotsByUserIDController(userID).Execute();
-    }
-    else
+
+
+    QVector<Slot> userSlots;
+    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
     {
         ResetUserDAOResult().Execute();
         return;
     }
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+
+    userSlots = SearchSlotsByUserIDController(userID).Execute();
+
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
     {
-        for (auto& slot : slotVector)
+        ResetUserDAOResult().Execute();
+        return;
+    }
+
+    QVector<Slot> allSlots = GetSlotsController().Execute();
+
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    {
+        ResetSlotDAOResult().Execute();
+        return;
+    }
+
+    QVector<Slot> availableSlots;
+
+    for(auto& as : allSlots)
+    {
+        for(auto& us : userSlots)
         {
-            int row = ui->assignedTable->rowCount();
-            ui->assignedTable->insertRow(row); // Insert a new row
-
-            // Create a new item for each piece of data/*
-            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-
-            // Add those items to the table
-            ui->assignedTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->assignedTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->assignedTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->assignedTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            if(as.SlotID != us.SlotID)
+            {
+                availableSlots.push_back(as);
+            }
         }
     }
-    else
+
+    for (auto& slot : availableSlots)
     {
-        ResetUserDAOResult().Execute();
+        int row = ui->availableTable->rowCount();
+        ui->availableTable->insertRow(row); // Insert a new row
+
+        // Create a new item for each piece of data/*
+        QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+        QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+        QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+        QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+        // Add those items to the table
+        ui->availableTable->setItem(row, 0, date); // 2 is the column number for the HashedPassword
+        ui->availableTable->setItem(row, 1, startTime);  //3 is the column number for profile
+        ui->availableTable->setItem(row, 2, endTime); // 4 is the column number for the Role etc
+    }
+
+
+    int maxSlots = GetUserController(QApplicationGlobal::CurrentUsername).Execute().MaxSlots;
+    int curSlots = userSlots.size();
+    QString workSlotFraction = QString::number(curSlots) + " / " + QString::number(maxSlots);
+
+    ui->workslotText->setText(workSlotFraction);
+
+    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    {
+        ResetSlotDAOResult().Execute();
         return;
+    }
+
+    for (auto& slot : userSlots)
+    {
+        int row = ui->assignedTable->rowCount();
+        ui->assignedTable->insertRow(row); // Insert a new row
+
+        // Create a new item for each piece of data/*
+        QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+        QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+        QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+        QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+        // Add those items to the table
+        ui->assignedTable->setItem(row, 0, slotID); // 1 is the column number for the Username
+        ui->assignedTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+        ui->assignedTable->setItem(row, 2, startTime);  //3 is the column number for profile
+        ui->assignedTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
     }
 
     ResetUserDAOResult().Execute();
 }
 
 
-
 CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::CafeStaffWindow)
 {
     ui->setupUi(this);
+    ui->workslotText->setEnabled(false);
     connect(ui->actionLogout, &QAction::triggered, this, &CafeStaffWindow::OnLogoutTriggered);
+
     ui->assignedTable->setSortingEnabled(true);
     ui->assignedTable->setColumnCount(4);
     ui->assignedTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->assignedTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    ui->availableTable->setSortingEnabled(true);
+    ui->availableTable->setColumnCount(3);
+    ui->availableTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->availableTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 
 
     // Get the horizontal header of the table widget
@@ -71,7 +128,11 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     QStringList headers;
     headers << "Slot ID" << "Date" << "Start Time" << "End Time";
 
+    QStringList headers2;
+    headers2 << "Date" << "Start Time" << "End Time";
+
     ui->assignedTable->setHorizontalHeaderLabels(headers);
+    ui->availableTable->setHorizontalHeaderLabels(headers2);
 
     EStaffRole esr = GetESRController(QApplicationGlobal::CurrentUsername).Execute();
 
