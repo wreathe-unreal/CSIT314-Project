@@ -133,6 +133,10 @@ User GetUserController::Execute()
     return QApplicationGlobal::UserDAO.GetUser(this->Username);
 }
 
+EDatabaseResult GetBidDAOResult::Execute()
+{
+    return QApplicationGlobal::BidDAO.Result;
+}
 
 EDatabaseResult GetUserDAOResult::Execute()
 {
@@ -152,4 +156,9 @@ void ResetUserDAOResult::Execute()
 void ResetSlotDAOResult::Execute()
 {
     QApplicationGlobal::SlotDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
+}
+
+void ResetBidDAOResult::Execute()
+{
+    QApplicationGlobal::BidDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
 }

@@ -270,6 +270,17 @@ class GetUserController : public IController
         User Execute();
 };
 
+class GetBidDAOResult : public IController
+{
+    public:
+        GetBidDAOResult()
+        {
+
+        }
+
+        EDatabaseResult Execute();
+};
+
 class GetUserDAOResult : public IController
 {
     public:
@@ -306,6 +317,16 @@ class ResetSlotDAOResult : public IController
 {
     public:
         ResetSlotDAOResult()
+        {
+
+        }
+        void Execute();
+};
+
+class ResetBidDAOResult : public IController
+{
+    public:
+        ResetBidDAOResult()
         {
 
         }
