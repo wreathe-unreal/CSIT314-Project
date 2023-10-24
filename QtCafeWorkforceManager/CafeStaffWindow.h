@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::CafeStaffWindow *ui;
+    void OnLogoutTriggered();
 };
 
 #endif // CAFESTAFFWINDOW_H

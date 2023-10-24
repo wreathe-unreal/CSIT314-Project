@@ -1,5 +1,4 @@
 #include "Enums.h"
-#include "NewSlot.h"
 #include "Slot.h"
 #include "QApplicationGlobal.h"
 #include "SlotDAO.h"
@@ -269,4 +268,32 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
         return this->GetAllSlots();
     }
 
+}
+
+QVector<Slot> SlotDataAccessObject::SearchByUserID(int userID)
+{
+    QVector<Slot> Slots;
+
+    if (!DATABASE.isOpen()) {
+        qWarning() << "Error: connection with database failed" << DATABASE.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+    }
+
+    QSqlQuery query("SELECT * FROM Slot WHERE UserID");
+    while (query.next())
+    {
+        int id = query.value("SlotID").toInt();
+        QDate date = QDate::fromString(query.value("SlotDate").toString());
+        QTime startTime = QTime::fromString(query.value("SlotStart").toString());
+        QTime endTime = QTime::fromString(query.value("SlotEnd").toString());
+        int curChefs = query.value("CurChefs").toInt();
+        int curCashiers = query.value("CurCashiers").toInt();
+        int curWaiters = query.value("CurWaiters").toInt();
+
+        Slot Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
+        Slots.push_back(Slot);
+    }
+
+    this->Result = EDatabaseResult::EDR_SUCCESS;
+    return Slots;
 }
