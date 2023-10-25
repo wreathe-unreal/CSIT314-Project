@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Bid.h"
 #include "Enums.h"
 #include "Slot.h"
 #include "User.h"
@@ -331,4 +332,47 @@ class ResetBidDAOResult : public IController
 
         }
         void Execute();
+};
+
+class InsertBidController : public IController
+{
+    public:
+        Bid NewBid;
+        InsertBidController(Bid newBid)
+        {
+            this->NewBid = newBid;
+        }
+        void Execute();
+};
+
+class GetPendingBidsController : public IController
+{
+    public:
+        GetPendingBidsController()
+        {
+
+        }
+        QVector<Bid> Execute();
+};
+
+class GetSlotController : public IController
+{
+    public:
+        int SlotID;
+        GetSlotController(int slotID)
+        {
+            this->SlotID = slotID;
+        }
+        Slot Execute();
+};
+
+class SearchBidsByUserIDController : public IController
+{
+    public:
+        int UserID;
+        SearchBidsByUserIDController(int userID)
+        {
+            this->UserID = userID;
+        }
+        QVector<Bid> Execute();
 };

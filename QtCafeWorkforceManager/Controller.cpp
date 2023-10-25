@@ -162,3 +162,23 @@ void ResetBidDAOResult::Execute()
 {
     QApplicationGlobal::BidDAO.Result = EDatabaseResult::EDR_UNINITIALIZED;
 }
+
+void InsertBidController::Execute()
+{
+    return QApplicationGlobal::BidDAO.Insert(this->NewBid);
+}
+
+QVector<Bid> GetPendingBidsController::Execute()
+{
+    return QApplicationGlobal::BidDAO.GetPending();
+}
+
+Slot GetSlotController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.GetSlot(this->SlotID);
+}
+
+QVector<Bid> SearchBidsByUserIDController::Execute()
+{
+    return QApplicationGlobal::BidDAO.SearchByUserID(this->UserID);
+}

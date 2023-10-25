@@ -21,7 +21,7 @@ class SlotDataAccessObject
     QVector<Slot> GetAllSlots();
     QVector<Slot> CreateSlot(Slot newSlot);
     void AssignStaff(Slot slot, User user);
-    Slot GetSlot(Slot slot);
+    Slot GetSlot(int slotID);
     std::vector<User> GetStaff(Slot slot);
     std::vector<User> GetUnassignedStaff(Slot slot);
     std::vector<User> GetBidders(Slot slot);

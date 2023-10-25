@@ -1,31 +1,35 @@
 ﻿#ifndef BID_H
 #define BID_H
 
+#include <QDebug>
 #include "Entity.h"
-
-#include <string>
 
 class Bid : public IEntity
 {
     public:
-        Bid();  // default constructor
+        Bid(); // default constructor
         ~Bid(); // destructor
-
+        Bid(int bidID, int userID, int slotID);
         // Getters
-        int getBidID() const { return BidID;}
-        int getShiftID() const {return ShiftID;}
+        int getBidID() const;
+        int getSlotID() const;
 
         // Setters
         void setBidID(int bidID);
-        void setShiftID(int shiftID);
+        void setSlotID(int slotID);
 
         int getUserID() const;
         void setUserID(int newUserID);
 
-    private:
+        int getEBS() const;
+        void setEBS(int newEBS);
+
         int BidID;          // Unique identifier for the bid
         int UserID;
-        int ShiftID;        // ID of the shift for which the bid is made
+        int SlotID;        // ID of the shift for which the bid is made
+        int EBS;
+        virtual void ToString() override { qDebug() << QString::number(getBidID());}
+
 };
 
 #endif // BID_H

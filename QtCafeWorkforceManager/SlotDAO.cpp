@@ -94,6 +94,55 @@ QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
     return GetAllSlots();
 }
 
+Slot SlotDataAccessObject::GetSlot(int slotID)
+{
+    // Check if the database is connected
+    if (!DATABASE.isOpen()) {
+        qWarning() << "Error: connection with database failed" << DATABASE.lastError();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return Slot(); // Return default slot if database connection fails
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM Slot WHERE SlotID = :slotID");
+    query.bindValue(":slotID", slotID);
+
+    // Check if the query was executed correctly
+    if (!query.exec()) {
+        qDebug() << "Error inserting Slot:" << query.lastError();
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not get slot.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return Slot();
+    }
+
+    // If a slot with the given SlotID is found, extract its details
+    if (query.next())
+    {
+        int id = query.value("SlotID").toInt();
+        QDate date = QDate::fromString(query.value("SlotDate").toString());
+        QTime startTime = QTime::fromString(query.value("SlotStart").toString());
+        QTime endTime = QTime::fromString(query.value("SlotEnd").toString());
+        int curChefs = query.value("CurChefs").toInt();
+        int curCashiers = query.value("CurCashiers").toInt();
+        int curWaiters = query.value("CurWaiters").toInt();
+
+        Slot slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
+        this->Result = EDatabaseResult::EDR_SUCCESS;
+        return slot;
+    }
+    else
+    {
+        // If no slot with the given SlotID is found, log a message and return a default Slot
+        qDebug() << "No Slot found for SlotID:" << slotID;
+        this->Result = EDatabaseResult::EDR_FAILURE;
+        return Slot();
+    }
+}
+
 QVector<Slot> SlotDataAccessObject::SearchDate(QDate date)
 {
     QVector<Slot> Slots;
