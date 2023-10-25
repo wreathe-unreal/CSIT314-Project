@@ -3,7 +3,6 @@
 #include "Enums.h"
 #include "QApplicationGlobal.h"
 #include "User.h"
-#include <string>
 
 class UserDataAccessObject
 {
