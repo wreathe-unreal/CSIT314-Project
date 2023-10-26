@@ -7,9 +7,9 @@ void Slot::setSlotID(int slotID)
 }
 
 
-int Slot::getSlotID() const
+int Slot::getSlotID()
 {
-    return SlotID;
+    return this->SlotID;
 }
 
 void Slot::setDate(QDate newSlotDate)
@@ -52,7 +52,7 @@ void Slot::setCurWaiters(int newCurWaiters)
     CurWaiters = newCurWaiters;
 }
 
-QDate Slot::getDate() const
+QDate Slot::getDate()
 {
     return this->Date;
 }
@@ -63,12 +63,12 @@ bool Slot::isSlotFull() const
     return CurChefs >=1 && CurCashiers >= 1 && CurWaiters >= 1;
 }
 
-QTime Slot::getStartTime() const
+QTime Slot::getStartTime()
 {
     return StartTime;
 }
 
-QTime Slot::getEndTime() const
+QTime Slot::getEndTime()
 {
     return EndTime;
 }

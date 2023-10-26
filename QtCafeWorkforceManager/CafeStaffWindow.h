@@ -22,6 +22,10 @@ private slots:
 
     void on_availableTable_clicked(const QModelIndex &index);
 
+    void on_pendingTable_clicked(const QModelIndex &index);
+
+    void on_deleteButton_clicked();
+
 private:
     Ui::CafeStaffWindow *ui;
     void OnLogoutTriggered();

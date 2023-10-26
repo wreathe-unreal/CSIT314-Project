@@ -16,9 +16,9 @@ Response<void> BidDataAccessObject::Insert(Bid newBid)
         return response;
     }
 
-    // Check if the username already exists
+    // Check if the bid already exists
     QSqlQuery queryCheck;
-    queryCheck.prepare("SELECT * FROM Bids WHERE UserID = :userid AND SlotID = :slotid");
+    queryCheck.prepare("SELECT * FROM Bid WHERE UserID = :userid AND SlotID = :slotid");
     queryCheck.bindValue(":userid", newBid.getUserID());
     queryCheck.bindValue(":slotid", newBid.getSlotID());
 
@@ -161,4 +161,44 @@ Response<QVector<Bid>> BidDataAccessObject::SearchByUserID(int userID)
 
     response.Result = EDatabaseResult::EDR_SUCCESS;
     return response;
+}
+
+
+Response<void> BidDataAccessObject::Delete(int bidID)
+{
+
+    Response<void> response;
+
+    if (!DATABASE.open())
+    {
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        qDebug() << "Error: Unable to open the database.";
+        return response;
+    }
+
+    QSqlQuery query;
+
+    // Prepare SQL statement to delete user with the given username
+    query.prepare("DELETE FROM Bid WHERE BidID = :bidid");
+
+    query.bindValue(":bidid", bidID);
+
+    if (!query.exec())
+    {
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
+        return response;
+    }
+
+    if (query.numRowsAffected() == 0)
+    {
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        qDebug() << "No bids found with the bidID.";
+        return response;
+    }
+    else
+    {
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+        return response;
+    }
 }

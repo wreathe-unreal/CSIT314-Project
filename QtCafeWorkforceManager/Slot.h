@@ -12,9 +12,9 @@ class Slot : public IEntity
         ~Slot(){};
 
         void setSlotID(int slotID);
-        int getSlotID() const;
+        int getSlotID();
 
-        QDate getDate() const;
+        QDate getDate();
         void setDate(QDate newSlotDate);
 
         int getCurChefs() const;
@@ -32,10 +32,10 @@ class Slot : public IEntity
         bool isWaiterRoleFull() const;
         bool isSlotFull() const;
 
-        QTime getStartTime() const;
+        QTime getStartTime();
         void setStartTime(QTime time) { this->StartTime = time;}
 
-        QTime getEndTime() const;
+        QTime getEndTime();
         void setEndTime(QTime time) { this->EndTime = time;}
 
         bool HasOverlap(Slot otherSlot)

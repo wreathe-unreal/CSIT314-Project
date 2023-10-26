@@ -23,8 +23,8 @@ class AuthorizeController : public IController
 
    AuthorizeController(QString username, QString password)
    {
-       Username = username;
-       Password = password;
+       this->Username = username;
+       this->Password = password;
    }
 
    Response<EUserProfile> Execute();
@@ -147,27 +147,6 @@ class SearchSlotByDayController : public IController
         Response<QVector<Slot>> Execute();
 };
 
-class IsUserActiveController : public IController
-{
-    public:
-        QString Username;
-        IsUserActiveController(QString username)
-        {
-            this->Username = username;
-        }
-        Response<void> Execute();
-};
-
-class GetUserIDController : public IController
-{
-    public:
-        QString Username;
-        GetUserIDController(QString username)
-        {
-            this->Username = username;
-        }
-        Response<int> Execute();
-};
 
 class SearchSlotsByUserIDController : public IController
 {
@@ -180,32 +159,6 @@ class SearchSlotsByUserIDController : public IController
         Response<QVector<Slot>> Execute();
 };
 
-class GetEUPController : public IController
-{
-    public:
-        QString Username;
-
-        GetEUPController(QString username)
-        {
-            this->Username = username;
-        }
-        Response<EUserProfile> Execute();
-
-};
-
-
-class GetESRController : public IController
-
-{
-    public:
-        QString Username;
-
-        GetESRController(QString username)
-        {
-            this->Username = username;
-        }
-        Response<EStaffRole> Execute();
-};
 
 class SetESRController : public IController
 {
@@ -219,17 +172,6 @@ class SetESRController : public IController
             this->NewESR = newESR;
         }
         Response<void> Execute();
-};
-
-class GetNameController : public IController
-{
-    public:
-        QString Username;
-        GetNameController(QString username)
-        {
-            this->Username = username;
-        }
-        Response<QString> Execute();
 };
 
 class SetNameController : public IController
@@ -264,10 +206,18 @@ class GetUserController : public IController
 {
     public:
         QString Username;
+        int UserID;
 
         GetUserController(QString username)
         {
+            this->UserID = -1;
             this->Username = username;
+        }
+
+        GetUserController(int userID)
+        {
+            this->UserID = userID;
+            this->Username = "";
         }
 
         Response<User> Execute();
@@ -314,4 +264,15 @@ class SearchBidsByUserIDController : public IController
             this->UserID = userID;
         }
         Response<QVector<Bid>> Execute();
+};
+
+class DeleteBidController : public IController
+{
+    public:
+        int BidID;
+        DeleteBidController(int bidID)
+        {
+            this->BidID = bidID;
+        }
+        Response<void> Execute();
 };

@@ -21,6 +21,7 @@ class QApplicationGlobal : public QApplication
             this->CafeDB.close();
         };
 
+        static int CurrentUserID;
         static QString CurrentUsername;
         static QSqlDatabase CafeDB;
         static UserDataAccessObject UserDAO;

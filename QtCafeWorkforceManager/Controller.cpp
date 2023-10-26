@@ -83,39 +83,14 @@ Response<QVector<Slot>> SearchSlotByDayController::Execute()
     return QApplicationGlobal::SlotDAO.SearchDate(this->Date);
 }
 
-Response<void> IsUserActiveController::Execute()
-{
-    return QApplicationGlobal::UserDAO.IsUserActive(this->Username);
-}
-
 Response<QVector<Slot>> SearchSlotsByUserIDController::Execute()
 {
     return QApplicationGlobal::SlotDAO.SearchByUserID(this->UserID);
 }
 
-Response<int> GetUserIDController::Execute()
-{
-    return QApplicationGlobal::UserDAO.GetUserID(this->Username);
-}
-
-Response<EUserProfile> GetEUPController::Execute()
-{
-    return QApplicationGlobal::UserDAO.GetEUP(this->Username);
-}
-
-Response<EStaffRole> GetESRController::Execute()
-{
-    return QApplicationGlobal::UserDAO.GetESR(this->Username);
-}
-
 Response<void> SetESRController::Execute()
 {
     return QApplicationGlobal::UserDAO.SetESR(this->Username, this->NewESR);
-}
-
-Response<QString> GetNameController::Execute()
-{
-    return QApplicationGlobal::UserDAO.GetName(this->Username);
 }
 
 Response<void> SetNameController::Execute()
@@ -130,7 +105,12 @@ Response<void> SetMaxSlotsController::Execute()
 
 Response<User> GetUserController::Execute()
 {
-    return QApplicationGlobal::UserDAO.GetUser(this->Username);
+    if(this->UserID == -1)
+    {
+        return QApplicationGlobal::UserDAO.GetUser(this->Username);
+
+    }
+    return QApplicationGlobal::UserDAO.GetUser(this->UserID);
 }
 
 Response<void> InsertBidController::Execute()
@@ -151,4 +131,9 @@ Response<Slot> GetSlotController::Execute()
 Response<QVector<Bid>> SearchBidsByUserIDController::Execute()
 {
     return QApplicationGlobal::BidDAO.SearchByUserID(this->UserID);
+}
+
+Response<void> DeleteBidController::Execute()
+{
+    return QApplicationGlobal::BidDAO.Delete(this->BidID);
 }

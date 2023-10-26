@@ -21,6 +21,7 @@ class UserDataAccessObject
     Response<EUserProfile> GetEUP(QString username);
     Response<EStaffRole> GetESR(QString username);
     Response<User> GetUser(QString username);
+    Response<User> GetUser(int userID);
     Response<void> UpdateOrInsert(User user, QString usernameBeforeUpdate);
     Response<void> SetMaxSlots(QString username, int maxSlots);
     Response<void> SetEUP(QString username, EUserProfile profile);

@@ -41,6 +41,7 @@ class User : public IEntity
         bool getbActive() const { return bActive; }
         void setbActive(bool bIsActive) { this->bActive = bIsActive;}
 
+        int UserID;
         QString Username;
         QString Password;
         int EUP; // Enum value EUserProfile

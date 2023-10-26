@@ -2,6 +2,7 @@
 
 
 // Define the static member of QApplicationGlobal
+int QApplicationGlobal::CurrentUserID;
 QString QApplicationGlobal::CurrentUsername;
 QSqlDatabase QApplicationGlobal::CafeDB;
 UserDataAccessObject QApplicationGlobal::UserDAO;

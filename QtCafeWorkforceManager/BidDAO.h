@@ -14,6 +14,8 @@ class BidDataAccessObject
         Response<QVector<Bid>> GetRejected();
         Response<QVector<Bid>> SearchByUserID(int UserID);
         Response<QVector<Bid>> SearchBySlotID(int slotID);
+        Response<void> Delete(int bidID);
+
 
 
 };
