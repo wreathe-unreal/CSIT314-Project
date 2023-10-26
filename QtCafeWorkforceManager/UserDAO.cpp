@@ -6,19 +6,18 @@
 #include "Slot.h"
 #include "User.h"
 #include <QSqlError>
-#include <string>
-#include <QJsonObject>
-
-
+#include "Response.h"
 class Slot;
 
-EUserProfile UserDataAccessObject::Authorize(QString username, QString password)
+Response<EUserProfile> UserDataAccessObject::Authorize(QString username, QString password)
 {
+    Response<EUserProfile> response;
+
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return EUserProfile::EUP_CafeStaff;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        response.Data = EUserProfile::EUP_CafeStaff;
     }
 
     bool bActive;
@@ -30,8 +29,8 @@ EUserProfile UserDataAccessObject::Authorize(QString username, QString password)
     {
         qDebug() << "authenticate() ERROR FINDING USER: " << query.lastError().text();
         qWarning() << "authenticate() ERROR FINDING USER: " << query.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return EUserProfile::EUP_CafeStaff;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        response.Data = EUserProfile::EUP_CafeStaff;
     }
 
     if (query.next())
@@ -50,37 +49,38 @@ EUserProfile UserDataAccessObject::Authorize(QString username, QString password)
             {
                 qDebug() << "ERROR GETTING EUP: " << query.lastError().text();
                 qWarning() << "ERROR GETTING EUP: " << query.lastError().text();
-                this->Result = EDatabaseResult::EDR_FAILURE;
-                return EUserProfile::EUP_CafeStaff;
+                response.Result = EDatabaseResult::EDR_FAILURE;
+                response.Data = EUserProfile::EUP_CafeStaff;
             }
 
             if (query2.next()) // Position query on the first (and hopefully only) result record
             {
                 //set global Username variable
                 QApplicationGlobal::CurrentUsername = username;
-                this->Result = EDatabaseResult::EDR_SUCCESS;
-                return static_cast<EUserProfile>(query2.value(0).toInt()); // Authenticated
+                response.Result = EDatabaseResult::EDR_SUCCESS;
+                response.Data = static_cast<EUserProfile>(query2.value(0).toInt());
+                return response; // Authenticated
             }
         }
     }
 
-    this->Result = EDatabaseResult::EDR_FAILURE;
-    return EUserProfile::EUP_CafeStaff;
+    return response;
 
 }
 
 
-QVector<User> UserDataAccessObject::SearchByEUP(EUserProfile profile)
+Response<QVector<User>> UserDataAccessObject::SearchByEUP(EUserProfile profile)
 {
+    Response<QVector<User>> response;
+
     int eup = EUserProfileToInt(profile);
 
-    QVector<User> users; // Vector to store the retrieved User objects
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_FAILURE;
-        return users; // Return the empty vector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Return the empty vector
     }
 
     QSqlQuery query;
@@ -100,29 +100,30 @@ QVector<User> UserDataAccessObject::SearchByEUP(EUserProfile profile)
             user.bActive = query.value("bActive").toBool();
             user.FullName = query.value("FullName").toString();
 
-            users.push_back(user);
+            response.Data.push_back(user);
         }
     }
     else
     {
         qWarning() << "getUsersByEUP() ERROR: " << query.lastError().text();
-        QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
 
     }
-    QApplicationGlobal::UserDAO.Result = EDatabaseResult::EDR_SUCCESS;
-    return users;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-QVector<User> UserDataAccessObject::SearchByESR(EStaffRole role)
+Response<QVector<User>> UserDataAccessObject::SearchByESR(EStaffRole role)
 {
+    Response<QVector<User>> response;
     int esr = EStaffRoleToInt(role);
-
-    QVector<User> users; // Vector to store the retrieved User objects
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        return users; // Return the empty vector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -142,25 +143,29 @@ QVector<User> UserDataAccessObject::SearchByESR(EStaffRole role)
             user.bActive = query.value("bActive").toBool();
             user.FullName = query.value("FullName").toString();
 
-            users.push_back(user);
+            response.Data.push_back(user);
         }
     }
     else
     {
         qWarning() << "getUsersByESR() ERROR: " << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
-
-    return users;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-int UserDataAccessObject::GetMaxSlots(std::string username)
+Response<int> UserDataAccessObject::GetMaxSlots(std::string username)
 {
-    int maxSlots = -1; // Initialized to -1 to indicate that the value wasn't found
+    Response<int> response;
+    response.Data = -1; // Initialized to -1 to indicate that the value wasn't found
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        return maxSlots;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -171,25 +176,29 @@ int UserDataAccessObject::GetMaxSlots(std::string username)
     {
         if (query.next())
         {
-            maxSlots = query.value(0).toInt(); // Gets the MaxSlots value from the query
+            response.Data = query.value(0).toInt(); // Gets the MaxSlots value from the query
         }
     }
     else
     {
         qWarning() << "GetUserMaxSlots() ERROR: " << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
     }
 
-    return maxSlots;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-EUserProfile UserDataAccessObject::GetEUP(QString username)
+Response<EUserProfile> UserDataAccessObject::GetEUP(QString username)
 {
-    EUserProfile eup = EUserProfile::EUP_CafeStaff;
+    Response<EUserProfile> response;
+    response.Data = EUserProfile::EUP_CafeStaff; //initialize to something so we can return early for errors
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        return eup;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -200,25 +209,30 @@ EUserProfile UserDataAccessObject::GetEUP(QString username)
     {
         if (query.next())
         {
-            eup = static_cast<EUserProfile>(query.value(0).toInt()); // Gets the ESR value from the query and casts it to the enum type
+            response.Data = static_cast<EUserProfile>(query.value(0).toInt()); // Gets the ESR value from the query and casts it to the enum type
         }
     }
     else
     {
         qWarning() << "GetUserESP() ERROR: " << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
-    return eup;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-EStaffRole UserDataAccessObject::GetESR(QString username)
+Response<EStaffRole> UserDataAccessObject::GetESR(QString username)
 {
-    EStaffRole esr = EStaffRole::ESR_NonStaff;
+    Response<EStaffRole> response;
+    response.Data = EStaffRole::ESR_NonStaff; //initialize to something so we can return early for errors
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        return esr;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -229,24 +243,28 @@ EStaffRole UserDataAccessObject::GetESR(QString username)
     {
         if (query.next())
         {
-            esr = static_cast<EStaffRole>(query.value(0).toInt()); // Gets the ESR value from the query and casts it to the enum type
+            response.Result = EDatabaseResult::EDR_SUCCESS;
+            response.Data = static_cast<EStaffRole>(query.value(0).toInt()); // Gets the ESR value from the query and casts it to the enum type
         }
     }
     else
     {
         qWarning() << "GetUserESP() ERROR: " << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
     }
-
-    return esr;
+    return response;
 }
 
 
-User UserDataAccessObject::GetUser(QString username)
+Response<User> UserDataAccessObject::GetUser(QString username)
 {
+    Response<User> response;
+
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        return User(); // Returning an empty/default User object
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Returning an empty/default User object
     }
 
     QSqlQuery query;
@@ -268,27 +286,30 @@ User UserDataAccessObject::GetUser(QString username)
             user.bActive = query.value(5).toBool();
             user.FullName = query.value(6).toString();
 
-            this->Result = EDatabaseResult::EDR_SUCCESS;
-            return user;
+            response.Result = EDatabaseResult::EDR_SUCCESS;
+            return response;;
         }
     }
     else
     {
         qWarning() << "GetUser() ERROR: " << query.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
-    this->Result = EDatabaseResult::EDR_FAILURE;
-    return User(); // Return a default User object if the username is not found or there's an error
+    response.Result = EDatabaseResult::EDR_FAILURE;
+    return response; // Return a default User object if the username is not found or there's an error
 }
 
-void UserDataAccessObject::IsUserActive(QString username)
+Response<void> UserDataAccessObject::IsUserActive(QString username)
 {
+    Response<void> response;
+
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query(DATABASE);
@@ -299,8 +320,8 @@ void UserDataAccessObject::IsUserActive(QString username)
     {
         qDebug() << "IsUserActive() ERROR FINDING USER: " << query.lastError().text();
         qWarning() << "IsUserActive() ERROR FINDING USER: " << query.lastError().text();\
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     if(query.next())
@@ -308,21 +329,24 @@ void UserDataAccessObject::IsUserActive(QString username)
         bool bActive = query.value(0).toBool();
         if(bActive)
         {
-            this->Result = EDatabaseResult::EDR_SUCCESS;
-            return;
+            response.Result = EDatabaseResult::EDR_SUCCESS;
+            return response;
         }
     }
 
-    this->Result = EDatabaseResult::EDR_FAILURE;
-    return;
+    response.Result = EDatabaseResult::EDR_FAILURE;
+    return response;
 }
 
-void UserDataAccessObject::Insert(User user)
+Response<void> UserDataAccessObject::Insert(User user)
 {
+    Response<void> response;
+
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // Check if the username already exists
@@ -335,13 +359,15 @@ void UserDataAccessObject::Insert(User user)
         if (queryCheck.next() && queryCheck.value(0).toInt() > 0)
         {
             qDebug() << "Username already exists.";
-            this->Result = EDatabaseResult::EDR_FAILURE;
+            response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
         }
     }
     else
     {
         qWarning() << "Check username query failed: " << queryCheck.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // Insert the new user
@@ -369,22 +395,27 @@ void UserDataAccessObject::Insert(User user)
 
     if (queryInsert.exec())
     {
-        this->Result = EDatabaseResult::EDR_SUCCESS;
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+        return response;
     }
     else
     {
         qWarning() << "Insert user failed: " << queryInsert.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 }
 
 
-void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdate)
+Response<void> UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdate)
 {
+    Response<void> response;
+
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // Check if the user already exists
@@ -410,12 +441,14 @@ void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdat
 
             if (queryUpdate.exec())
             {
-                this->Result = EDatabaseResult::EDR_SUCCESS;
+                response.Result = EDatabaseResult::EDR_SUCCESS;
+                return response;
             }
             else
             {
                 qWarning() << "Update user failed: " << queryUpdate.lastError().text();
-                this->Result = EDatabaseResult::EDR_FAILURE;
+                response.Result = EDatabaseResult::EDR_FAILURE;
+                return response;
             }
         }
         else
@@ -433,28 +466,36 @@ void UserDataAccessObject::UpdateOrInsert(User user, QString usernameBeforeUpdat
 
             if (queryInsert.exec())
             {
-                this->Result = EDatabaseResult::EDR_SUCCESS;
+                response.Result = EDatabaseResult::EDR_SUCCESS;
+                return response;
             }
             else
             {
                 qWarning() << "Insert user failed: " << queryInsert.lastError().text();
-                this->Result = EDatabaseResult::EDR_FAILURE;
+                response.Result = EDatabaseResult::EDR_FAILURE;
+                return response;
             }
         }
     }
     else
     {
         qWarning() << "Check user query failed: " << queryCheck.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
+    return response;
+
 }
 
-void UserDataAccessObject::SetMaxSlots(QString username, int maxSlots)
+Response<void> UserDataAccessObject::SetMaxSlots(QString username, int maxSlots)
 {
+    Response<void> response;
+
     if(!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery queryUpdate;
@@ -464,53 +505,65 @@ void UserDataAccessObject::SetMaxSlots(QString username, int maxSlots)
 
     if (queryUpdate.exec())
     {
-        this->Result = EDatabaseResult::EDR_SUCCESS;
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+        return response;
     }
     else
     {
         qWarning() << "Update MaxSlots failed: " << queryUpdate.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
+    return response;
 }
 
-bool UserDataAccessObject::GetbActive(std::string username)
-{   if (!DATABASE.isOpen())
+Response<bool> UserDataAccessObject::GetbActive(QString username)
+{
+    Response<bool> response;
+
+    if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_UNINITIALIZED;
+        return response;
     }
 
     QSqlQuery query;
     query.prepare("SELECT EUP FROM User WHERE Username = :username");
-    query.bindValue(":username", QString::fromStdString(username));
+    query.bindValue(":username", username);
 
     if (query.exec())
     {
         if (query.next())
         {
-            this->Result = EDatabaseResult::EDR_SUCCESS;
-            return query.value(0).toBool();
+            response.Result = EDatabaseResult::EDR_SUCCESS;
+            response.Data = query.value(0).toBool();
+            return response;
         }
     }
     else
     {
         qWarning() << "GetUserEUP() ERROR: " << query.lastError().text();
-        return false;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
-    return false;
+    return response;
 }
 
-void UserDataAccessObject::SuspendUser(std::string username)
+Response<void> UserDataAccessObject::SuspendUser(QString username)
 {
+    Response<void> response;
+
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
     query.prepare("SELECT EUP FROM User WHERE Username = :username");
-    query.bindValue(":username", QString::fromStdString(username));
+    query.bindValue(":username", username);
 
     if (query.exec())
     {
@@ -521,22 +574,28 @@ void UserDataAccessObject::SuspendUser(std::string username)
             queryUpdate.prepare("UPDATE User SET bActive = :active WHERE Username = :username");
             queryUpdate.bindValue(":active", 0);
 
-            this->Result = EDatabaseResult::EDR_SUCCESS;
+            response.Result = EDatabaseResult::EDR_SUCCESS;
+            return response;
         }
     }
     else
     {
         qWarning() << "GetUserEUP() ERROR: " << query.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
+    return response;
 }
 
-int UserDataAccessObject::GetUserID(QString username)
+Response<int> UserDataAccessObject::GetUserID(QString username)
 {
+    Response<int> response;
+    response.Data = -1;
+
     if (!DATABASE.isOpen()) {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return -1; // Return empty QVector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -547,21 +606,24 @@ int UserDataAccessObject::GetUserID(QString username)
     if (!query.exec() || !query.next())
     {
         qWarning() << "Failed to execute User query or user not found:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return -1;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    int userID = query.value(0).toInt();
-    return userID;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    response.Data = query.value(0).toInt();
+    return response;
 }
 
-void UserDataAccessObject::SetEUP(QString username, EUserProfile profile)
+Response<void> UserDataAccessObject::SetEUP(QString username, EUserProfile profile)
 {
+    Response<void> response;
+
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // Check if the user already exists
@@ -581,35 +643,43 @@ void UserDataAccessObject::SetEUP(QString username, EUserProfile profile)
 
             if (queryUpdate.exec())
             {
-                this->Result = EDatabaseResult::EDR_SUCCESS;
+                response.Result = EDatabaseResult::EDR_SUCCESS;
+                return response;
             }
             else
             {
                 qWarning() << "Update EUP failed: " << queryUpdate.lastError().text();
-                this->Result = EDatabaseResult::EDR_FAILURE;
+                response.Result = EDatabaseResult::EDR_FAILURE;
+                return response;
             }
         }
         else
         {
             qWarning("Error: User not found");
-            this->Result = EDatabaseResult::EDR_FAILURE;
+            response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
+
         }
     }
     else
     {
         qWarning() << "Check user query failed: " << queryCheck.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
     }
 }
 
 
-void UserDataAccessObject::SetESR(QString username, EStaffRole role)
+Response<void> UserDataAccessObject::SetESR(QString username, EStaffRole role)
 {
+
+    Response<void> response;
 
     if (!DATABASE.open())
     {
         qDebug() << "Error: Unable to open the database.";
-        this->Result = EDatabaseResult::EDR_SUCCESS;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+
     }
 
     QSqlQuery query;
@@ -622,25 +692,31 @@ void UserDataAccessObject::SetESR(QString username, EStaffRole role)
     if (!query.exec())
     {
         qDebug() << "Error: Failed to update ESR. Error:" << query.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     if (query.numRowsAffected() == 0)
     {
         qDebug() << "No user found with the provided username.";
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
+
 }
 
-void UserDataAccessObject::Delete(QString username)
+Response<void> UserDataAccessObject::Delete(QString username)
 {
+    Response<void> response;
 
     if (!DATABASE.open())
     {
         qDebug() << "Error: Unable to open the database.";
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -653,29 +729,32 @@ void UserDataAccessObject::Delete(QString username)
     if (!query.exec())
     {
         qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     if (query.numRowsAffected() == 0)
     {
         qDebug() << "No user found with the provided username.";
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
     else
     {
-        this->Result = EDatabaseResult::EDR_SUCCESS;
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+        return response;
     }
 }
 
-QVector<User> UserDataAccessObject::GetUsers()
+Response<QVector<User>> UserDataAccessObject::GetUsers()
 {
-    QVector<User> users; // Vector to store the retrieved User objects
+    Response<QVector<User>> response;
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        Result = EDatabaseResult::EDR_FAILURE;
-        return users; // Return the empty vector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Return the empty vector
     }
 
     QSqlQuery query;
@@ -694,24 +773,28 @@ QVector<User> UserDataAccessObject::GetUsers()
             user.bActive = query.value("bActive").toBool();
             user.FullName = query.value("FullName").toString();
 
-            users.push_back(user);
+            response.Data.push_back(user);
         }
     }
     else
     {
-        Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
         qWarning() << "GetUsers() ERROR: " << query.lastError().text();
+        return response;
     }
-    Result = EDatabaseResult::EDR_SUCCESS;
-    return users;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-QString UserDataAccessObject::GetName(QString username)
+Response<QString> UserDataAccessObject::GetName(QString username)
 {
+    Response<QString> response;
+    response.Data = "";
+
     if (!DATABASE.isOpen()) {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return ""; // Return empty QVector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -722,20 +805,23 @@ QString UserDataAccessObject::GetName(QString username)
     if (!query.exec() || !query.next())
     {
         qWarning() << "Failed to execute User query or user not found:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return "";
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    return query.value(0).toString();
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    response.Data = query.value(0).toString();
+    return response;
 }
 
-void UserDataAccessObject::SetName(QString username, QString newName)
+Response<void> UserDataAccessObject::SetName(QString username, QString newName)
 {
+    Response<void> response;
+
     if (!DATABASE.isOpen()) {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return; // Return empty QVector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Return empty QVector
     }
 
     QSqlQuery query;
@@ -748,29 +834,29 @@ void UserDataAccessObject::SetName(QString username, QString newName)
     if (!query.exec() || !query.next())
     {
         qWarning() << "Failed to execute query or user not found:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    return;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-QVector<Slot> UserDataAccessObject::GetSlotsByUser(QString username)
+Response<QVector<Slot>> UserDataAccessObject::GetSlotsByUser(QString username)
 {
-    QVector<Slot> associatedSlots;
+    Response<QVector<Slot>> response;
 
-    int userID = this->GetUserID(username);
+    Response<int> getUserIDResponse = GetUserID(username);
 
     QSqlQuery query;
     // Then, get the SlotIDs from the UserSlot table for the found UserID
     query.prepare("SELECT SlotID FROM UserSlot WHERE UserID = ?");
-    query.addBindValue(userID);
+    query.addBindValue(getUserIDResponse.Data);
     if (!query.exec())
     {
         qWarning() << "Failed to execute UserSlot query:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return associatedSlots;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     while (query.next())
@@ -791,15 +877,15 @@ QVector<Slot> UserDataAccessObject::GetSlotsByUser(QString username)
             slot.setCurCashiers(slotQuery.value("CurCashiers").toInt());
             slot.setCurWaiters(slotQuery.value("CurWaiters").toInt());
 
-            associatedSlots.push_back(slot);
+            response.Data.push_back(slot);
         }
         else
         {
             qWarning() << "Failed to execute Slot query or slot not found:" << slotQuery.lastError();
-            this->Result = EDatabaseResult::EDR_FAILURE;
+            response.Result = EDatabaseResult::EDR_FAILURE;
         }
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    return associatedSlots;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }

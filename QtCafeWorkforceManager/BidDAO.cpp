@@ -1,16 +1,19 @@
 #include "BidDAO.h"
 #include "Bid.h"
 #include "QApplicationGlobal.h"
-
+#include "Response.h"
 #include <QMessageBox>
 
-void BidDataAccessObject::Insert(Bid newBid)
+Response<void> BidDataAccessObject::Insert(Bid newBid)
 {
+
+    Response<void> response;
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // Check if the username already exists
@@ -29,13 +32,15 @@ void BidDataAccessObject::Insert(Bid newBid)
             errorMsgBox.setText("A bid for this workslot already exists!"); // Set the text to display
             errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
             errorMsgBox.exec();
-            this->Result = EDatabaseResult::EDR_FAILURE;
+            response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
         }
     }
     else
     {
         qWarning() << "Check existing bid query failed: " << queryCheck.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // Insert the new user
@@ -47,20 +52,21 @@ void BidDataAccessObject::Insert(Bid newBid)
 
     if (queryInsert.exec())
     {
-        this->Result = EDatabaseResult::EDR_SUCCESS;
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+        return response;
     }
     else
     {
         qWarning() << "Insert bid failed: " << queryInsert.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
 }
 
-QVector<Bid> BidDataAccessObject::GetPending()
+Response<QVector<Bid>> BidDataAccessObject::GetPending()
 {
-
-    QVector<Bid> bids; // Vector to store the retrieved User objects
+    Response<QVector<Bid>> bidResponse;
 
     if (!DATABASE.isOpen())
     {
@@ -70,8 +76,8 @@ QVector<Bid> BidDataAccessObject::GetPending()
         errorMsgBox.setText("Database connection failure."); // Set the text to display
         errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
-        Result = EDatabaseResult::EDR_FAILURE;
-        return bids; // Return the empty vector
+        bidResponse.Result = EDatabaseResult::EDR_FAILURE;
+        return bidResponse; // Return the empty vector
     }
 
     QSqlQuery query;
@@ -88,29 +94,28 @@ QVector<Bid> BidDataAccessObject::GetPending()
             bid.SlotID = query.value("SlotID").toInt();
             bid.EBS = query.value("EBS").toInt();
 
-            bids.push_back(bid);
+            bidResponse.Data.push_back(bid);
         }
     }
     else
     {
-        Result = EDatabaseResult::EDR_FAILURE;
+        bidResponse.Result = EDatabaseResult::EDR_FAILURE;
         QMessageBox errorMsgBox;
         errorMsgBox.setWindowTitle("Bid Access Failure"); // Set the window title
         errorMsgBox.setText("Could not build pending bids table!"); // Set the text to display
         errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
         qWarning() << "GetBids() ERROR: " << query.lastError().text();
+        return bidResponse;
     }
 
-    Result = EDatabaseResult::EDR_SUCCESS;
-    return bids;
+    bidResponse.Result = EDatabaseResult::EDR_SUCCESS;
+    return bidResponse;
 }
 
-QVector<Bid> BidDataAccessObject::SearchByUserID(int userID)
+Response<QVector<Bid>> BidDataAccessObject::SearchByUserID(int userID)
 {
-
-
-    QVector<Bid> bids; // Vector to store the retrieved User objects
+    Response<QVector<Bid>> response;
 
     if (!DATABASE.isOpen())
     {
@@ -120,8 +125,8 @@ QVector<Bid> BidDataAccessObject::SearchByUserID(int userID)
         errorMsgBox.setText("Database connection failure."); // Set the text to display
         errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
-        Result = EDatabaseResult::EDR_FAILURE;
-        return bids; // Return the empty vector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Return the empty vector
     }
 
     QSqlQuery query;
@@ -139,20 +144,21 @@ QVector<Bid> BidDataAccessObject::SearchByUserID(int userID)
             bid.SlotID = query.value("SlotID").toInt();
             bid.EBS = query.value("EBS").toInt();
 
-            bids.push_back(bid);
+            response.Data.push_back(bid);
         }
     }
     else
     {
-        Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
         QMessageBox errorMsgBox;
         errorMsgBox.setWindowTitle("Bid Access Failure"); // Set the window title
         errorMsgBox.setText("Could not build users' bids table!"); // Set the text to display
         errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
         qWarning() << "GetBids() ERROR: " << query.lastError().text();
+        return response;
     }
 
-    Result = EDatabaseResult::EDR_SUCCESS;
-    return bids;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }

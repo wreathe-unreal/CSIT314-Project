@@ -5,16 +5,17 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QString>
-#include <string>
+#include "Response.h"
 #include <QMessageBox>
 
-QVector<Slot> SlotDataAccessObject::GetAllSlots()
+Response<QVector<Slot>> SlotDataAccessObject::GetAllSlots()
 {
-    QVector<Slot> Slots;
+    Response<QVector<Slot>> response;
 
     if (!DATABASE.isOpen()) {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query("SELECT * FROM Slot");
@@ -29,16 +30,35 @@ QVector<Slot> SlotDataAccessObject::GetAllSlots()
         int curWaiters = query.value("CurWaiters").toInt();
 
         Slot Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
-        Slots.push_back(Slot);
+        response.Data.push_back(Slot);
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    return Slots;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
+Response<QVector<Slot>> SlotDataAccessObject::CreateSlot(Slot newSlot)
 {
-    QVector<Slot> existingSlots = GetAllSlots();
+    Response<QVector<Slot>> response = GetAllSlots();
+
+    if(response.Result != EDatabaseResult::EDR_SUCCESS)
+    {
+        qDebug() << "Error: Could not get slots.";
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!"); // Set the window title
+        errorMsgBox.setText("Could not build workslot array."); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        errorMsgBox.exec();
+
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        response.Data.empty();
+        return response;
+    }
+
+    QVector<Slot> existingSlots = response.Data;
+    response = Response<QVector<Slot>>(); //reset response
 
     if (newSlot.StartTime >= newSlot.EndTime)
     {
@@ -51,8 +71,8 @@ QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
         // Show the message box as a modal dialog
         errorMsgBox.exec();
 
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return existingSlots;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     for (const Slot &existingSlot : existingSlots)
@@ -67,8 +87,8 @@ QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
             // Show the message box as a modal dialog
             errorMsgBox.exec();
             qDebug() << "Error: The new work slot overlaps with an existing Slot.";
-            this->Result = EDatabaseResult::EDR_FAILURE;
-            return existingSlots;
+            response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
         }
     }
 
@@ -86,21 +106,24 @@ QVector<Slot> SlotDataAccessObject::CreateSlot(Slot newSlot)
     if (!query.exec())
     {
         qDebug() << "Error inserting Slot:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return existingSlots;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+
     return GetAllSlots();
 }
 
-Slot SlotDataAccessObject::GetSlot(int slotID)
+Response<Slot> SlotDataAccessObject::GetSlot(int slotID)
 {
+    Response<Slot> response;
+
     // Check if the database is connected
     if (!DATABASE.isOpen()) {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return Slot(); // Return default slot if database connection fails
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Return default slot if database connection fails
     }
 
     QSqlQuery query;
@@ -115,8 +138,8 @@ Slot SlotDataAccessObject::GetSlot(int slotID)
         errorMsgBox.setText("Could not get slot.");
         errorMsgBox.setIcon(QMessageBox::Critical);
         errorMsgBox.exec();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return Slot();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // If a slot with the given SlotID is found, extract its details
@@ -131,25 +154,29 @@ Slot SlotDataAccessObject::GetSlot(int slotID)
         int curWaiters = query.value("CurWaiters").toInt();
 
         Slot slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
-        this->Result = EDatabaseResult::EDR_SUCCESS;
-        return slot;
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+        response.Data = slot;
+        return response;
     }
     else
     {
         // If no slot with the given SlotID is found, log a message and return a default Slot
         qDebug() << "No Slot found for SlotID:" << slotID;
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return Slot();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
+    response.Result = EDatabaseResult::EDR_FAILURE;
+    return response;
 }
 
-QVector<Slot> SlotDataAccessObject::SearchDate(QDate date)
+Response<QVector<Slot>> SlotDataAccessObject::SearchDate(QDate date)
 {
-    QVector<Slot> Slots;
+    Response<QVector<Slot>> response;
 
     if (!DATABASE.isOpen()) {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -158,8 +185,8 @@ QVector<Slot> SlotDataAccessObject::SearchDate(QDate date)
 
     if (!query.exec()) {
         qWarning() << "Failed to execute Slot Search query:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return Slots;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     while (query.next())
@@ -173,22 +200,22 @@ QVector<Slot> SlotDataAccessObject::SearchDate(QDate date)
         int curWaiters = query.value("CurWaiters").toInt();
 
         Slot Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
-        Slots.push_back(Slot);
+        response.Data.push_back(Slot);
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    return Slots;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 
 }
 
-std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
+Response<QVector<User>> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
 {
-    std::vector<User> users;
+    Response<QVector<User>> response;
 
     if (!DATABASE.isOpen()) {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return users; // Return empty vector
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -198,8 +225,8 @@ std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
     query.addBindValue("SlotID");
     if (!query.exec()) {
         qWarning() << "Failed to execute UserSlot query:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return users;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     while (query.next()) {
@@ -218,25 +245,28 @@ std::vector<User> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
             user.setESR(userQuery.value("ESR").toInt());
             user.setMaxSlots(userQuery.value("MaxSlots").toInt());
 
-            users.push_back(user);
+            response.Data.push_back(user);
         }
         else
         {
             qWarning() << "Failed to execute User query or user not found:" << userQuery.lastError();
-            this->Result = EDatabaseResult::EDR_FAILURE;
-
+            response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
         }
     }
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    return users;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }
 
-void SlotDataAccessObject::DeleteSlot(int SlotID)
+Response<void> SlotDataAccessObject::DeleteSlot(int SlotID)
 {
+    Response<void> response;
+
     if (!DATABASE.open())
     {
         qDebug() << "Error: Unable to open the database.";
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query;
@@ -249,25 +279,26 @@ void SlotDataAccessObject::DeleteSlot(int SlotID)
     if (!query.exec())
     {
         qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     if (query.numRowsAffected() == 0)
     {
         qDebug() << "No workslot found with the slotID.";
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
     else
     {
-        this->Result = EDatabaseResult::EDR_SUCCESS;
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+        return response;
     }
 }
 
-QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
+Response<QVector<Slot>> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
 {
-    QVector<Slot> existingSlots = this->GetAllSlots();
+    Response<QVector<Slot>> response = GetAllSlots();
 
     if (editedSlot.StartTime == editedSlot.EndTime)
     {
@@ -279,9 +310,13 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
 
         // Show the message box as a modal dialog
         errorMsgBox.exec();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return existingSlots;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        response.Data.empty();
+        return response;
     }
+
+    QVector<Slot> existingSlots = response.Data;
+    response = Response<QVector<Slot>>(); //reset response
 
     for (const Slot &existingSlot : existingSlots)
     {
@@ -295,8 +330,8 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
 
             // Show the message box as a modal dialog
             errorMsgBox.exec();
-            this->Result = EDatabaseResult::EDR_FAILURE;
-            return existingSlots;
+            response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
         }
     }
 
@@ -304,7 +339,8 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
-        this->Result = EDatabaseResult::EDR_FAILURE;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     // slot exists, proceed with update
@@ -320,28 +356,42 @@ QVector<Slot> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
 
     if (query.exec())
     {
-        qDebug() << "Update slot succeded.";
-        this->Result = EDatabaseResult::EDR_SUCCESS;
-        return this->GetAllSlots();
+        qDebug() << "Update slot succeded.";            qDebug() << "Error: The new work slot overlaps with an existing Slot.";
+        QMessageBox updateMsgBox;
+        updateMsgBox.setWindowTitle("Slot Updated!"); // Set the window title
+        updateMsgBox.setText("The work slot has been updated."); // Set the text to display
+        updateMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        updateMsgBox.exec();
+        response = GetAllSlots();
+        return response;
     }
     else
     {
         qWarning() << "Update slot failed: " << query.lastError().text();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return this->GetAllSlots();
+        qDebug() << "Error: The new work slot overlaps with an existing Slot.";
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!"); // Set the window title
+        errorMsgBox.setText("The work slot overlaps with an existing work slot."); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        errorMsgBox.exec();
+        return GetAllSlots();
     }
 
 }
 
-QVector<Slot> SlotDataAccessObject::SearchByUserID(int userID)
+Response<QVector<Slot>> SlotDataAccessObject::SearchByUserID(int userID)
 {
-    QVector<Slot> userSlots;
+    Response <QVector<Slot>> response;
 
     if (!DATABASE.isOpen())
     {
         qWarning() << "Error: connection with database failed" << DATABASE.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return userSlots;
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
     }
 
     QSqlQuery query("SELECT * FROM Slot WHERE SlotID IN (SELECT SlotID FROM UserSlot WHERE UserID = ?)");
@@ -352,8 +402,8 @@ QVector<Slot> SlotDataAccessObject::SearchByUserID(int userID)
     {
         qDebug() << query.lastQuery();
         qWarning() << "Database query error:" << query.lastError();
-        this->Result = EDatabaseResult::EDR_FAILURE;
-        return userSlots;  // return the empty QVector or handle the error as appropriate
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;  // return the empty QVector or handle the error as appropriate
     }
 
     while (query.next())
@@ -367,9 +417,9 @@ QVector<Slot> SlotDataAccessObject::SearchByUserID(int userID)
         int curWaiters = query.value("CurWaiters").toInt();
 
         Slot userSlot = Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
-        userSlots.push_back(userSlot);
+        response.Data.push_back(userSlot);
     }
 
-    this->Result = EDatabaseResult::EDR_SUCCESS;
-    return userSlots;
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
 }

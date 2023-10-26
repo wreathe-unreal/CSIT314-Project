@@ -2,13 +2,11 @@
 #include "AuthWindow.h"
 #include "./ui_AuthWindow.h"
 #include <iostream>
-#include <string>
 #include "CafeStaffWindow.h"
 #include <QDebug>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include "CafeManagerWindow.h"
 #include "CafeOwnerWindow.h"
+#include "Response.h"
 #include "QApplicationGlobal.h"
 #include "SysAdminWindow.h"
 
@@ -33,29 +31,30 @@ AuthWindow::~AuthWindow()
 
 void AuthWindow::on_LoginButton_clicked()
 {
-    EUserProfile userProfile = AuthorizeController(ui->QLE_Username->text(), ui->QLE_Password->text()).Execute();
-    bool bUserAuthd = GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS ? true : false;
+    Response<EUserProfile> authResponse = AuthorizeController(ui->QLE_Username->text(), ui->QLE_Password->text()).Execute();
+    bool bUserAuthd = authResponse.Result == EDatabaseResult::EDR_SUCCESS ? true : false;
+
+    Response<void> checkActive;
 
     //if user info is correct, check if user is active
     if(bUserAuthd)
     {
-        IsUserActiveController(ui->QLE_Username->text()).Execute();
+        checkActive = IsUserActiveController(ui->QLE_Username->text()).Execute();
     }
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    if(checkActive.Result == EDatabaseResult::EDR_FAILURE)
     {
         QPalette palette;
         palette.setColor(QPalette::Text, QColorConstants::Red);
         ui->QLE_Password->setPalette(palette);
         ui->QLE_Username->setPalette(palette);
         ui->InvalidLoginLabel->setVisible(true);
-        ResetUserDAOResult().Execute();
         return;
     }
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    if(checkActive.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        switch(userProfile)
+        switch(authResponse.Data)
         {
             case EUserProfile::EUP_SysAdmin:
                 SysAdminWindow* SysAdminView;
@@ -84,8 +83,6 @@ void AuthWindow::on_LoginButton_clicked()
             default:
                 break;
         }
-
-        ResetUserDAOResult().Execute();
         this->close(); // close the main window
     }
 }

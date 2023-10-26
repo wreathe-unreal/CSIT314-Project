@@ -5,6 +5,8 @@
 #include "Slot.h"
 #include "User.h"
 #include <QString>
+#include <QVector>
+#include "Response.h"
 
 class IController
 {
@@ -25,7 +27,7 @@ class AuthorizeController : public IController
        Password = password;
    }
 
-   EUserProfile Execute();
+   Response<EUserProfile> Execute();
 
 };
 
@@ -33,7 +35,7 @@ class AuthorizeController : public IController
 class GetUsersController : public IController
 {
     public:
-        QVector<User> Execute();
+   Response<QVector<User>> Execute();
 };
 
 class UpdateUserController : public IController
@@ -49,7 +51,7 @@ class UpdateUserController : public IController
        }
 
 
-       void Execute();
+       Response<void> Execute();
 };
 
 class CreateUserController : public IController
@@ -63,7 +65,7 @@ class CreateUserController : public IController
        }
 
 
-       void Execute();
+       Response<void> Execute();
 };
 
 class DeleteUserController : public IController
@@ -76,7 +78,7 @@ class DeleteUserController : public IController
             this->UsernameToDelete = usernameToDelete;
        }
 
-       void Execute();
+       Response<void> Execute();
 };
 
 class SearchByEUPController : public IController
@@ -89,7 +91,7 @@ class SearchByEUPController : public IController
             this->profile = userProfile;
        }
 
-       QVector<User> Execute();
+       Response<QVector<User>> Execute();
 };
 
 
@@ -102,13 +104,13 @@ class CreateSlotController: public IController
             this->NewSlot = newslot;
        }
 
-       QVector<Slot> Execute();
+       Response<QVector<Slot>> Execute();
 };
 
 class GetSlotsController: public IController
 {
    public:
-    QVector<Slot> Execute();
+       Response<QVector<Slot>> Execute();
 };
 
 class DeleteSlotController: public IController
@@ -119,7 +121,7 @@ class DeleteSlotController: public IController
         {
             this->SlotID = slotID;
         }
-        void Execute();
+        Response<void> Execute();
 };
 
 class UpdateSlotController: public IController
@@ -131,7 +133,7 @@ class UpdateSlotController: public IController
             this->SlotToEdit = slotToEdit;
         }
 
-        QVector<Slot> Execute();
+        Response<QVector<Slot>> Execute();
 };
 
 class SearchSlotByDayController : public IController
@@ -142,7 +144,7 @@ class SearchSlotByDayController : public IController
         {
             this->Date = date;
         }
-        QVector<Slot> Execute();
+        Response<QVector<Slot>> Execute();
 };
 
 class IsUserActiveController : public IController
@@ -153,7 +155,7 @@ class IsUserActiveController : public IController
         {
             this->Username = username;
         }
-        void Execute();
+        Response<void> Execute();
 };
 
 class GetUserIDController : public IController
@@ -164,7 +166,7 @@ class GetUserIDController : public IController
         {
             this->Username = username;
         }
-        int Execute();
+        Response<int> Execute();
 };
 
 class SearchSlotsByUserIDController : public IController
@@ -175,7 +177,7 @@ class SearchSlotsByUserIDController : public IController
         {
             this->UserID = userID;
         }
-        QVector<Slot> Execute();
+        Response<QVector<Slot>> Execute();
 };
 
 class GetEUPController : public IController
@@ -187,7 +189,7 @@ class GetEUPController : public IController
         {
             this->Username = username;
         }
-        EUserProfile Execute();
+        Response<EUserProfile> Execute();
 
 };
 
@@ -202,7 +204,7 @@ class GetESRController : public IController
         {
             this->Username = username;
         }
-        EStaffRole Execute();
+        Response<EStaffRole> Execute();
 };
 
 class SetESRController : public IController
@@ -216,7 +218,7 @@ class SetESRController : public IController
             this->Username = username;
             this->NewESR = newESR;
         }
-        void Execute();
+        Response<void> Execute();
 };
 
 class GetNameController : public IController
@@ -227,7 +229,7 @@ class GetNameController : public IController
         {
             this->Username = username;
         }
-        QString Execute();
+        Response<QString> Execute();
 };
 
 class SetNameController : public IController
@@ -241,7 +243,7 @@ class SetNameController : public IController
             this->NewName = newName;
         }
 
-        void Execute();
+        Response<void> Execute();
 };
 
 class SetMaxSlotsController : public IController
@@ -255,7 +257,7 @@ class SetMaxSlotsController : public IController
             this->MaxSlots = maxSlots;
         }
 
-        void Execute();
+        Response<void> Execute();
 };
 
 class GetUserController : public IController
@@ -268,70 +270,7 @@ class GetUserController : public IController
             this->Username = username;
         }
 
-        User Execute();
-};
-
-class GetBidDAOResult : public IController
-{
-    public:
-        GetBidDAOResult()
-        {
-
-        }
-
-        EDatabaseResult Execute();
-};
-
-class GetUserDAOResult : public IController
-{
-    public:
-        GetUserDAOResult()
-        {
-
-        }
-
-        EDatabaseResult Execute();
-};
-
-class GetSlotDAOResult : public IController
-{
-    public:
-        GetSlotDAOResult()
-        {
-
-        }
-
-        EDatabaseResult Execute();
-};
-
-class ResetUserDAOResult : public IController
-{
-    public:
-        ResetUserDAOResult()
-        {
-
-        }
-        void Execute();
-};
-
-class ResetSlotDAOResult : public IController
-{
-    public:
-        ResetSlotDAOResult()
-        {
-
-        }
-        void Execute();
-};
-
-class ResetBidDAOResult : public IController
-{
-    public:
-        ResetBidDAOResult()
-        {
-
-        }
-        void Execute();
+        Response<User> Execute();
 };
 
 class InsertBidController : public IController
@@ -342,7 +281,7 @@ class InsertBidController : public IController
         {
             this->NewBid = newBid;
         }
-        void Execute();
+        Response<void> Execute();
 };
 
 class GetPendingBidsController : public IController
@@ -352,7 +291,7 @@ class GetPendingBidsController : public IController
         {
 
         }
-        QVector<Bid> Execute();
+        Response<QVector<Bid>> Execute();
 };
 
 class GetSlotController : public IController
@@ -363,7 +302,7 @@ class GetSlotController : public IController
         {
             this->SlotID = slotID;
         }
-        Slot Execute();
+        Response<Slot> Execute();
 };
 
 class SearchBidsByUserIDController : public IController
@@ -374,5 +313,5 @@ class SearchBidsByUserIDController : public IController
         {
             this->UserID = userID;
         }
-        QVector<Bid> Execute();
+        Response<QVector<Bid>> Execute();
 };

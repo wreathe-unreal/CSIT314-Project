@@ -2,18 +2,18 @@
 #define BIDDAO_H
 #include "Bid.h"
 #include "Enums.h"
+#include "Response.h"
 
 class BidDataAccessObject
 {
     public:
-        EDatabaseResult Result;
-        void Insert(Bid newBid);
-        QVector<Bid> GetBids();
-        QVector<Bid> GetPending();
-        QVector<Bid> GetApproved();
-        QVector<Bid> GetRejected();
-        QVector<Bid> SearchByUserID(int UserID);
-        QVector<Bid> SearchBySlotID(int slotID);
+        Response<void> Insert(Bid newBid);
+        Response<QVector<Bid>> GetBids();
+        Response<QVector<Bid>> GetPending();
+        Response<QVector<Bid>> GetApproved();
+        Response<QVector<Bid>> GetRejected();
+        Response<QVector<Bid>> SearchByUserID(int UserID);
+        Response<QVector<Bid>> SearchBySlotID(int slotID);
 
 
 };

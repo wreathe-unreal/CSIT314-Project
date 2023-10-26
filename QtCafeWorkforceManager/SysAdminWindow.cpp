@@ -56,10 +56,12 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
 
     ui->userTable->setHorizontalHeaderLabels(headers);
 
-    QVector<User> Users = GetUsersController().Execute();
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+
+    Response<QVector<User>> usersResponse = GetUsersController().Execute();
+
+    if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        for (auto& user : Users)
+        for (auto& user : usersResponse.Data)
         {
             int row = ui->userTable->rowCount();
             ui->userTable->insertRow(row); // Insert a new row
@@ -86,9 +88,6 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :
     }
 
     connect(ui->actionLogout, &QAction::triggered, this, &SysAdminWindow::OnLogoutTriggered);
-
-    ResetUserDAOResult().Execute();
-
 }
 
 SysAdminWindow::~SysAdminWindow()
@@ -204,9 +203,9 @@ void SysAdminWindow::on_editButton_clicked()
             user.setESR(ui->roleCombo->currentIndex() + 1);
     }
 
-    UpdateUserController(user, UsernameBeforeEdit).Execute();
+    Response<void> updateResponse = UpdateUserController(user, UsernameBeforeEdit).Execute();
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    if(updateResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -227,15 +226,14 @@ void SysAdminWindow::on_editButton_clicked()
         errorMsgBox.exec();
     }
 
-    ResetUserDAOResult().Execute();
 
-    QVector<User> Users = GetUsersController().Execute();
+    Response<QVector<User>> usersResponse = GetUsersController().Execute();
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         ui->userTable->setRowCount(0);
 
-        for (auto& user : Users)
+        for (auto& user : usersResponse.Data)
         {
                 int row = ui->userTable->rowCount();
                 ui->userTable->insertRow(row); // Insert a new row
@@ -260,9 +258,6 @@ void SysAdminWindow::on_editButton_clicked()
                 ui->userTable->setItem(row, 6, bActiveItem);
         }
     }
-
-    ResetUserDAOResult().Execute();
-
 
     ui->fullNameEdit->clear();
     ui->usernameEdit->clear();
@@ -294,8 +289,8 @@ void SysAdminWindow::on_createButton_clicked()
     user.setEUP(static_cast<int>(QStringToEUserProfile(ui->profileComboCreate->currentText())));
     user.setESR(static_cast<int>(QStringToEStaffRole(ui->roleComboCreate->currentText())));
 
-    CreateUserController(user).Execute();
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    Response<void> createResponse = CreateUserController(user).Execute();
+    if(createResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -305,13 +300,13 @@ void SysAdminWindow::on_createButton_clicked()
         // Show the message box as a modal dialog
         successMsgBox.exec();
 
-        QVector<User> Users = GetUsersController().Execute();
+        Response<QVector<User>> usersResponse = GetUsersController().Execute();
 
-        if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+        if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
                 ui->userTable->setRowCount(0);
 
-                for (auto& user : Users)
+                for (auto& user : usersResponse.Data)
                 {
                     int row = ui->userTable->rowCount();
                     ui->userTable->insertRow(row); // Insert a new row
@@ -348,7 +343,6 @@ void SysAdminWindow::on_createButton_clicked()
         errorMsgBox.exec();
     }
 
-    ResetUserDAOResult().Execute();
     ui->fullNameCreate->clear();
     ui->usernameCreate->clear();
     ui->passwordCreate->clear();
@@ -427,9 +421,9 @@ void SysAdminWindow::on_deleteButton_clicked()
     {
         QString UsernameToDelete = ui->userTable->item(ui->userTable->currentRow(), 1)->text();
 
-        DeleteUserController(UsernameToDelete).Execute();
+        Response<void> deleteResponse = DeleteUserController(UsernameToDelete).Execute();
 
-        if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+        if(deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
             QMessageBox successMsgBox;
             successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -439,13 +433,13 @@ void SysAdminWindow::on_deleteButton_clicked()
             // Show the message box as a modal dialog
             successMsgBox.exec();
 
-            QVector<User> Users = GetUsersController().Execute();
+            Response<QVector<User>> usersResponse = GetUsersController().Execute();
 
-            if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+            if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
             {
                     ui->userTable->setRowCount(0);
 
-                    for (auto& user : Users)
+                    for (auto& user : usersResponse.Data)
                     {
                         int row = ui->userTable->rowCount();
                         ui->userTable->insertRow(row); // Insert a new row
@@ -496,7 +490,6 @@ void SysAdminWindow::on_deleteButton_clicked()
         ui->roleCombo->setEnabled(false);
         ui->deleteButton->setEnabled(false);
         ui->editButton->setEnabled(false);
-        ResetUserDAOResult().Execute();
     }
 }
 
@@ -504,13 +497,13 @@ void SysAdminWindow::on_deleteButton_clicked()
 
 void SysAdminWindow::on_searchButton_clicked()
 {
-    QVector<User> Users = SearchByEUPController(IntToEUserProfile(ui->searchCombo->currentIndex())).Execute();
+    Response<QVector<User>> eupSearch = SearchByEUPController(IntToEUserProfile(ui->searchCombo->currentIndex())).Execute();
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS && Users.size() > 0)
+    if(eupSearch.Result == EDatabaseResult::EDR_SUCCESS && eupSearch.Data.size() > 0)
     {
         ui->userTable->setRowCount(0);
 
-        for (auto& user : Users)
+        for (auto& user : eupSearch.Data)
         {
                 int row = ui->userTable->rowCount();
                 ui->userTable->insertRow(row); // Insert a new row
@@ -546,7 +539,6 @@ void SysAdminWindow::on_searchButton_clicked()
         errorMsgBox.exec();
     }
 
-    ResetUserDAOResult().Execute();
 }
 
 void SysAdminWindow::OnLogoutTriggered()

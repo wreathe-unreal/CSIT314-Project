@@ -1,25 +1,27 @@
-#pragma once
+#ifndef RESPONSE_H
+#define RESPONSE_H
 
-#include <QJsonDocument>
-#include <QJsonObject>
+
 #include "Enums.h"
-#include "User.h"
-#include <QString>
-#include <any>
-
+template <typename T>
 class Response
 {
     public:
+        Response();
+        ~Response();
         EDatabaseResult Result;
+        T Data;
 };
 
-class AuthorizeResponse : public Response
+// Specialization for void
+template <>
+class Response<void>
 {
     public:
-        EUserProfile Profile;
-        AuthorizeResponse (EDatabaseResult result, EUserProfile profile)
-        {
-            this->Result = result;
-            this->Profile = profile;
-        }
+        Response();
+        ~Response();
+        EDatabaseResult Result;
+        // No 'data' member for void specialization
 };
+
+#endif // RESPONSE_H
