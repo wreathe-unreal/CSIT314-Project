@@ -3,6 +3,7 @@
 #include "Controller.h"
 #include "QApplicationGlobal.h"
 #include "Slot.h"
+#include "Response.h"
 #include "qdatetime.h"
 #include "ui_CafeOwnerWindow.h"
 
@@ -45,10 +46,10 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     ui->slotTable->setColumnWidth(cashiersColumnIndex, smallerWidth);
     ui->slotTable->setColumnWidth(waitersColumnIndex, smallerWidth);
 
-    QVector<Slot> slotVector = GetSlotsController().Execute();
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
+    if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        for (auto& slot : slotVector)
+        for (auto& slot : slotResponse.Data)
         {
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
@@ -74,7 +75,6 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     }
 
     connect(ui->actionLogout, &QAction::triggered, this, &CafeOwnerWindow::OnLogoutTriggered);
-    ResetUserDAOResult().Execute();
 }
 
 CafeOwnerWindow::~CafeOwnerWindow()
@@ -90,9 +90,9 @@ void CafeOwnerWindow::on_createButton_clicked()
     QTime end = ui->endEdit->time();
     Slot newSlot(date, start, end);
 
-    QVector<Slot> slotVector = CreateSlotController(newSlot).Execute();
+    Response<QVector<Slot>> createSlotResponse = CreateSlotController(newSlot).Execute();
 
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    if(createSlotResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -104,7 +104,7 @@ void CafeOwnerWindow::on_createButton_clicked()
 
         ui->slotTable->setRowCount(0);
 
-        for (auto& slot : slotVector)
+        for (auto& slot : createSlotResponse.Data)
         {
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
@@ -139,8 +139,6 @@ void CafeOwnerWindow::on_createButton_clicked()
         // Show the message box as a modal dialog
         errorMsgBox.exec();
     }
-
-    ResetUserDAOResult().Execute();
 }
 
 
@@ -175,9 +173,9 @@ void CafeOwnerWindow::on_deleteButton_clicked()
     {
         int slotIDToDelete = ui->slotTable->item(ui->slotTable->currentRow(), 0)->text().toInt();
 
-        DeleteSlotController(slotIDToDelete).Execute();
+        Response<void> deleteSlotResponse = DeleteSlotController(slotIDToDelete).Execute();
 
-        if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+        if(deleteSlotResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
             QMessageBox successMsgBox;
             successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -187,13 +185,13 @@ void CafeOwnerWindow::on_deleteButton_clicked()
             // Show the message box as a modal dialog
             successMsgBox.exec();
 
-            QVector<Slot> slotVector = GetSlotsController().Execute();
+            Response<QVector<Slot>> getSlotsResponse = GetSlotsController().Execute();
 
-            if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+            if(getSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
             {
                 ui->slotTable->setRowCount(0);
 
-                for (auto& slot : slotVector)
+                for (auto& slot : getSlotsResponse.Data)
                 {
                     int row = ui->slotTable->rowCount();
                     ui->slotTable->insertRow(row); // Insert a new row
@@ -229,8 +227,6 @@ void CafeOwnerWindow::on_deleteButton_clicked()
             // Show the message box as a modal dialog
             errorMsgBox.exec();
         }
-
-        ResetUserDAOResult().Execute();
     }
 }
 
@@ -315,9 +311,9 @@ void CafeOwnerWindow::on_editButton_clicked()
     slotChanged.CurCashiers = ui->slotTable->item(row, 5)->text().toInt();
     slotChanged.CurWaiters = ui->slotTable->item(row, 6)->text().toInt();
 
-    QVector<Slot> slotVector = UpdateSlotController(slotChanged).Execute();
+    Response<QVector<Slot>> updateSlotsResponse = UpdateSlotController(slotChanged).Execute();
 
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    if(updateSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
@@ -336,7 +332,7 @@ void CafeOwnerWindow::on_editButton_clicked()
 
         ui->slotTable->setRowCount(0);
 
-        for (auto& slot : slotVector)
+        for (auto& slot : updateSlotsResponse.Data)
         {
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
@@ -372,20 +368,18 @@ void CafeOwnerWindow::on_editButton_clicked()
         // Show the message box as a modal dialog
         errorMsgBox.exec();
     }
-
-    ResetSlotDAOResult().Execute();
 }
 
 
 void CafeOwnerWindow::on_searchButton_clicked()
 {
-    QVector<Slot> FoundSlots = SearchSlotByDayController(ui->calendarSearch->selectedDate()).Execute();
+    Response<QVector<Slot>> searchResponse = SearchSlotByDayController(ui->calendarSearch->selectedDate()).Execute();
 
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS && FoundSlots.size() > 0)
+    if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("Slot search successful: " + QString::number(FoundSlots.size()) + " results found."); // Set the text to display
+        successMsgBox.setText("Slot search successful: " + QString::number(searchResponse.Data.size()) + " results found."); // Set the text to display
         successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
 
         // Show the message box as a modal dialog
@@ -393,7 +387,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
 
         ui->slotTable->setRowCount(0);
 
-        for (auto& slot : FoundSlots)
+        for (auto& slot : searchResponse.Data)
         {
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
@@ -418,7 +412,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
             ui->slotTable->setItem(row, 6, curWaiters);
         }
     }
-    if(FoundSlots.size() <= 0)
+    if(searchResponse.Data.size() <= 0)
     {
         QMessageBox warning;
         warning.setWindowTitle("No Results"); // Set the window title
@@ -426,7 +420,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
         warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
         warning.exec();
     }
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         QMessageBox warning;
         warning.setWindowTitle("Error"); // Set the window title
@@ -434,8 +428,6 @@ void CafeOwnerWindow::on_searchButton_clicked()
         warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
         warning.exec();
     }
-
-    ResetSlotDAOResult().Execute();
 }
 
 void CafeOwnerWindow::OnLogoutTriggered()
@@ -451,10 +443,10 @@ void CafeOwnerWindow::OnLogoutTriggered()
 void CafeOwnerWindow::on_showAllButton_clicked()
 {
     ui->slotTable->setRowCount(0);
-    QVector<Slot> slotVector = GetSlotsController().Execute();
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    Response<QVector<Slot>> getSlotsResponse = GetSlotsController().Execute();
+    if(getSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        for (auto& slot : slotVector)
+        for (auto& slot : getSlotsResponse.Data)
         {
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row

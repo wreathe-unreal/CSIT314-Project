@@ -11,36 +11,38 @@
 void ReloadSlots(Ui::CafeStaffWindow* ui)
 {
     //get user id
-    int userID = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
+    Response<int> userIDResponse = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
 
     //use userid to get userslots
-    QVector<Slot> userSlots = SearchSlotsByUserIDController(userID).Execute();
+    Response<QVector<Slot>> searchUserSlotsResponse = SearchSlotsByUserIDController(userIDResponse.Data).Execute();
 
 
     //get user pending bids and add to bid table
-    QVector<Bid> pendingBids = GetPendingBidsController().Execute();
+    Response<QVector<Bid>> pendingBidsResponse = GetPendingBidsController().Execute();
 
-    if(GetBidDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    if(pendingBidsResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         ui->pendingTable->setRowCount(0);
 
-        for (auto& bid : pendingBids)
+        for (auto& bid : pendingBidsResponse.Data)
         {
             int row = ui->pendingTable->rowCount();
             ui->pendingTable->insertRow(row); // Insert a new row
 
-            Slot bidSlot = GetSlotController(bid.SlotID).Execute();
+            Response<Slot> bidSlotResponse = GetSlotController(bid.SlotID).Execute();
 
-            if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+            if(bidSlotResponse.Result == EDatabaseResult::EDR_FAILURE)
             {
                 QMessageBox errorMsgBox;
                 errorMsgBox.setWindowTitle("Slot Error"); // Set the window title
                 errorMsgBox.setText("Could not build slot!"); // Set the text to display
                 errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
                 errorMsgBox.exec();
-                ResetSlotDAOResult().Execute();
                 continue;
             }
+
+
+            Slot bidSlot = bidSlotResponse.Data;
 
             // Create a new item for each piece of data/*
             QTableWidgetItem *date = new QTableWidgetItem(bidSlot.getDate().toString());
@@ -54,33 +56,19 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
         }
     }
 
-    ResetUserDAOResult().Execute();
+    Response<QVector<Slot>> slotsResponse = GetSlotsController().Execute();
+    Response<QVector<Bid>> searchUserBidsResponse = SearchBidsByUserIDController(userIDResponse.Data).Execute();
 
-
-    QVector<Slot> allSlots = GetSlotsController().Execute();
-
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
-    {
-        ResetSlotDAOResult().Execute();
-        return;
-    }
-
-    QVector<Bid> userBids = SearchBidsByUserIDController(userID).Execute();
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
-    {
-        ResetSlotDAOResult().Execute();
-        return;
-    }
 
 
     //available workslots are workslots for which the user has no bids
     QVector<Slot> availableSlots;
 
-    for(auto& as : allSlots)
+    for(auto& as : slotsResponse.Data)
     {
         bool bAvailable = true;
 
-        for(auto& us : userSlots)
+        for(auto& us : searchUserSlotsResponse.Data)
         {
             if(as.SlotID == us.SlotID)
             {
@@ -89,7 +77,7 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
             }
         }
 
-        for(auto& bid: userBids)
+        for(auto& bid: searchUserBidsResponse.Data)
         {
             if(as.SlotID == bid.SlotID)
             {
@@ -187,9 +175,9 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     ui->approvedTable->setHorizontalHeaderLabels(headers2);
     ui->rejectedTable->setHorizontalHeaderLabels(headers2);
 
-    EStaffRole esr = GetESRController(QApplicationGlobal::CurrentUsername).Execute();
+    Response<EStaffRole> esrResponse = GetESRController(QApplicationGlobal::CurrentUsername).Execute();
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    if(esrResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         QMessageBox msgBox;
         msgBox.setWindowTitle("Failed to find Staff Role."); // Set the window title
@@ -200,7 +188,7 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     }
 
     //handle first login
-    if(esr == EStaffRole::ESR_NonStaff)
+    if(esrResponse.Data == EStaffRole::ESR_NonStaff)
     {
 
         QMessageBox msgBox;
@@ -223,63 +211,46 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
         SetESRController(QApplicationGlobal::CurrentUsername, newESR).Execute();
     }
 
-
-    ui->firstNameText->setText(GetNameController(QApplicationGlobal::CurrentUsername).Execute());
+    Response<QString> nameResponse = GetNameController(QApplicationGlobal::CurrentUsername).Execute();
+    ui->firstNameText->setText(nameResponse.Data);
     ui->roleCombo->clear();
     ui->roleCombo->addItem("Non-Staff");
     ui->roleCombo->addItem("Chef");
     ui->roleCombo->addItem("Cashier");
     ui->roleCombo->addItem("Waiter");
     ui->roleCombo->setEnabled(false);
-    ui->roleCombo->setCurrentIndex(static_cast<int>(esr));
+    ui->roleCombo->setCurrentIndex(static_cast<int>(esrResponse.Data));
 
     ui->bidButton->setEnabled(false);
 
     ReloadSlots(ui);
 
-    int userID = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
+    int userID = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute().Data;
+    int maxSlots = GetUserController(QApplicationGlobal::CurrentUsername).Execute().Data.MaxSlots;
+    Response<QVector<Slot>> userSlotsResponse = SearchSlotsByUserIDController(userID).Execute();
+    int curSlots = userSlotsResponse.Data.size();
 
-
-    QVector<Slot> userSlots;
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
-    {
-        ResetUserDAOResult().Execute();
-        return;
-    }
-
-    userSlots = SearchSlotsByUserIDController(userID).Execute();
-    int maxSlots = GetUserController(QApplicationGlobal::CurrentUsername).Execute().MaxSlots;
-    int curSlots = userSlots.size();
     QString workSlotFraction = QString::number(curSlots) + " / " + QString::number(maxSlots);
 
     ui->workslotText->setText(workSlotFraction);
 
-
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    for (auto& slot : userSlotsResponse.Data)
     {
-        for (auto& slot : userSlots)
-        {
-            int row = ui->assignedTable->rowCount();
-            ui->assignedTable->insertRow(row); // Insert a new row
+        int row = ui->assignedTable->rowCount();
+        ui->assignedTable->insertRow(row); // Insert a new row
 
-            // Create a new item for each piece of data/*
-            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+        // Create a new item for each piece of data/*
+        QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+        QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+        QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+        QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
 
-            // Add those items to the table
-            ui->assignedTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->assignedTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->assignedTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->assignedTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-        }
+        // Add those items to the table
+        ui->assignedTable->setItem(row, 0, slotID); // 1 is the column number for the Username
+        ui->assignedTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+        ui->assignedTable->setItem(row, 2, startTime);  //3 is the column number for profile
+        ui->assignedTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
     }
-    else if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
-    {
-        ResetSlotDAOResult().Execute();
-    }
-
 }
 
 CafeStaffWindow::~CafeStaffWindow()
@@ -298,13 +269,13 @@ void CafeStaffWindow::OnLogoutTriggered()
 
 void CafeStaffWindow::on_editInfoButton_clicked()
 {
-    User updatedUser = GetUserController(QApplicationGlobal::CurrentUsername).Execute();
-    updatedUser.FullName = ui->firstNameText->text();
-    updatedUser.MaxSlots = ui->maxSlotsBox->value();
+    Response<User> userResponse = GetUserController(QApplicationGlobal::CurrentUsername).Execute();
+    userResponse.Data.FullName = ui->firstNameText->text();
+    userResponse.Data.MaxSlots = ui->maxSlotsBox->value();
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_SUCCESS)
+    if(userResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        UpdateUserController(updatedUser, QApplicationGlobal::CurrentUsername).Execute();
+        UpdateUserController(userResponse.Data, QApplicationGlobal::CurrentUsername).Execute();
     }
     else
     {
@@ -313,17 +284,6 @@ void CafeStaffWindow::on_editInfoButton_clicked()
         msgBox.setIcon(QMessageBox::Warning);
         msgBox.setWindowFlags(msgBox.windowFlags() & ~Qt::WindowCloseButtonHint);
         msgBox.setText("Update user information failed, invalid user.");
-        msgBox.exec();
-        return;
-    }
-
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
-    {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle("Update Failed");
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setWindowFlags(msgBox.windowFlags() & ~Qt::WindowCloseButtonHint);
-        msgBox.setText("Update user information failed, user not found.");
         msgBox.exec();
         return;
     }
@@ -344,23 +304,21 @@ void CafeStaffWindow::on_bidButton_clicked()
     Bid newBid;
     int row = ui->availableTable->currentIndex().row();
     newBid.SlotID = ui->availableTable->item(row, 0)->text().toInt();
-    newBid.UserID = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
+    Response<int> userIDResponse = GetUserIDController(QApplicationGlobal::CurrentUsername).Execute();
+    newBid.UserID = userIDResponse.Data;
     newBid.EBS = 0; // pending EBidStatus
 
-    if(GetUserDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    if(userIDResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         QMessageBox errorMsgBox;
         errorMsgBox.setWindowTitle("Bid Conflict!"); // Set the window title
         errorMsgBox.setText("A bid for this workslot already exists!"); // Set the text to display
         errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
-        ResetUserDAOResult().Execute();
         return;
     }
 
-    InsertBidController(newBid).Execute();
-
-    if(GetBidDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    if(InsertBidController(newBid).Execute().Result == EDatabaseResult::EDR_FAILURE)
     {
         ui->bidButton->setEnabled(false);
         return;
@@ -376,16 +334,16 @@ void CafeStaffWindow::on_bidButton_clicked()
     int row2 = ui->submittedTable->rowCount();
     ui->submittedTable->insertRow(row2); // Insert a new row
 
-    Slot bidSlot = GetSlotController(newBid.SlotID).Execute();
+    Response<Slot> bidSlotResponse = GetSlotController(newBid.SlotID).Execute();
+    Slot bidSlot = bidSlotResponse.Data;
 
-    if(GetSlotDAOResult().Execute() == EDatabaseResult::EDR_FAILURE)
+    if(bidSlotResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         QMessageBox errorMsgBox;
         errorMsgBox.setWindowTitle("Slot Error"); // Set the window title
         errorMsgBox.setText("Could not build slot from bid!"); // Set the text to display
         errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
-        ResetSlotDAOResult().Execute();
         return;
     }
 

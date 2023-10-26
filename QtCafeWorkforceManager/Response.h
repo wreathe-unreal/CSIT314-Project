@@ -7,8 +7,8 @@ template <typename T>
 class Response
 {
     public:
-        Response();
-        ~Response();
+        Response() { this->Result = EDatabaseResult::EDR_UNINITIALIZED; }
+        ~Response(){ }
         EDatabaseResult Result;
         T Data;
 };
@@ -18,10 +18,11 @@ template <>
 class Response<void>
 {
     public:
-        Response();
-        ~Response();
+        Response(){this->Result = EDatabaseResult::EDR_UNINITIALIZED;}
+        ~Response(){}
         EDatabaseResult Result;
         // No 'data' member for void specialization
 };
 
 #endif // RESPONSE_H
+
