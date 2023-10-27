@@ -5,9 +5,7 @@
 
 #include <QMessageBox>
 
-SysAdminWindow::SysAdminWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::SysAdminWindow)
+SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::SysAdminWindow)
 {
     ui->setupUi(this);
 

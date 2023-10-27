@@ -133,11 +133,6 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     ui->availableTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->availableTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    ui->submittedTable->setSortingEnabled(true);
-    ui->submittedTable->setColumnCount(3);
-    ui->submittedTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui->submittedTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
     ui->pendingTable->setSortingEnabled(true);
     ui->pendingTable->setColumnCount(4);
     ui->pendingTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -168,7 +163,6 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     ui->rejectedTable->setColumnWidth(1, 80);
     ui->pendingTable->setColumnWidth(1, 80);
     ui->pendingTable->setColumnWidth(0,60);
-    ui->submittedTable->setHorizontalHeaderLabels(headers2);
     ui->pendingTable->setHorizontalHeaderLabels(headers);
     ui->rejectedTable->setHorizontalHeaderLabels(headers2);
 
@@ -194,8 +188,8 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
 
         msgBox.exec();
 
-        EStaffRole newESR = static_cast<EStaffRole>(comboBox.currentIndex() + 1);
-        SetESRController(QApplicationGlobal::CurrentUsername, newESR).Execute();
+        esr = static_cast<EStaffRole>(comboBox.currentIndex() + 1);
+        SetESRController(QApplicationGlobal::CurrentUsername, esr).Execute();
     }
 
     ui->firstNameText->setText(user.FullName);
@@ -316,9 +310,6 @@ void CafeStaffWindow::on_bidButton_clicked()
     msgBox.exec();
     ui->bidButton->setEnabled(false);
 
-    int row2 = ui->submittedTable->rowCount();
-    ui->submittedTable->insertRow(row2); // Insert a new row
-
     Response<Slot> bidSlotResponse = GetSlotController(newBid.SlotID).Execute();
     Slot bidSlot = bidSlotResponse.Data;
 
@@ -331,17 +322,6 @@ void CafeStaffWindow::on_bidButton_clicked()
         errorMsgBox.exec();
         return;
     }
-
-    // Create a new item for each piece of data/*
-    QTableWidgetItem *date = new QTableWidgetItem(bidSlot.getDate().toString());
-    QTableWidgetItem *startTime = new QTableWidgetItem(bidSlot.getStartTime().toString("hh:mm:ss AP"));
-    QTableWidgetItem *endTime = new QTableWidgetItem(bidSlot.getEndTime().toString("hh:mm:ss AP"));
-
-    // Add those items to the table
-
-    ui->submittedTable->setItem(row2, 0, date); // 2 is the column number for the HashedPassword
-    ui->submittedTable->setItem(row2, 1, startTime);  //3 is the column number for profile
-    ui->submittedTable->setItem(row2, 2, endTime); // 4 is the column number for the Role etc
 
     ReloadSlots(ui);
 }
@@ -368,38 +348,20 @@ void CafeStaffWindow::on_pendingTable_clicked(const QModelIndex &index)
         return;
     }
 
-    // Get the selected row
-    int row = index.row();
-
-    // Retrieve the items from the table
-    QTableWidgetItem *slot = ui->pendingTable->item(row, 0);
-    QTableWidgetItem *date = ui->pendingTable->item(row, 1);
-    QTableWidgetItem *startTime = ui->pendingTable->item(row, 2);
-    QTableWidgetItem *endTime = ui->pendingTable->item(row, 3);
-
-
-    ui->startTimeEdit->setTime(QTime::fromString(startTime->text(), "hh:mm:ss AP"));
-    ui->endTimeEdit->setTime(QTime::fromString(endTime->text(), "hh:mm:ss AP"));
-
-    ui->dateSelectedEdit->setDate(QDate::fromString(date->text()));
-
     ui->deleteButton->setEnabled(true);
-
-    ui->slotText->setText(slot->text());
 }
 
 
 
 void CafeStaffWindow::on_deleteButton_clicked()
 {
-    int slotID = ui->slotText->text().toInt();
     Response<QVector<Bid>> pendingBids = GetPendingBidsController().Execute();
 
     Response<void> deleteResponse;
-
+    int row = ui->pendingTable->currentIndex().row();
     for(auto bid : pendingBids.Data)
     {
-        if(bid.SlotID == slotID && bid.UserID == QApplicationGlobal::CurrentUserID)
+        if(bid.SlotID == ui->pendingTable->item(row, 0)->text().toInt() && bid.UserID == QApplicationGlobal::CurrentUserID)
         {
             deleteResponse = DeleteBidController(bid.BidID).Execute();
         }
@@ -416,10 +378,6 @@ void CafeStaffWindow::on_deleteButton_clicked()
         successMsgBox.exec();
 
         ui->deleteButton->setEnabled(false);
-        ui->startTimeEdit->clear();
-        ui->endTimeEdit->clear();
-        ui->dateSelectedEdit->setDate(QDate::currentDate());
-        ui->slotText->clear();
 
         ReloadSlots(ui);
 
@@ -433,5 +391,66 @@ void CafeStaffWindow::on_deleteButton_clicked()
 
     // Show the message box as a modal dialog
     errorMsgBox.exec();
+}
+
+
+void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
+{
+
+    Response<QVector<Slot>> searchResponse = SearchSlotByDayController(ui->workslotCalendar->selectedDate()).Execute();
+
+    if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
+    {
+        QMessageBox successMsgBox;
+        successMsgBox.setWindowTitle("Success!"); // Set the window title
+        successMsgBox.setText("Slot search successful: " + QString::number(searchResponse.Data.size()) + " results found."); // Set the text to display
+        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+
+        // Show the message box as a modal dialog
+        successMsgBox.exec();
+
+        ui->availableTable->setRowCount(0);
+
+        for (auto& slot : searchResponse.Data)
+        {
+            int row = ui->availableTable->rowCount();
+            ui->availableTable->insertRow(row); // Insert a new row
+
+
+            // Create a new item for each piece of data/*
+            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+            // Add those items to the table
+            ui->availableTable->setItem(row, 0, slotID); // 1 is the column number for the Username
+            ui->availableTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+            ui->availableTable->setItem(row, 2, startTime);  //3 is the column number for profile
+            ui->availableTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+        }
+    }
+    if(searchResponse.Data.size() <= 0)
+    {
+        QMessageBox warning;
+        warning.setWindowTitle("No Results"); // Set the window title
+        warning.setText("Worklot search found no results."); // Set the text to display
+        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+    if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        QMessageBox warning;
+        warning.setWindowTitle("Error"); // Set the window title
+        warning.setText("Slot search encountered an error."); // Set the text to display
+        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+}
+
+
+void CafeStaffWindow::on_pushButton_clicked()
+{
+    ReloadSlots(ui);
 }
 

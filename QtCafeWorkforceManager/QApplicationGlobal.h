@@ -23,10 +23,13 @@ class QApplicationGlobal : public QApplication
 
         static int CurrentUserID;
         static QString CurrentUsername;
+
         static QSqlDatabase CafeDB;
+
         static UserDataAccessObject UserDAO;
         static SlotDataAccessObject SlotDAO;
         static BidDataAccessObject BidDAO;
+
 };
 
 #endif // QAPPLICATIONGLOBAL_H
