@@ -33,6 +33,8 @@ private slots:
 
     void on_searchButton_clicked();
     void OnLogoutTriggered();
+    void on_showAllUsersButton_clicked();
+
 private:
     Ui::SysAdminWindow *ui;
 };

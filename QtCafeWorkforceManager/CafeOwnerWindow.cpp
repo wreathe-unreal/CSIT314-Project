@@ -51,6 +51,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     {
         for (auto& slot : slotResponse.Data)
         {
+            ui->slotTable->setSortingEnabled(false);
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
 
@@ -71,6 +72,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
             ui->slotTable->setItem(row, 4, curChefs);
             ui->slotTable->setItem(row, 5, curCashiers);
             ui->slotTable->setItem(row, 6, curWaiters);
+            ui->slotTable->setSortingEnabled(true);
         }
     }
 
@@ -106,6 +108,7 @@ void CafeOwnerWindow::on_createButton_clicked()
 
         for (auto& slot : createSlotResponse.Data)
         {
+            ui->slotTable->setSortingEnabled(false);
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
 
@@ -127,6 +130,7 @@ void CafeOwnerWindow::on_createButton_clicked()
             ui->slotTable->setItem(row, 4, curChefs);
             ui->slotTable->setItem(row, 5, curCashiers);
             ui->slotTable->setItem(row, 6, curWaiters);
+            ui->slotTable->setSortingEnabled(true);
         }
     }
     else
@@ -193,6 +197,7 @@ void CafeOwnerWindow::on_deleteButton_clicked()
 
                 for (auto& slot : getSlotsResponse.Data)
                 {
+                    ui->slotTable->setSortingEnabled(false);
                     int row = ui->slotTable->rowCount();
                     ui->slotTable->insertRow(row); // Insert a new row
 
@@ -214,6 +219,7 @@ void CafeOwnerWindow::on_deleteButton_clicked()
                     ui->slotTable->setItem(row, 4, curChefs);
                     ui->slotTable->setItem(row, 5, curCashiers);
                     ui->slotTable->setItem(row, 6, curWaiters);
+                    ui->slotTable->setSortingEnabled(true);
                 }
             }
         }
@@ -246,6 +252,7 @@ void CafeOwnerWindow::on_slotTable_clicked(const QModelIndex &index)
 
     // Get the selected row
     int row = index.row();
+
 
     ui->tabWidget->setCurrentIndex(1);
     // Retrieve the items from the table
@@ -301,6 +308,7 @@ void CafeOwnerWindow::on_editButton_clicked()
     }
 
     Slot slotChanged;
+
     int row = ui->slotTable->currentRow();
 
     slotChanged.SlotID = ui->slotTable->item(row, 0)->text().toInt();
@@ -334,6 +342,7 @@ void CafeOwnerWindow::on_editButton_clicked()
 
         for (auto& slot : updateSlotsResponse.Data)
         {
+            ui->slotTable->setSortingEnabled(false);
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
 
@@ -355,6 +364,7 @@ void CafeOwnerWindow::on_editButton_clicked()
             ui->slotTable->setItem(row, 4, curChefs);
             ui->slotTable->setItem(row, 5, curCashiers);
             ui->slotTable->setItem(row, 6, curWaiters);
+            ui->slotTable->setSortingEnabled(true);
         }
 
     }
@@ -389,6 +399,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
 
         for (auto& slot : searchResponse.Data)
         {
+            ui->slotTable->setSortingEnabled(false);
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
 
@@ -410,6 +421,7 @@ void CafeOwnerWindow::on_searchButton_clicked()
             ui->slotTable->setItem(row, 4, curChefs);
             ui->slotTable->setItem(row, 5, curCashiers);
             ui->slotTable->setItem(row, 6, curWaiters);
+            ui->slotTable->setSortingEnabled(true);
         }
     }
     if(searchResponse.Data.size() <= 0)
@@ -448,6 +460,7 @@ void CafeOwnerWindow::on_showAllButton_clicked()
     {
         for (auto& slot : getSlotsResponse.Data)
         {
+            ui->slotTable->setSortingEnabled(false);
             int row = ui->slotTable->rowCount();
             ui->slotTable->insertRow(row); // Insert a new row
 
@@ -468,6 +481,7 @@ void CafeOwnerWindow::on_showAllButton_clicked()
             ui->slotTable->setItem(row, 4, curChefs);
             ui->slotTable->setItem(row, 5, curCashiers);
             ui->slotTable->setItem(row, 6, curWaiters);
+            ui->slotTable->setSortingEnabled(true);
         }
     }
 }

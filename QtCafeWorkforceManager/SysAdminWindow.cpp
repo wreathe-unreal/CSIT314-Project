@@ -50,7 +50,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui:
     horizontalHeader->setStretchLastSection(true);
 
     QStringList headers;
-    headers <<"FullName" << "Username" << "Password" << "UserProfile" << "StaffRole" << "MaxSlots" << "bActive";
+    headers <<"Full Name" << "Username" << "Password" << "User Profile" << "Staff Role" << "Max Slots" << "Is Active?";
 
     ui->userTable->setHorizontalHeaderLabels(headers);
 
@@ -306,6 +306,7 @@ void SysAdminWindow::on_createButton_clicked()
 
                 for (auto& user : usersResponse.Data)
                 {
+                    ui->userTable->setSortingEnabled(false);
                     int row = ui->userTable->rowCount();
                     ui->userTable->insertRow(row); // Insert a new row
 
@@ -327,6 +328,7 @@ void SysAdminWindow::on_createButton_clicked()
                     ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
                     ui->userTable->setItem(row, 5, maxSlotsItem);
                     ui->userTable->setItem(row, 6, bActiveItem);
+                    ui->userTable->setSortingEnabled(true);
                 }
         }
     }
@@ -439,6 +441,7 @@ void SysAdminWindow::on_deleteButton_clicked()
 
                     for (auto& user : usersResponse.Data)
                     {
+                        ui->userTable->setSortingEnabled(false);
                         int row = ui->userTable->rowCount();
                         ui->userTable->insertRow(row); // Insert a new row
 
@@ -460,6 +463,7 @@ void SysAdminWindow::on_deleteButton_clicked()
                         ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
                         ui->userTable->setItem(row, 5, maxSlotsItem);
                         ui->userTable->setItem(row, 6, bActiveItem);
+                        ui->userTable->setSortingEnabled(true);
                     }
             }
         }
@@ -503,6 +507,7 @@ void SysAdminWindow::on_searchButton_clicked()
 
         for (auto& user : eupSearch.Data)
         {
+                ui->userTable->setSortingEnabled(false);
                 int row = ui->userTable->rowCount();
                 ui->userTable->insertRow(row); // Insert a new row
 
@@ -524,6 +529,7 @@ void SysAdminWindow::on_searchButton_clicked()
                 ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
                 ui->userTable->setItem(row, 5, maxSlotsItem);
                 ui->userTable->setItem(row, 6, bActiveItem);
+                ui->userTable->setSortingEnabled(true);
         }
     }
     else
@@ -546,5 +552,44 @@ void SysAdminWindow::OnLogoutTriggered()
     AuthView->setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
     AuthView->show();
     this->close();
+}
+
+
+void SysAdminWindow::on_showAllUsersButton_clicked()
+{
+    Response<QVector<User>> usersResponse = GetUsersController().Execute();
+
+    if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
+    {
+        ui->userTable->setRowCount(0);
+
+        for (auto& user : usersResponse.Data)
+        {
+                ui->userTable->setSortingEnabled(false);
+                int row = ui->userTable->rowCount();
+                ui->userTable->insertRow(row); // Insert a new row
+
+                // Create a new item for each piece of data/*
+                QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
+                QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
+                QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
+                QTableWidgetItem *profileItem = new QTableWidgetItem(EUserProfileToQString(static_cast<EUserProfile>(user.EUP)));
+                QTableWidgetItem *roleItem = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(user.ESR)));
+                QTableWidgetItem *maxSlotsItem = new QTableWidgetItem(QString::number(user.MaxSlots));
+                QString bActive = user.bActive ? "true" : "false";
+                QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
+
+                // Add those items to the table
+                ui->userTable->setItem(row, 0, fullNameItem);
+                ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
+                ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
+                ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
+                ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
+                ui->userTable->setItem(row, 5, maxSlotsItem);
+                ui->userTable->setItem(row, 6, bActiveItem);
+                ui->userTable->setSortingEnabled(true);
+        }
+    }
+
 }
 

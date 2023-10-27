@@ -43,7 +43,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -82,6 +82,9 @@
         <width>121</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: green;</string>
       </property>
       <property name="text">
        <string>Apply Changes</string>
@@ -224,6 +227,9 @@
         <height>31</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: red;</string>
+      </property>
       <property name="text">
        <string>Delete User</string>
       </property>
@@ -251,7 +257,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="usernameCreate"/>
+        <widget class="QLineEdit" name="usernameCreate">
+         <property name="text">
+          <string>username</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -273,7 +283,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="passwordCreate"/>
+        <widget class="QLineEdit" name="passwordCreate">
+         <property name="text">
+          <string>password</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -360,6 +374,9 @@
         <height>31</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: green;</string>
+      </property>
       <property name="text">
        <string>Create User</string>
       </property>
@@ -382,7 +399,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="fullNameCreate"/>
+        <widget class="QLineEdit" name="fullNameCreate">
+         <property name="text">
+          <string>John Doe</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -391,33 +412,49 @@
      <attribute name="title">
       <string>Search User</string>
      </attribute>
-     <widget class="QPushButton" name="searchButton">
+     <widget class="QWidget" name="">
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>40</y>
-        <width>80</width>
-        <height>24</height>
+        <y>80</y>
+        <width>87</width>
+        <height>56</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Search</string>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPushButton" name="searchButton">
+         <property name="styleSheet">
+          <string notr="true">background-color: green;</string>
+         </property>
+         <property name="text">
+          <string>Search</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="showAllUsersButton">
+         <property name="text">
+          <string>Show All Users</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="">
       <property name="geometry">
        <rect>
-        <x>40</x>
-        <y>10</y>
-        <width>291</width>
-        <height>26</height>
+        <x>120</x>
+        <y>30</y>
+        <width>161</width>
+        <height>48</height>
        </rect>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_9">
-       <item alignment="Qt::AlignRight">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
         <widget class="QLabel" name="label_10">
          <property name="text">
-          <string>User Profile:</string>
+          <string>Filter User Profile: </string>
          </property>
         </widget>
        </item>

@@ -15,12 +15,14 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
 
     if(pendingBidsResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
+        ui->pendingTable->setSortingEnabled(false);
         ui->pendingTable->setRowCount(0);
 
         for (int i = 0; i < pendingBidsResponse.Data.size(); i ++)
         {
             if(pendingBidsResponse.Data[i].UserID == QApplicationGlobal::CurrentUserID)
             {
+                ui->pendingTable->setSortingEnabled(false);
                 int row = ui->pendingTable->rowCount();
                 ui->pendingTable->insertRow(row); // Insert a new row
 
@@ -50,8 +52,11 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
                 ui->pendingTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
                 ui->pendingTable->setItem(row, 2, startTime);  //3 is the column number for profile
                 ui->pendingTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+                ui->pendingTable->setSortingEnabled(true);
+
             }
         }
+        ui->pendingTable->setSortingEnabled(true);
     }
 
     Response<QVector<Slot>> slotsResponse = GetSlotsController().Execute();
@@ -92,9 +97,10 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
     }
 
     ui->availableTable->setRowCount(0);
-
+    ui->availableTable->setSortingEnabled(false);
     for (auto& slot : availableSlots)
     {
+        ui->availableTable->setSortingEnabled(false);
         int row = ui->availableTable->rowCount();
         ui->availableTable->insertRow(row); // Insert a new row
 
@@ -109,7 +115,10 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
         ui->availableTable->setItem(row, 1, date);         // 2 is the column number for the HashedPassword
         ui->availableTable->setItem(row, 2, startTime);   //3 is the column number for profile
         ui->availableTable->setItem(row, 3, endTime);     // 4 is the column number for the Role etc
+        ui->availableTable->setSortingEnabled(true);
+
     }
+    ui->availableTable->setSortingEnabled(true);
 }
 
 
@@ -213,9 +222,10 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     QString workSlotFraction = QString::number(curSlots) + " / " + QString::number(user.MaxSlots);
 
     ui->workslotText->setText(workSlotFraction);
-
+    ui->assignedTable->setSortingEnabled(false);
     for (auto& slot : userSlotsResponse.Data)
     {
+        ui->assignedTable->setSortingEnabled(false);
         int row = ui->assignedTable->rowCount();
         ui->assignedTable->insertRow(row); // Insert a new row
 
@@ -230,7 +240,9 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
         ui->assignedTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
         ui->assignedTable->setItem(row, 2, startTime);  //3 is the column number for profile
         ui->assignedTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+        ui->assignedTable->setSortingEnabled(true);
     }
+    ui->assignedTable->setSortingEnabled(true);
 }
 
 CafeStaffWindow::~CafeStaffWindow()
@@ -410,9 +422,10 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
         successMsgBox.exec();
 
         ui->availableTable->setRowCount(0);
-
+        ui->availableTable->setSortingEnabled(false);
         for (auto& slot : searchResponse.Data)
         {
+            ui->availableTable->setSortingEnabled(false);
             int row = ui->availableTable->rowCount();
             ui->availableTable->insertRow(row); // Insert a new row
 
@@ -428,7 +441,10 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
             ui->availableTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
             ui->availableTable->setItem(row, 2, startTime);  //3 is the column number for profile
             ui->availableTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            ui->availableTable->setSortingEnabled(true);
+
         }
+        ui->availableTable->setSortingEnabled(true);
     }
     if(searchResponse.Data.size() <= 0)
     {

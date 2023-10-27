@@ -102,6 +102,9 @@
          <property name="enabled">
           <bool>false</bool>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rosybrown;</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -207,6 +210,9 @@
           <height>24</height>
          </rect>
         </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: green;</string>
+        </property>
         <property name="text">
          <string>Apply Changes</string>
         </property>
@@ -226,6 +232,9 @@
         <width>91</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: green;</string>
       </property>
       <property name="text">
        <string>Submit Bid -&gt;</string>
@@ -280,6 +289,10 @@
         <width>91</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: indianred;
+color: darkgray;</string>
       </property>
       <property name="text">
        <string>&lt;- Remove Bid</string>

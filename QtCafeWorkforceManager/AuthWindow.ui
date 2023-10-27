@@ -24,9 +24,9 @@
     <property name="geometry">
      <rect>
       <x>280</x>
-      <y>230</y>
+      <y>240</y>
       <width>201</width>
-      <height>111</height>
+      <height>101</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -43,7 +43,7 @@
     </property>
     <property name="font">
      <font>
-      <family>Calibri</family>
+      <family>Lucida Console</family>
       <pointsize>11</pointsize>
       <italic>false</italic>
       <bold>true</bold>
@@ -52,13 +52,14 @@
     </property>
     <property name="styleSheet">
      <string notr="true">QGroupBox
- { 
+ {
+	background-color: BurlyWood ;
      border: 3px solid gray; 
      border-radius: 5px; 
  } </string>
     </property>
     <property name="title">
-     <string>Enter username and password:</string>
+     <string/>
     </property>
     <property name="flat">
      <bool>false</bool>
@@ -66,78 +67,113 @@
     <property name="checkable">
      <bool>false</bool>
     </property>
-    <widget class="QLineEdit" name="QLE_Username">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>26</y>
+       <y>0</y>
        <width>181</width>
-       <height>20</height>
+       <height>71</height>
       </rect>
      </property>
-     <property name="font">
-      <font>
-       <family>Calibri</family>
-       <pointsize>11</pointsize>
-       <italic>false</italic>
-       <bold>true</bold>
-       <kerning>true</kerning>
-      </font>
-     </property>
-     <property name="text">
-      <string>example@gmail.com</string>
-     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="QLE_Username">
+        <property name="font">
+         <font>
+          <family>Calibri</family>
+          <pointsize>11</pointsize>
+          <italic>false</italic>
+          <bold>true</bold>
+          <kerning>true</kerning>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(52, 46, 36);
+color: rgb(202, 202, 202);
+border-color: rgb(128, 128, 128);
+gridline-color: rgb(128, 128, 128);</string>
+        </property>
+        <property name="text">
+         <string>example@gmail.com</string>
+        </property>
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="QLE_Password">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(52, 46, 36);
+color: rgb(202, 202, 202);
+border-color: rgb(128, 128, 128);
+gridline-color: rgb(128, 128, 128);</string>
+        </property>
+        <property name="text">
+         <string>password</string>
+        </property>
+        <property name="frame">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
-    <widget class="QLineEdit" name="QLE_Password">
+    <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>46</y>
+       <y>60</y>
        <width>181</width>
-       <height>20</height>
+       <height>41</height>
       </rect>
      </property>
-     <property name="text">
-      <string>password</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="LoginButton">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>70</y>
-       <width>91</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Login</string>
-     </property>
-     <property name="autoDefault">
-      <bool>true</bool>
-     </property>
-     <property name="default">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QLabel" name="InvalidLoginLabel">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>91</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0004;&quot;&gt;Invalid Login!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="InvalidLoginLabel">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0004;&quot;&gt;Invalid Login!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="LoginButton">
+        <property name="font">
+         <font>
+          <family>Calibri</family>
+          <pointsize>10</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(144, 144, 144);
+color:rgb(229, 229, 229);</string>
+        </property>
+        <property name="text">
+         <string>Login</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </widget>
    <widget class="QLabel" name="label">
