@@ -9,7 +9,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui:
 {
     ui->setupUi(this);
 
-
+    ui->editButton->setStyleSheet("background-color: rgb(97, 255, 137); color: gainsboro;");
     ui->profileCombo->addItem("Sys Admin");
     ui->profileCombo->addItem("Cafe Owner");
     ui->profileCombo->addItem("Cafe Manager");
@@ -102,7 +102,7 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
         // Get the selected row
         int row = index.row();
 
-         ui->tabWidget->setCurrentIndex(0);
+         ui->tabWidget->setCurrentIndex(1);
 
         //since we must lookup the database by the old username we store it on the window's class every time the table is clicked
         UsernameBeforeEdit = ui->userTable->item(row, 1)->text();
@@ -165,6 +165,7 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
         ui->activeCheckBox->setEnabled(true);
         ui->editButton->setEnabled(true);
         ui->deleteButton->setEnabled(true);
+        ui->editButton->setStyleSheet("background-color: rgb(97, 255, 137); color: dimgray;");
 
 }
 
@@ -177,12 +178,14 @@ void SysAdminWindow::on_editButton_clicked()
             errorMsgBox.setWindowTitle("Error!"); // Set the window title
             errorMsgBox.setText("No user selected!"); // Set the text to display
             errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+            ui->editButton->setStyleSheet("background-color: rgb(97, 255, 137); color: gainsboro;");
 
             // Show the message box as a modal dialog
             errorMsgBox.exec();
             return;
     }
 
+    ui->createButton->setStyleSheet("background-color: rgb(97, 255, 137); color: gray;");
     User user;
     user.setFullName(ui->fullNameEdit->text());
     user.setUsername(ui->usernameEdit->text());

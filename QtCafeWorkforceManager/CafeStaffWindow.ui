@@ -272,6 +272,10 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton">
+           <property name="styleSheet">
+            <string notr="true">background-color: dodgerblue;
+color: black;</string>
+           </property>
            <property name="text">
             <string>Show All Workslots</string>
            </property>

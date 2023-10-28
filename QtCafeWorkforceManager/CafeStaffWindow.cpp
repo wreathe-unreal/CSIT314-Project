@@ -322,19 +322,6 @@ void CafeStaffWindow::on_bidButton_clicked()
     msgBox.exec();
     ui->bidButton->setEnabled(false);
 
-    Response<Slot> bidSlotResponse = GetSlotController(newBid.SlotID).Execute();
-    Slot bidSlot = bidSlotResponse.Data;
-
-    if(bidSlotResponse.Result == EDatabaseResult::EDR_FAILURE)
-    {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Slot Error"); // Set the window title
-        errorMsgBox.setText("Could not build slot from bid!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-        errorMsgBox.exec();
-        return;
-    }
-
     ReloadSlots(ui);
 }
 

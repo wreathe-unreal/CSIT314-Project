@@ -13,6 +13,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CafeOwnerWindow)
 {
+    setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
     ui->setupUi(this);
     ui->calendarEdit->setEnabled(false);
     ui->startEditEdit->setEnabled(false);

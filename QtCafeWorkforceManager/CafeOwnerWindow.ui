@@ -262,7 +262,8 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: green;</string>
+       <string notr="true">background-color: dodgerblue;
+color: black;</string>
       </property>
       <property name="text">
        <string>Search</string>
@@ -286,6 +287,10 @@
         <width>131</width>
         <height>24</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: dodgerblue;
+color: black;</string>
       </property>
       <property name="text">
        <string>Show All Workslots</string>
