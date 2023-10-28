@@ -8,6 +8,7 @@
 SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::SysAdminWindow)
 {
     ui->setupUi(this);
+    ui->userTable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     ui->editButton->setStyleSheet("background-color: rgb(97, 255, 137); color: gainsboro;");
     ui->profileCombo->addItem("Sys Admin");
@@ -36,6 +37,8 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui:
     ui->activeCheckBox->setEnabled(false);
     ui->editButton->setEnabled(false);
     ui->deleteButton->setEnabled(false);
+
+    ui->userTable->verticalHeader()->setVisible(false);
 
     ui->userTable->setSortingEnabled(true);
     ui->userTable->setColumnCount(7);

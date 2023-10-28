@@ -163,6 +163,57 @@ Response<QVector<Bid>> BidDataAccessObject::SearchByUserID(int userID)
     return response;
 }
 
+Response<QVector<Bid> > BidDataAccessObject::SearchBySlotID(int slotID)
+{
+
+    Response<QVector<Bid>> response;
+
+    if (!DATABASE.isOpen())
+    {
+        qWarning("Error: connection with database failed");
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Database Connection Failure"); // Set the window title
+        errorMsgBox.setText("Database connection failure."); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Return the empty vector
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM Bid WHERE SlotID = :slotid");
+    query.bindValue(":slotid", slotID);
+
+    if (query.exec())
+    {
+        while (query.next())
+        {
+            User user;
+            Bid bid;
+            bid.BidID = query.value("BidID").toInt();
+            bid.UserID = query.value("UserID").toInt();
+            bid.SlotID = query.value("SlotID").toInt();
+            bid.EBS = query.value("EBS").toInt();
+
+            response.Data.push_back(bid);
+        }
+    }
+    else
+    {
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Bid Access Failure"); // Set the window title
+        errorMsgBox.setText("Could not build slots' bids table!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+        errorMsgBox.exec();
+        qWarning() << "GetBids() ERROR: " << query.lastError().text();
+        return response;
+    }
+
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
+}
+
 
 Response<void> BidDataAccessObject::Delete(int bidID)
 {

@@ -276,3 +276,14 @@ class DeleteBidController : public IController
         }
         Response<void> Execute();
 };
+
+class SearchBidsBySlotIDController : public IController
+{
+    public:
+        int SlotID;
+        SearchBidsBySlotIDController(int slotID)
+        {
+            this->SlotID = slotID;
+        }
+        Response<QVector<Bid>> Execute();
+};

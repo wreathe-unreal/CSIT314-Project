@@ -30,6 +30,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_updateButton_clicked();
+
 private:
     Ui::CafeStaffWindow *ui;
     void OnLogoutTriggered();

@@ -234,13 +234,14 @@
       <property name="geometry">
        <rect>
         <x>690</x>
-        <y>90</y>
+        <y>80</y>
         <width>91</width>
         <height>31</height>
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color:  rgb(97, 255, 137);</string>
+       <string notr="true">background-color:  rgb(97, 255, 137);
+color: gray;</string>
       </property>
       <property name="text">
        <string>Submit Bid -&gt;</string>
@@ -249,9 +250,9 @@
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>319</x>
+        <x>309</x>
         <y>18</y>
-        <width>361</width>
+        <width>371</width>
         <height>209</height>
        </rect>
       </property>
@@ -295,7 +296,7 @@ color: black;</string>
       <property name="geometry">
        <rect>
         <x>690</x>
-        <y>120</y>
+        <y>160</y>
         <width>91</width>
         <height>31</height>
        </rect>
@@ -344,6 +345,23 @@ color:gray;</string>
         <widget class="QTableWidget" name="pendingTable"/>
        </item>
       </layout>
+     </widget>
+     <widget class="QPushButton" name="updateButton">
+      <property name="geometry">
+       <rect>
+        <x>690</x>
+        <y>120</y>
+        <width>91</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: gold;
+color: black;</string>
+      </property>
+      <property name="text">
+       <string>&lt;-Update-&gt;</string>
+      </property>
      </widget>
     </widget>
    </widget>

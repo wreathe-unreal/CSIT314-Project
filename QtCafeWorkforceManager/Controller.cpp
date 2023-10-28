@@ -137,3 +137,8 @@ Response<void> DeleteBidController::Execute()
 {
     return QApplicationGlobal::BidDAO.Delete(this->BidID);
 }
+
+Response<QVector<Bid>> SearchBidsBySlotIDController::Execute()
+{
+    return QApplicationGlobal::BidDAO.SearchBySlotID(this->SlotID);
+}

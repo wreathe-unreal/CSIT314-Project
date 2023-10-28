@@ -128,6 +128,17 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     Bid newBid;
 
     ui->setupUi(this);
+
+    ui->assignedTable->verticalHeader()->setVisible(false);
+    ui->pendingTable->verticalHeader()->setVisible(false);
+    ui->availableTable->verticalHeader()->setVisible(false);
+    ui->rejectedTable->verticalHeader()->setVisible(false);
+
+    ui->assignedTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->pendingTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->availableTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->rejectedTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+
     ui->maxSlotsBox->setValue(user.MaxSlots);
     ui->workslotText->setEnabled(false);
     connect(ui->actionLogout, &QAction::triggered, this, &CafeStaffWindow::OnLogoutTriggered);
@@ -336,6 +347,7 @@ void CafeStaffWindow::on_availableTable_clicked(const QModelIndex &index)
     }
 
     ui->bidButton->setEnabled(true);
+    ui->bidButton->setStyleSheet("background-color:  rgb(97, 255, 137); color: black;");
 }
 
 
@@ -371,7 +383,7 @@ void CafeStaffWindow::on_deleteButton_clicked()
     {
         QMessageBox successMsgBox;
         successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("Slot has been deleted."); // Set the text to display
+        successMsgBox.setText("Bid has been deleted."); // Set the text to display
         successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
 
         // Show the message box as a modal dialog
@@ -458,5 +470,87 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
 void CafeStaffWindow::on_pushButton_clicked()
 {
     ReloadSlots(ui);
+}
+
+
+void CafeStaffWindow::on_updateButton_clicked()
+{
+    if(ui->availableTable->currentRow() == -1 || ui->availableTable->selectedItems().isEmpty())
+    {
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!"); // Set the window title
+        errorMsgBox.setText("No replacement work slot selected!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        errorMsgBox.exec();
+        return;
+    }
+
+    if(ui->pendingTable->currentRow() == -1 || ui->pendingTable->selectedItems().isEmpty())
+    {
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!"); // Set the window title
+        errorMsgBox.setText("No bid to update selected!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+
+        // Show the message box as a modal dialog
+        errorMsgBox.exec();
+        return;
+    }
+
+
+    Bid newBid;
+    int availableRow = ui->availableTable->currentIndex().row();
+    newBid.SlotID = ui->availableTable->item(availableRow, 0)->text().toInt();
+    newBid.UserID = QApplicationGlobal::CurrentUserID;
+    newBid.EBS = 0; // pending EBidStatus
+
+    if(InsertBidController(newBid).Execute().Result == EDatabaseResult::EDR_FAILURE)
+    {
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Bid Conflict!"); // Set the window title
+        errorMsgBox.setText("A bid for this workslot already exists!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+        errorMsgBox.exec();
+        return;
+        ui->bidButton->setEnabled(false);
+        return;
+    }
+
+    int pendingRow = ui->pendingTable->currentRow();
+    int pendingSlotID = ui->pendingTable->item(pendingRow, 0)->text().toInt();
+    Response<QVector<Bid>> bidSlotResponse = SearchBidsBySlotIDController(pendingSlotID).Execute();
+
+
+    Response<void> deleteResponse;
+    for(auto& b : bidSlotResponse.Data)
+    {
+        if(b.UserID == QApplicationGlobal::CurrentUserID)
+        {
+            deleteResponse = DeleteBidController(b.BidID).Execute();
+
+        }
+    }
+
+    if(deleteResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Delete Failed!"); // Set the window title
+        errorMsgBox.setText("Could not update bid during deletion of old bid!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+        errorMsgBox.exec();
+    }
+
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Bid Confirmed!"); // Set the window title
+    msgBox.setText("Your bid has been submitted."); // Set the text to display
+    msgBox.setIcon(QMessageBox::Information); // Set an icon for the message box
+    msgBox.exec();
+    ui->bidButton->setEnabled(false);
+
+    ReloadSlots(ui);
+
+
 }
 
