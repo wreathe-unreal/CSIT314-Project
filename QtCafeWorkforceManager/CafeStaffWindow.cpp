@@ -361,6 +361,7 @@ void CafeStaffWindow::on_pendingTable_clicked(const QModelIndex &index)
     }
 
     ui->deleteButton->setEnabled(true);
+    ui->deleteButton->setStyleSheet("background-color:rgb(235, 69, 69); color:white;");
 }
 
 
@@ -390,6 +391,8 @@ void CafeStaffWindow::on_deleteButton_clicked()
         successMsgBox.exec();
 
         ui->deleteButton->setEnabled(false);
+        ui->deleteButton->setStyleSheet("background-color:rgb(235, 69, 69); color:gray;");
+
 
         ReloadSlots(ui);
 

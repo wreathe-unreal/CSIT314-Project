@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -38,6 +38,9 @@
         <width>361</width>
         <height>201</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border:1px solid rgb(97, 255, 137)</string>
       </property>
      </widget>
      <widget class="QWidget" name="layoutWidget">
@@ -100,10 +103,13 @@
        <item>
         <widget class="QTableWidget" name="rejectedTable">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-color: rosybrown;</string>
+          <string notr="true">border:1px solid red;</string>
          </property>
         </widget>
        </item>
@@ -234,7 +240,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: green;</string>
+       <string notr="true">background-color:  rgb(97, 255, 137);</string>
       </property>
       <property name="text">
        <string>Submit Bid -&gt;</string>
@@ -291,8 +297,8 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: indianred;
-color: darkgray;</string>
+       <string notr="true">background-color:rgb(235, 69, 69);
+color:gray;</string>
       </property>
       <property name="text">
        <string>&lt;- Remove Bid</string>

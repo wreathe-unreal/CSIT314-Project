@@ -43,7 +43,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -84,7 +84,7 @@
        </rect>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: green;</string>
+       <string notr="true">background-color: rgb(97, 255, 137);</string>
       </property>
       <property name="text">
        <string>Apply Changes</string>
@@ -412,7 +412,7 @@
      <attribute name="title">
       <string>Search User</string>
      </attribute>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -441,7 +441,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>120</x>
