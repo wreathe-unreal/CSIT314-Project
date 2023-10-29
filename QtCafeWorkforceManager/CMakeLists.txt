@@ -47,6 +47,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         BidDAO.h
         BidDAO.cpp
         Response.h
+        popupalert.h popupalert.cpp popupalert.ui
+        workslotbid.cpp workslotbid.h workslotbid.ui workslotcreator.cpp workslotcreator.h workslotcreator.ui workslotdelete.cpp workslotdelete.h workslotdelete.ui
 
 
     )
