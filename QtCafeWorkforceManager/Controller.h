@@ -287,3 +287,25 @@ class SearchBidsBySlotIDController : public IController
         }
         Response<QVector<Bid>> Execute();
 };
+
+class SearchUsersBySlotIDController : public IController
+{
+    public:
+        int SlotID;
+        SearchUsersBySlotIDController(int slotid)
+        {
+            this->SlotID = slotid;
+        }
+        Response<QVector<User>> Execute();
+};
+
+class GetUserByBidIDController : public IController
+{
+    public:
+        int BidID;
+        GetUserByBidIDController(int bidID)
+        {
+            this->BidID = bidID;
+        }
+        Response<User> Execute();
+};

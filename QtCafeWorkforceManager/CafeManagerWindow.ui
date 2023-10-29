@@ -43,7 +43,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
@@ -58,8 +58,12 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(97, 255, 137);
+color:dimgray;</string>
+      </property>
       <property name="text">
-       <string>Approve</string>
+       <string>Approve ↓</string>
       </property>
      </widget>
      <widget class="QTableWidget" name="bidTable">
@@ -81,8 +85,11 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: red;</string>
+      </property>
       <property name="text">
-       <string>Reject</string>
+       <string>Reject X</string>
       </property>
      </widget>
     </widget>
@@ -109,8 +116,12 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(97, 255, 137);
+color:dimgray;</string>
+      </property>
       <property name="text">
-       <string>Approve</string>
+       <string>Approve ↓</string>
       </property>
      </widget>
      <widget class="QPushButton" name="chefRejectButton">
@@ -122,8 +133,11 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: red;</string>
+      </property>
       <property name="text">
-       <string>Reject</string>
+       <string>Reject X</string>
       </property>
      </widget>
     </widget>
@@ -150,8 +164,12 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(97, 255, 137);
+color:dimgray;</string>
+      </property>
       <property name="text">
-       <string>Approve</string>
+       <string>Approve ↓</string>
       </property>
      </widget>
      <widget class="QPushButton" name="cashierRejectButton">
@@ -163,8 +181,11 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: red;</string>
+      </property>
       <property name="text">
-       <string>Reject</string>
+       <string>Reject X</string>
       </property>
      </widget>
     </widget>
@@ -191,8 +212,12 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(97, 255, 137);
+color:dimgray;</string>
+      </property>
       <property name="text">
-       <string>Approve</string>
+       <string>Approve ↓</string>
       </property>
      </widget>
      <widget class="QPushButton" name="waiterRejectButton">
@@ -204,8 +229,11 @@
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: red;</string>
+      </property>
       <property name="text">
-       <string>Reject</string>
+       <string>Reject X</string>
       </property>
      </widget>
     </widget>
@@ -230,32 +258,36 @@
       <property name="geometry">
        <rect>
         <x>280</x>
-        <y>10</y>
+        <y>40</y>
         <width>411</width>
-        <height>231</height>
+        <height>201</height>
        </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="unapproveButton">
       <property name="geometry">
        <rect>
-        <x>820</x>
-        <y>220</y>
+        <x>910</x>
+        <y>10</y>
         <width>80</width>
         <height>24</height>
        </rect>
       </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 170, 0);
+color: dimgray;</string>
+      </property>
       <property name="text">
-       <string>Unapprove</string>
+       <string>Unapprove ↑</string>
       </property>
      </widget>
      <widget class="QCalendarWidget" name="calendarWidget">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>22</y>
+        <y>10</y>
         <width>261</width>
-        <height>191</height>
+        <height>221</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -269,8 +301,8 @@
       <property name="geometry">
        <rect>
         <x>710</x>
-        <y>10</y>
-        <width>271</width>
+        <y>210</y>
+        <width>281</width>
         <height>28</height>
        </rect>
       </property>
@@ -338,11 +370,65 @@
       <property name="geometry">
        <rect>
         <x>700</x>
-        <y>50</y>
+        <y>40</y>
         <width>301</width>
         <height>171</height>
        </rect>
       </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>710</x>
+        <y>15</y>
+        <width>49</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Staff</string>
+      </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>0</y>
+        <width>226</width>
+        <height>37</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QDateEdit" name="dateEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Workslots</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </widget>
@@ -356,8 +442,20 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLogout"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLogout">
+   <property name="text">
+    <string>Logout</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="CafeResources.qrc"/>

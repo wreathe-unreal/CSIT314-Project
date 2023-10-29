@@ -3,6 +3,7 @@
 #include "Bid.h"
 #include "Enums.h"
 #include "Response.h"
+#include "User.h"
 
 class BidDataAccessObject
 {
@@ -15,6 +16,7 @@ class BidDataAccessObject
         Response<QVector<Bid>> SearchByUserID(int UserID);
         Response<QVector<Bid>> SearchBySlotID(int slotID);
         Response<void> Delete(int bidID);
+        Response<User>  GetUserByBidID(int bidid);
 
 
 

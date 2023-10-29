@@ -142,3 +142,13 @@ Response<QVector<Bid>> SearchBidsBySlotIDController::Execute()
 {
     return QApplicationGlobal::BidDAO.SearchBySlotID(this->SlotID);
 }
+
+Response<QVector<User>> SearchUsersBySlotIDController::Execute()
+{
+    return QApplicationGlobal::SlotDAO.GetStaff(this->SlotID);
+}
+
+Response<User> GetUserByBidIDController::Execute()
+{
+    return QApplicationGlobal::BidDAO.GetUserByBidID(this->BidID);
+}

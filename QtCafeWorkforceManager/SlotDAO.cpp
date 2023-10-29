@@ -4,6 +4,7 @@
 #include "SlotDAO.h"
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QVariant>
 #include <QString>
 #include "Response.h"
 #include <QMessageBox>
@@ -166,6 +167,80 @@ Response<Slot> SlotDataAccessObject::GetSlot(int slotID)
         return response;
     }
     response.Result = EDatabaseResult::EDR_FAILURE;
+    return response;
+}
+
+Response<QVector<User> > SlotDataAccessObject::GetStaff(int slotID)
+{
+    Response<QVector<User>> response;
+    QVector<User> users;
+
+    // Assuming you have a QSqlDatabase connection setup
+    QSqlDatabase db = QSqlDatabase::database(); // Default connection
+
+    // Check if the connection is open
+    if(!db.isOpen())
+    {
+        // Handle error (maybe set some error status in the Response object)
+        // Example:
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not open DB.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query(db);
+    query.prepare("SELECT UserID FROM UserSlot WHERE SlotID = :slotID");
+    query.bindValue(":slotID", slotID);
+
+    if(!query.exec())
+    {
+        // Handle error
+        Response<QVector<User>> errorResponse;
+        qDebug() << "Error getting users:" << query.lastError();
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not get users associated with slot.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return errorResponse;
+    }
+
+    QVector<int> userIDs;
+    while(query.next())
+    {
+        userIDs.append(query.value(0).toInt());
+    }
+
+    //Loop through each UserID and fetch the User details
+    for(int userID : userIDs)
+    {
+        QSqlQuery userQuery(db);
+        userQuery.prepare("SELECT * FROM User WHERE UserID = :userID");
+        userQuery.bindValue(":userID", userID);
+
+        if(userQuery.exec() && userQuery.next())
+        {
+            User user;
+            user.UserID = userQuery.value("UserID").toInt();
+            user.setUsername(userQuery.value("Username").toString());
+            user.setPassword(userQuery.value("Password").toString());
+            user.setEUP(userQuery.value("EUP").toInt());
+            user.setESR(userQuery.value("ESR").toInt());
+            user.setbActive(userQuery.value("bActive").toBool());
+            user.setFullName(userQuery.value("FullName").toString());
+
+            users.push_back(user);
+        }
+    }
+
+    //Populate the QVector<User> and wrap it in a Response and return
+    response.Data = users;
+    // Set any other response attributes if necessary
     return response;
 }
 

@@ -19,7 +19,7 @@ class SlotDataAccessObject
     Response<QVector<Slot>> CreateSlot(Slot newSlot);
     Response<void> AssignStaff(Slot slot, User user);
     Response<Slot> GetSlot(int slotID);
-    Response<QVector<User>> GetStaff(Slot slot);
+    Response<QVector<User>> GetStaff(int SlotID);
     Response<QVector<User>> GetUnassignedStaff(Slot slot);
     Response<QVector<User>> GetBidders(Slot slot);
     Response<QVector<Slot>> SearchDate(QDate date);

@@ -13,8 +13,6 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CafeOwnerWindow)
 {
-    ui->slotTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    setWindowFlags(Qt::Window | Qt::MSWindowsFixedSizeDialogHint);
     ui->setupUi(this);
 
     ui->slotTable->verticalHeader()->setVisible(false);

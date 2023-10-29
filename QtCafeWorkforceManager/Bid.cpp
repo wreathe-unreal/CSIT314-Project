@@ -19,7 +19,7 @@ Bid::Bid(int bidID, int userID, int slotID)
 
 int Bid::getBidID() const
 {
-    return BidID;
+    return this->BidID;
 }
 
 int Bid::getSlotID() const

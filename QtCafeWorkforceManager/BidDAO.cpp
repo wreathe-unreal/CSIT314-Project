@@ -253,3 +253,59 @@ Response<void> BidDataAccessObject::Delete(int bidID)
         return response;
     }
 }
+
+Response<User> BidDataAccessObject::GetUserByBidID(int bidid)
+{
+    Response<User> response;
+
+    if (!DATABASE.isOpen())
+    {
+        qWarning() << "Failed to open database:" << DATABASE.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    // Get UserID based on BidID
+    QSqlQuery query(DATABASE);
+    query.prepare("SELECT UserID FROM Bid WHERE BidID = :bidID");
+    query.bindValue(":bidID", bidid);
+
+    if (!query.exec())
+    {
+        qWarning() << "Query failed:" << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    while (query.next())
+    {
+        int userID = query.value(0).toInt();
+
+        // Now retrieve user details based on UserID
+        QSqlQuery userQuery(DATABASE);
+        userQuery.prepare("SELECT * FROM User WHERE UserID = :userID");
+        userQuery.bindValue(":userID", userID);
+
+        if (userQuery.exec() && userQuery.next())
+        {
+            User user;
+            user.UserID = userQuery.value("UserID").toInt();
+            user.setUsername(userQuery.value("Username").toString());
+            user.setPassword(userQuery.value("Password").toString());
+            user.setEUP(userQuery.value("EUP").toInt());
+            user.setESR(userQuery.value("ESR").toInt());
+            user.setMaxSlots(userQuery.value("MaxSlots").toInt());
+            user.setbActive(userQuery.value("bActive").toInt());
+            user.setFullName(userQuery.value("FullName").toString());
+            qDebug() << user.EUP;
+            response.Data = user;
+        }
+        else
+        {
+            qWarning() << "User query failed:" << userQuery.lastError().text();
+        }
+    }
+
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
+}
