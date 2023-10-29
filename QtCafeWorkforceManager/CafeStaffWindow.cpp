@@ -3,8 +3,6 @@
 #include "Enums.h"
 #include "QApplicationGlobal.h"
 #include "ui_CafeStaffWindow.h"
-#include "workslotbid.h"
-#include "workslotdelete.h"
 
 #include <QDebug>
 #include <QMessageBox>
@@ -223,7 +221,7 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     ui->roleCombo->setEnabled(false);
     ui->roleCombo->setCurrentIndex(static_cast<int>(esr));
 
-    //ui->bidButton->setEnabled(false);
+    ui->bidButton->setEnabled(false);
 
     ReloadSlots(ui);
 
@@ -310,33 +308,30 @@ void CafeStaffWindow::on_editInfoButton_clicked()
 
 void CafeStaffWindow::on_bidButton_clicked()
 {
-//    Bid newBid;
-//    int availableRow = ui->availableTable->currentIndex().row();
-//    newBid.SlotID = ui->availableTable->item(availableRow, 0)->text().toInt();
-//    newBid.UserID = QApplicationGlobal::CurrentUserID;
-//    newBid.EBS = 0; // pending EBidStatus
+    Bid newBid;
+    int availableRow = ui->availableTable->currentIndex().row();
+    newBid.SlotID = ui->availableTable->item(availableRow, 0)->text().toInt();
+    newBid.UserID = QApplicationGlobal::CurrentUserID;
+    newBid.EBS = 0; // pending EBidStatus
 
-//    if(InsertBidController(newBid).Execute().Result == EDatabaseResult::EDR_FAILURE)
-//    {
-//        QMessageBox errorMsgBox;
-//        errorMsgBox.setWindowTitle("Bid Conflict!"); // Set the window title
-//        errorMsgBox.setText("A bid for this workslot already exists!"); // Set the text to display
-//        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-//        errorMsgBox.exec();
-//        return;
-//        ui->bidButton->setEnabled(false);
-//        return;
-//    }
+    if(InsertBidController(newBid).Execute().Result == EDatabaseResult::EDR_FAILURE)
+    {
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Bid Conflict!"); // Set the window title
+        errorMsgBox.setText("A bid for this workslot already exists!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+        errorMsgBox.exec();
+        return;
+        ui->bidButton->setEnabled(false);
+        return;
+    }
 
-//    QMessageBox msgBox;
-//    msgBox.setWindowTitle("Bid Confirmed!"); // Set the window title
-//    msgBox.setText("Your bid has been submitted."); // Set the text to display
-//    msgBox.setIcon(QMessageBox::Information); // Set an icon for the message box
-//    msgBox.exec();
-//    ui->bidButton->setEnabled(false);
-    WorkSlotBid workslotbid;
-    workslotbid.setModal(true);
-    workslotbid.exec();
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Bid Confirmed!"); // Set the window title
+    msgBox.setText("Your bid has been submitted."); // Set the text to display
+    msgBox.setIcon(QMessageBox::Information); // Set an icon for the message box
+    msgBox.exec();
+    ui->bidButton->setEnabled(false);
 
     ReloadSlots(ui);
 }
@@ -372,50 +367,44 @@ void CafeStaffWindow::on_pendingTable_clicked(const QModelIndex &index)
 
 void CafeStaffWindow::on_deleteButton_clicked()
 {
-//    Response<QVector<Bid>> pendingBids = GetPendingBidsController().Execute();
+    Response<QVector<Bid>> pendingBids = GetPendingBidsController().Execute();
 
-//    Response<void> deleteResponse;
-//    int row = ui->pendingTable->currentIndex().row();
-//    for(auto bid : pendingBids.Data)
-//    {
-//        if(bid.SlotID == ui->pendingTable->item(row, 0)->text().toInt() && bid.UserID == QApplicationGlobal::CurrentUserID)
-//        {
-//            deleteResponse = DeleteBidController(bid.BidID).Execute();
-//        }
-//    }
+    Response<void> deleteResponse;
+    int row = ui->pendingTable->currentIndex().row();
+    for(auto bid : pendingBids.Data)
+    {
+        if(bid.SlotID == ui->pendingTable->item(row, 0)->text().toInt() && bid.UserID == QApplicationGlobal::CurrentUserID)
+        {
+            deleteResponse = DeleteBidController(bid.BidID).Execute();
+        }
+    }
 
-//    if(deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
-//    {
-//        QMessageBox successMsgBox;
-//        successMsgBox.setWindowTitle("Success!"); // Set the window title
-//        successMsgBox.setText("Bid has been deleted."); // Set the text to display
-//        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+    if(deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
+    {
+        QMessageBox successMsgBox;
+        successMsgBox.setWindowTitle("Success!"); // Set the window title
+        successMsgBox.setText("Bid has been deleted."); // Set the text to display
+        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
 
-//        // Show the message box as a modal dialog
-//        successMsgBox.exec();
+        // Show the message box as a modal dialog
+        successMsgBox.exec();
 
-//        ui->deleteButton->setEnabled(false);
-//        ui->deleteButton->setStyleSheet("background-color:rgb(235, 69, 69); color:gray;");
+        ui->deleteButton->setEnabled(false);
+        ui->deleteButton->setStyleSheet("background-color:rgb(235, 69, 69); color:gray;");
 
 
-//        ReloadSlots(ui);
+        ReloadSlots(ui);
 
-//        return;
-//    }
+        return;
+    }
 
-//    QMessageBox errorMsgBox;
-//    errorMsgBox.setWindowTitle("Error!"); // Set the window title
-//    errorMsgBox.setText("The slot could not be deleted."); // Set the text to display
-//    errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
+    QMessageBox errorMsgBox;
+    errorMsgBox.setWindowTitle("Error!"); // Set the window title
+    errorMsgBox.setText("The slot could not be deleted."); // Set the text to display
+    errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
 
-//    // Show the message box as a modal dialog
-//    errorMsgBox.exec();
-
-    WorkSlotDelete workslotdelete;
-    workslotdelete.setModal(true);
-    workslotdelete.exec();
-
-    ReloadSlots(ui);
+    // Show the message box as a modal dialog
+    errorMsgBox.exec();
 }
 
 
