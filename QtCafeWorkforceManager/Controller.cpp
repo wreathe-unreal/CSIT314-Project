@@ -143,7 +143,7 @@ Response<QVector<Bid>> SearchBidsBySlotIDController::Execute()
     return QApplicationGlobal::BidDAO.SearchBySlotID(this->SlotID);
 }
 
-Response<QVector<User>> SearchUsersBySlotIDController::Execute()
+Response<QVector<User>> SearchWorkersBySlotIDController::Execute()
 {
     return QApplicationGlobal::BidDAO.GetStaff(this->SlotID);
 }
@@ -163,7 +163,12 @@ Response<Bid> GetBidController::Execute()
     return QApplicationGlobal::BidDAO.GetBid(this->BidID);
 }
 
-Response<QVector<User> > GetApprovedUsersBySlot::Execute()
+Response<QVector<User> > GetApprovedUsersBySlotController::Execute()
 {
     return QApplicationGlobal::BidDAO.GetStaff(this->SlotID);
+}
+
+Response<QVector<User> > GetBiddersBySlotIDController::Execute()
+{
+    return QApplicationGlobal::BidDAO.GetBidders(this->SlotID);
 }

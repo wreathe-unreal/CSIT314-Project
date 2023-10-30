@@ -19,10 +19,10 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->waiterText->setEnabled(false);
 
     QStringList slotHeaders;
-    slotHeaders << "Slot ID" << "Date" << "Start Time" << "End Time";
+    slotHeaders << "SlotID" << "Date" << "Start Time" << "End Time";
 
     QStringList bidHeaders;
-    bidHeaders << "ID" << "Full Name" << "Role";
+    bidHeaders << "BidID" << "Full Name" << "Role";
 
 
     ui->slotTable->setColumnCount(4);
@@ -197,7 +197,7 @@ void SetRoleText(Slot slot, Ui::CafeManagerWindow* ui)
 
 void ReloadTables(Slot slot, Ui::CafeManagerWindow* ui)
 {
-    Response<QVector<User>> userSearch = SearchUsersBySlotIDController(slot.SlotID).Execute();
+    Response<QVector<User>> userSearch = SearchWorkersBySlotIDController(slot.SlotID).Execute();
     Response<QVector<Bid>> bidSearch = SearchBidsBySlotIDController(slot.SlotID).Execute();
 
 
@@ -223,11 +223,13 @@ void ReloadTables(Slot slot, Ui::CafeManagerWindow* ui)
 
         // Add those items to the table
         ui->staffTable->setItem(row, 0, bidid);
-        ui->staffTable->setItem(row, 0, name); // 1 is the column number for the name
-        ui->staffTable->setItem(row, 1, role); // 2 is the column number for the role
+        ui->staffTable->setItem(row, 1, name); // 1 is the column number for the name
+        ui->staffTable->setItem(row, 2, role); // 2 is the column number for the role
 
     }
     ui->staffTable->setSortingEnabled(true);
+
+
 
     ui->bidTable->setRowCount(0);
     ui->chefTable->setRowCount(0);
@@ -239,35 +241,37 @@ void ReloadTables(Slot slot, Ui::CafeManagerWindow* ui)
     ui->cashierTable->setSortingEnabled(false);
     for(auto&b : bidSearch.Data)
     {
-        Response<User> bidder = GetUserByBidIDController(b.BidID).Execute();
-        int row = ui->staffTable->rowCount();
-        ui->bidTable->insertRow(row); // Insert a new row
-
-
-
-        // Create a new item for each piece of data/*
-        //these pointers cannot be created in switch statements???? for some reason??
-        //items also cannot be owned by multiple tables...so we create multiple copies here
-        QTableWidgetItem *id = new QTableWidgetItem(QString::number(b.getBidID()));
-        QTableWidgetItem *name = new QTableWidgetItem(bidder.Data.getFullName());
-        QTableWidgetItem *role = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-        QTableWidgetItem *chefid = new QTableWidgetItem(QString::number(b.getBidID()));
-        QTableWidgetItem *chefName = new QTableWidgetItem(bidder.Data.getFullName());
-        QTableWidgetItem *chefRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-        QTableWidgetItem *cashierid = new QTableWidgetItem(QString::number(b.getBidID()));
-        QTableWidgetItem *cashierName = new QTableWidgetItem(bidder.Data.getFullName());
-        QTableWidgetItem *cashierRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-        QTableWidgetItem *waiterid = new QTableWidgetItem(QString::number(b.getBidID()));
-        QTableWidgetItem *waiterName = new QTableWidgetItem(bidder.Data.getFullName());
-        QTableWidgetItem *waiterRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-
-        // Add those items to the table
-        ui->bidTable->setItem(row, 0, id);
-        ui->bidTable->setItem(row, 1, name); // 1 is the column number for the name
-        ui->bidTable->setItem(row, 2, role); // 2 is the column number for the role
-
-        switch(bidder.Data.getESR())
+        if(b.EBS == 0)
         {
+            Response<User> bidder = GetUserByBidIDController(b.BidID).Execute();
+            int row = ui->bidTable->rowCount();
+            ui->bidTable->insertRow(row); // Insert a new row
+
+
+
+            // Create a new item for each piece of data/*
+            //these pointers cannot be created in switch statements???? for some reason??
+            //items also cannot be owned by multiple tables...so we create multiple copies here
+            QTableWidgetItem *id = new QTableWidgetItem(QString::number(b.getBidID()));
+            QTableWidgetItem *name = new QTableWidgetItem(bidder.Data.getFullName());
+            QTableWidgetItem *role = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
+            QTableWidgetItem *chefid = new QTableWidgetItem(QString::number(b.getBidID()));
+            QTableWidgetItem *chefName = new QTableWidgetItem(bidder.Data.getFullName());
+            QTableWidgetItem *chefRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
+            QTableWidgetItem *cashierid = new QTableWidgetItem(QString::number(b.getBidID()));
+            QTableWidgetItem *cashierName = new QTableWidgetItem(bidder.Data.getFullName());
+            QTableWidgetItem *cashierRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
+            QTableWidgetItem *waiterid = new QTableWidgetItem(QString::number(b.getBidID()));
+            QTableWidgetItem *waiterName = new QTableWidgetItem(bidder.Data.getFullName());
+            QTableWidgetItem *waiterRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
+
+            // Add those items to the table
+            ui->bidTable->setItem(row, 0, id);
+            ui->bidTable->setItem(row, 1, name); // 1 is the column number for the name
+            ui->bidTable->setItem(row, 2, role); // 2 is the column number for the role
+
+            switch(bidder.Data.getESR())
+            {
             case 1:
                 ui->chefTable->insertRow(row); // Insert a new row
                 ui->chefTable->setItem(row, 0, chefid);
@@ -306,7 +310,9 @@ void ReloadTables(Slot slot, Ui::CafeManagerWindow* ui)
                 break;
             default:
                 break;
+            }
         }
+
     }
 
     ui->bidTable->setSortingEnabled(true);
@@ -348,6 +354,7 @@ void CafeManagerWindow::on_approveButton_clicked()
 {
     if (!ui->bidTable->currentIndex().isValid() || ui->bidTable->rowCount() <= 0 )
     {
+        //nothing selected error
         return;
     }
 

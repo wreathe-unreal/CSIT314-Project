@@ -288,11 +288,11 @@ class SearchBidsBySlotIDController : public IController
         Response<QVector<Bid>> Execute();
 };
 
-class SearchUsersBySlotIDController : public IController
+class SearchWorkersBySlotIDController : public IController
 {
     public:
         int SlotID;
-        SearchUsersBySlotIDController(int slotid)
+        SearchWorkersBySlotIDController(int slotid)
         {
             this->SlotID = slotid;
         }
@@ -332,11 +332,22 @@ class GetBidController : public IController
         Response<Bid> Execute();
 };
 
-class GetApprovedUsersBySlot : public IController
+class GetApprovedUsersBySlotController : public IController
 {
     public:
         int SlotID;
-        GetApprovedUsersBySlot(int slotID)
+        GetApprovedUsersBySlotController(int slotID)
+        {
+            this->SlotID = slotID;
+        }
+        Response<QVector<User>> Execute();
+};
+
+class GetBiddersBySlotIDController : public IController
+{
+    public:
+        int SlotID;
+        GetBiddersBySlotIDController(int slotID)
         {
             this->SlotID = slotID;
         }

@@ -408,6 +408,58 @@ Response<QVector<User>> BidDataAccessObject::GetStaff(int slotID)
     return response;
 }
 
+Response<QVector<User>> BidDataAccessObject::GetBidders(int slotID)
+{
+    Response<QVector<User>> response;
+    QVector<User> users;
+
+    // Check if the connection is open
+    if(!DATABASE.isOpen())
+    {
+        // Handle error (maybe set some error status in the Response object)
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not open DB.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query(DATABASE);
+    query.prepare("SELECT UserID FROM Bid WHERE SlotID = :slotID");
+    query.bindValue(":slotID", slotID);
+
+    if(!query.exec())
+    {
+        // Handle error
+        qDebug() << "Error getting users:" << query.lastError();
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not get users associated with slot.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Returning the same response object here instead of creating a new one.
+    }
+
+    while(query.next())
+    {
+        int userID = query.value(0).toInt();
+        Response<User> userResponse = GetUserController(userID).Execute();
+        if(userResponse.Result == EDatabaseResult::EDR_SUCCESS) // Assuming you have an EDR_SUCCESS status
+        {
+            users.push_back(userResponse.Data);
+        }
+        // Otherwise, handle the error or continue
+    }
+
+    // Populate the QVector<User> and wrap it in a Response and return
+    response.Data = users;
+    // Set any other response attributes if necessary
+    return response;
+}
+
 Response<void> BidDataAccessObject::ApproveBid(int bidid)
 {
     Response<void> response;

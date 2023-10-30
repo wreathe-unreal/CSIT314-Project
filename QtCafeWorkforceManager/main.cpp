@@ -9,7 +9,6 @@ int main(int argc, char *argv[])
 {
     QApplicationGlobal a(argc, argv);
     QApplicationGlobal::setStyle(QStyleFactory::create("Fusion"));
-    QStringList availableStyles = QStyleFactory::keys();
     AuthWindow w;
     w.setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
     w.show();

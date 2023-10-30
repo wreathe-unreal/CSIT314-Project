@@ -20,9 +20,7 @@ class BidDataAccessObject
         Response<User>  GetUserByBidID(int bidid);
         Response<void> ApproveBid(int bidid);
         Response<QVector<User>> GetStaff(int slotID);
-
-
-
+        Response<QVector<User>> GetBidders(int slotID);
 };
 
 #endif // BIDDAO_H

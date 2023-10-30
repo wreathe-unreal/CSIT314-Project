@@ -446,20 +446,53 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
 
     Response<QVector<Slot>> searchResponse = SearchSlotByDayController(ui->workslotCalendar->selectedDate()).Execute();
 
+    if(searchResponse.Data.size() <= 0)
+    {
+        QMessageBox warning;
+        warning.setWindowTitle("No Results"); // Set the window title
+        warning.setText("Worklot search found no results."); // Set the text to display
+        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+    if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        QMessageBox warning;
+        warning.setWindowTitle("Error"); // Set the window title
+        warning.setText("Slot search encountered an error."); // Set the text to display
+        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+
     if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("Slot search successful: " + QString::number(searchResponse.Data.size()) + " results found."); // Set the text to display
-        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-        // Show the message box as a modal dialog
-        successMsgBox.exec();
-
         ui->availableTable->setRowCount(0);
         ui->availableTable->setSortingEnabled(false);
+
+        bool bSlotAvailable = true;
+
+        qDebug() << searchResponse.Data.size();
+
         for (auto& slot : searchResponse.Data)
         {
+            Response<QVector<User>> bidders = GetBiddersBySlotIDController(slot.SlotID).Execute();
+
+            qDebug() << bidders.Data.size();
+
+            for(auto& b : bidders.Data)
+            {
+                qDebug() << b.UserID << " " << QApplicationGlobal::CurrentUserID;
+                if(b.UserID == QApplicationGlobal::CurrentUserID)
+                {
+                    bSlotAvailable = false;
+                    qDebug() << "Slot unavailable";
+                }
+            }
+
+            if(!bSlotAvailable)
+            {
+                continue;
+            }
+
             ui->availableTable->setSortingEnabled(false);
             int row = ui->availableTable->rowCount();
             ui->availableTable->insertRow(row); // Insert a new row
@@ -480,22 +513,26 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
 
         }
         ui->availableTable->setSortingEnabled(true);
-    }
-    if(searchResponse.Data.size() <= 0)
-    {
-        QMessageBox warning;
-        warning.setWindowTitle("No Results"); // Set the window title
-        warning.setText("Worklot search found no results."); // Set the text to display
-        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
-        warning.exec();
-    }
-    if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
-    {
-        QMessageBox warning;
-        warning.setWindowTitle("Error"); // Set the window title
-        warning.setText("Slot search encountered an error."); // Set the text to display
-        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
-        warning.exec();
+        if(ui->availableTable->rowCount() > 0)
+        {
+            QMessageBox successMsgBox;
+            successMsgBox.setWindowTitle("Success!"); // Set the window title
+            successMsgBox.setText("Slot search successful: " + QString::number(ui->availableTable->rowCount()) + " results found."); // Set the text to display
+            successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+
+            // Show the message box as a modal dialog
+            successMsgBox.exec();
+        }
+        else
+        {
+            QMessageBox successMsgBox;
+            successMsgBox.setWindowTitle("No unbidded slots!"); // Set the window title
+            successMsgBox.setText("Slots were found, but none are available for bidding by you."); // Set the text to display
+            successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+
+            // Show the message box as a modal dialog
+            successMsgBox.exec();
+        }
     }
 }
 
