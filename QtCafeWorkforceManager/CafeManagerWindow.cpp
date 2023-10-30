@@ -9,11 +9,23 @@
 
 #include <QMessageBox>
 
+void ClearTables(Ui::CafeManagerWindow* ui)
+{
+    ui->staffTable->clear();
+    ui->bidTable->clear();
+    ui->waiterTable->clear();
+    ui->chefTable->clear();
+    ui->cashierTable->clear();
+}
+
 CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CafeManagerWindow)
 {
     ui->setupUi(this);
+
+    ui->tabWidget->tabBar()->setTabTextColor(4, QColor("red"));
+    ui->tabWidget->tabBar()->setStyleSheet(QString("QTabBar::tab:selected { background-color: dodgerblue; }"));
 
     ui->chefText->setEnabled(false);
     ui->cashierText->setEnabled(false);
@@ -94,6 +106,70 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->cashierTable->setColumnWidth(0,50);
     ui->cashierTable->setColumnWidth(1,175);
 
+    ui->rejectedTable->setColumnCount(3);
+    ui->rejectedTable->setHorizontalHeaderLabels(bidHeaders);
+    ui->rejectedTable->verticalHeader()->setVisible(false);
+    ui->rejectedTable->setSortingEnabled(true);
+    ui->rejectedTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->rejectedTable->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->rejectedTable->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui->rejectedTable->horizontalHeader()->setStretchLastSection(true);
+    ui->rejectedTable->setColumnWidth(0,50);
+    ui->rejectedTable->setColumnWidth(1,175);
+
+    Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
+
+    if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS && slotResponse.Data.size() > 0)
+    {
+
+        ui->slotTable->setRowCount(0);
+        ui->slotTable->setSortingEnabled(false);
+        for (auto& slot : slotResponse.Data)
+        {
+            ui->slotTable->setSortingEnabled(false);
+            int row = ui->slotTable->rowCount();
+            ui->slotTable->insertRow(row); // Insert a new row
+
+
+            // Create a new item for each piece of data/*
+            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+            // Add those items to the table
+            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
+            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
+            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            ui->slotTable->setSortingEnabled(true);
+
+        }
+        ui->slotTable->setSortingEnabled(true);
+    }
+    if(slotResponse.Data.size() <= 0)
+    {
+        ClearTables(ui);
+        QMessageBox warning;
+        warning.setWindowTitle("No Results"); // Set the window title
+        warning.setText("Worklot search found no results."); // Set the text to display
+        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+
+    if(slotResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        ClearTables(ui);
+        QMessageBox warning;
+        warning.setWindowTitle("Error"); // Set the window title
+        warning.setText("Slot search encountered an error."); // Set the text to display
+        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+
+    ui->slotTable->setFocus();
+    ui->slotTable->selectRow(0);
+
     connect(ui->actionLogout, &QAction::triggered, this, &CafeManagerWindow::OnLogoutTriggered);
 
 }
@@ -110,15 +186,6 @@ void CafeManagerWindow::OnLogoutTriggered()
     AuthView->setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
     AuthView->show();
     this->close();
-}
-
-void ClearTables(Ui::CafeManagerWindow* ui)
-{
-    ui->staffTable->clear();
-    ui->bidTable->clear();
-    ui->waiterTable->clear();
-    ui->chefTable->clear();
-    ui->cashierTable->clear();
 }
 
 void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
@@ -185,25 +252,24 @@ void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
     ui->slotTable->selectRow(0);
 }
 
-void SetRoleText(Slot slot, Ui::CafeManagerWindow* ui)
+void ReloadTables(Ui::CafeManagerWindow* ui)
 {
-    ui->cashierText->setText(QString::number(slot.getCurCashiers()));
-    ui->waiterText->setText(QString::number(slot.getCurWaiters()));
-    ui->chefText->setText(QString::number(slot.getCurChefs()));
 
 
+    int slotRow = ui->slotTable->currentIndex().row();
+    Response<Slot> thisSlot = GetSlotController(ui->slotTable->item(slotRow, 0)->text().toInt()).Execute();
 
-
-}
-
-void ReloadTables(Slot slot, Ui::CafeManagerWindow* ui)
-{
-    Response<QVector<User>> userSearch = SearchWorkersBySlotIDController(slot.SlotID).Execute();
-    Response<QVector<Bid>> bidSearch = SearchBidsBySlotIDController(slot.SlotID).Execute();
+    Response<QVector<User>> userSearch = SearchWorkersBySlotIDController(thisSlot.Data.SlotID).Execute();
+    Response<QVector<Bid>> bidSearch = SearchBidsBySlotIDController(thisSlot.Data.SlotID).Execute();
 
 
     ui->staffTable->setRowCount(0);
     ui->staffTable->setSortingEnabled(false);
+
+    int NumChefs = 0;
+    int NumCashiers = 0;
+    int NumWaiters = 0;
+
     for (auto& u : userSearch.Data)
     {
         int row = ui->staffTable->rowCount();
@@ -222,6 +288,23 @@ void ReloadTables(Slot slot, Ui::CafeManagerWindow* ui)
             }
         }
 
+        switch(u.ESR)
+        {
+            case 0:
+                break;
+            case 1:
+                NumChefs++;
+                break;
+            case 2:
+                NumCashiers++;
+                break;
+            case 3:
+                NumWaiters++;
+                break;
+            default:
+                break;
+        }
+
         // Add those items to the table
         ui->staffTable->setItem(row, 0, bidid);
         ui->staffTable->setItem(row, 1, name); // 1 is the column number for the name
@@ -230,98 +313,97 @@ void ReloadTables(Slot slot, Ui::CafeManagerWindow* ui)
     }
     ui->staffTable->setSortingEnabled(true);
 
+    // Helper lambda function to determine color based on value
+    auto determineColor = [](int value) -> QString { return (value == 0) ? "maroon" : "seagreen"; };
+
+    // Cashier Text
+    ui->cashierText->setText(QString::number(NumCashiers));
+    ui->cashierText->setStyleSheet(QString("background-color: %1; color: white;").arg(determineColor(NumCashiers)));
+
+    // Waiter Text
+    ui->waiterText->setText(QString::number(NumWaiters));
+    ui->waiterText->setStyleSheet(QString("background-color: %1; color: white;").arg(determineColor(NumWaiters)));
+
+    // Chef Text
+    ui->chefText->setText(QString::number(NumChefs));
+    ui->chefText->setStyleSheet(QString("background-color: %1; color: white;").arg(determineColor(NumChefs)));
+
 
 
     ui->bidTable->setRowCount(0);
     ui->chefTable->setRowCount(0);
     ui->waiterTable->setRowCount(0);
     ui->cashierTable->setRowCount(0);
+    ui->rejectedTable->setRowCount(0);
     ui->bidTable->setSortingEnabled(false);
     ui->chefTable->setSortingEnabled(false);
     ui->waiterTable->setSortingEnabled(false);
     ui->cashierTable->setSortingEnabled(false);
-    for(auto&b : bidSearch.Data)
+    ui->rejectedTable->setSortingEnabled(false);
+    for(auto& b : bidSearch.Data)
     {
+        Response<User> bidder = GetUserByBidIDController(b.BidID).Execute();
+
+        QTableWidgetItem *id = new QTableWidgetItem(QString::number(b.getBidID()));
+        QTableWidgetItem *name = new QTableWidgetItem(bidder.Data.getFullName());
+        QTableWidgetItem *role = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
+
         if(b.EBS == 0)
         {
-            Response<User> bidder = GetUserByBidIDController(b.BidID).Execute();
-            int row = ui->bidTable->rowCount();
-            ui->bidTable->insertRow(row); // Insert a new row
-
-
-
-            // Create a new item for each piece of data/*
-            //these pointers cannot be created in switch statements???? for some reason??
-            //items also cannot be owned by multiple tables...so we create multiple copies here
-            QTableWidgetItem *id = new QTableWidgetItem(QString::number(b.getBidID()));
-            QTableWidgetItem *name = new QTableWidgetItem(bidder.Data.getFullName());
-            QTableWidgetItem *role = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-            QTableWidgetItem *chefid = new QTableWidgetItem(QString::number(b.getBidID()));
-            QTableWidgetItem *chefName = new QTableWidgetItem(bidder.Data.getFullName());
-            QTableWidgetItem *chefRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-            QTableWidgetItem *cashierid = new QTableWidgetItem(QString::number(b.getBidID()));
-            QTableWidgetItem *cashierName = new QTableWidgetItem(bidder.Data.getFullName());
-            QTableWidgetItem *cashierRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-            QTableWidgetItem *waiterid = new QTableWidgetItem(QString::number(b.getBidID()));
-            QTableWidgetItem *waiterName = new QTableWidgetItem(bidder.Data.getFullName());
-            QTableWidgetItem *waiterRole = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
-
-            // Add those items to the table
-            ui->bidTable->setItem(row, 0, id);
-            ui->bidTable->setItem(row, 1, name); // 1 is the column number for the name
-            ui->bidTable->setItem(row, 2, role); // 2 is the column number for the role
+            int bidRow = ui->bidTable->rowCount();
+            ui->bidTable->insertRow(bidRow);
+            ui->bidTable->setItem(bidRow, 0, new QTableWidgetItem(*id));
+            ui->bidTable->setItem(bidRow, 1, new QTableWidgetItem(*name));
+            ui->bidTable->setItem(bidRow, 2, new QTableWidgetItem(*role));
 
             switch(bidder.Data.getESR())
             {
             case 1:
-                ui->chefTable->insertRow(row); // Insert a new row
-                ui->chefTable->setItem(row, 0, chefid);
-                ui->chefTable->setItem(row, 1, chefName);
-                ui->chefTable->setItem(row, 2, chefRole);
-                delete waiterid;
-                delete waiterName;
-                delete waiterRole;
-                delete cashierid;
-                delete cashierName;
-                delete cashierRole;
+            {// Chef
+                int chefRow = ui->chefTable->rowCount();
+                ui->chefTable->insertRow(chefRow);
+                ui->chefTable->setItem(chefRow, 0, new QTableWidgetItem(*id));
+                ui->chefTable->setItem(chefRow, 1, new QTableWidgetItem(*name));
+                ui->chefTable->setItem(chefRow, 2, new QTableWidgetItem(*role));
                 break;
+            }
             case 2:
-                ui->cashierTable->insertRow(row); // Insert a new row
-                ui->cashierTable->setItem(row, 0, cashierid);
-                ui->cashierTable->setItem(row, 1, cashierName);
-                ui->cashierTable->setItem(row, 2, cashierRole);
-                delete waiterid;
-                delete waiterName;
-                delete waiterRole;
-                delete chefid;
-                delete chefName;
-                delete chefRole;
+            {// Cashier
+                int cashierRow = ui->cashierTable->rowCount();
+                ui->cashierTable->insertRow(cashierRow);
+                ui->cashierTable->setItem(cashierRow, 0, new QTableWidgetItem(*id));
+                ui->cashierTable->setItem(cashierRow, 1, new QTableWidgetItem(*name));
+                ui->cashierTable->setItem(cashierRow, 2, new QTableWidgetItem(*role));
                 break;
+            }
             case 3:
-                ui->waiterTable->insertRow(row); // Insert a new row
-                ui->waiterTable->setItem(row, 0, waiterid);
-                ui->waiterTable->setItem(row, 1, waiterName);
-                ui->waiterTable->setItem(row, 2, waiterRole);
-                delete chefid;
-                delete chefName;
-                delete chefRole;
-                delete cashierid;
-                delete cashierName;
-                delete cashierRole;
+            {// Waiter
+                int waiterRow = ui->waiterTable->rowCount();
+                ui->waiterTable->insertRow(waiterRow);
+                ui->waiterTable->setItem(waiterRow, 0, new QTableWidgetItem(*id));
+                ui->waiterTable->setItem(waiterRow, 1, new QTableWidgetItem(*name));
+                ui->waiterTable->setItem(waiterRow, 2, new QTableWidgetItem(*role));
                 break;
+            }
             default:
                 break;
             }
         }
-
+        else if(b.EBS == 2)
+        {
+            int rejectedRow = ui->rejectedTable->rowCount();
+            ui->rejectedTable->insertRow(rejectedRow);
+            ui->rejectedTable->setItem(rejectedRow, 0, id);
+            ui->rejectedTable->setItem(rejectedRow, 1, name);
+            ui->rejectedTable->setItem(rejectedRow, 2, role);
+        }
     }
 
     ui->bidTable->setSortingEnabled(true);
     ui->chefTable->setSortingEnabled(true);
     ui->waiterTable->setSortingEnabled(true);
     ui->cashierTable->setSortingEnabled(true);
-
-
+    ui->rejectedTable->setSortingEnabled(true);
 }
 
 
@@ -340,29 +422,146 @@ void CafeManagerWindow::on_slotTable_itemSelectionChanged()
         return;
     }
 
-    ReloadTables(slotResponse.Data, ui);
-    SetRoleText(slotResponse.Data, ui);
+    ReloadTables(ui);
 }
 
 
 void CafeManagerWindow::on_unapproveButton_clicked()
 {
 
-}
-
-
-void CafeManagerWindow::on_approveButton_clicked()
-{
-
-    if (!ui->bidTable->currentIndex().isValid() || ui->bidTable->rowCount() <= 0 )
+    if (!ui->staffTable->currentIndex().isValid() || ui->staffTable->rowCount() <= 0 )
     {
         PopUp error = PopUp();
         error.ManagerNullSelectionError();
         return;
     }
 
-    int row = ui->bidTable->currentIndex().row();
-    int bidID = ui->bidTable->item(row, 0)->text().toInt();
+    int row = ui->staffTable->currentIndex().row();
+    int bidID = ui->staffTable->item(row, 0)->text().toInt();
+
+    auto bidder = GetUserByBidIDController(bidID).Execute();
+
+    Response<void> unapproveResponse = UnapproveBidController(bidID).Execute();
+
+    if(unapproveResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        PopUp error = PopUp();
+        error.ManagerUnapprovalError();
+    }
+
+
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_approveButton_clicked()
+{
+        Approve(ui->bidTable, ui);
+        ReloadTables(ui);
+
+}
+
+
+void CafeManagerWindow::on_showWorkslotsButton_clicked()
+{
+
+    Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
+
+    if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS && slotResponse.Data.size() > 0)
+    {
+
+        ui->slotTable->setRowCount(0);
+        ui->slotTable->setSortingEnabled(false);
+        for (auto& slot : slotResponse.Data)
+        {
+            ui->slotTable->setSortingEnabled(false);
+            int row = ui->slotTable->rowCount();
+            ui->slotTable->insertRow(row); // Insert a new row
+
+
+            // Create a new item for each piece of data/*
+            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+            // Add those items to the table
+            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
+            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
+            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            ui->slotTable->setSortingEnabled(true);
+
+        }
+        ui->slotTable->setSortingEnabled(true);
+    }
+    if(slotResponse.Data.size() <= 0)
+    {
+        ClearTables(ui);
+        QMessageBox warning;
+        warning.setWindowTitle("No Results"); // Set the window title
+        warning.setText("Worklot search found no results."); // Set the text to display
+        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+
+    if(slotResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        ClearTables(ui);
+        QMessageBox warning;
+        warning.setWindowTitle("Error"); // Set the window title
+        warning.setText("Slot search encountered an error."); // Set the text to display
+        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
+        warning.exec();
+    }
+
+    ui->slotTable->setFocus();
+    ui->slotTable->selectRow(0);
+
+}
+
+
+void CafeManagerWindow::on_rejectButton_clicked()
+{
+    Reject(ui->bidTable, ui);
+    ReloadTables(ui);
+}
+
+void CafeManagerWindow::Reject(QTableWidget* tableWidget, Ui::CafeManagerWindow* ui)
+{
+    if (!tableWidget->currentIndex().isValid() || tableWidget->rowCount() <= 0)
+    {
+        PopUp error = PopUp();
+        error.ManagerNullSelectionError();
+        return;
+    }
+
+    int row = tableWidget->currentIndex().row();
+    int bidID = tableWidget->item(row, 0)->text().toInt();
+
+    auto bidder = GetUserByBidIDController(bidID).Execute();
+
+    Response<void> rejectResponse = RejectBidController(bidID).Execute();
+
+    if(rejectResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        PopUp error = PopUp();
+        error.ManagerRejectError();
+    }
+}
+
+void CafeManagerWindow::Approve(QTableWidget* tableWidget, Ui::CafeManagerWindow* ui)
+{
+
+    if (!tableWidget->currentIndex().isValid() || tableWidget->rowCount() <= 0 )
+    {
+        PopUp error = PopUp();
+        error.ManagerNullSelectionError();
+        return;
+    }
+
+    int row = tableWidget->currentIndex().row();
+    int bidID = tableWidget->item(row, 0)->text().toInt();
 
     auto bidder = GetUserByBidIDController(bidID).Execute();
     auto bidderSlots = SearchSlotsByUserIDController(bidder.Data.UserID).Execute();
@@ -377,16 +576,86 @@ void CafeManagerWindow::on_approveButton_clicked()
             PopUp error = PopUp();
             error.ManagerApprovalError();
         }
-
-        int row = ui->slotTable->currentIndex().row();
-        Response<Slot> thisSlot = GetSlotController(ui->slotTable->item(row, 0)->text().toInt()).Execute();
-        ReloadTables(thisSlot.Data, ui);
-        SetRoleText(thisSlot.Data, ui);
     }
     else
     {
         PopUp error = PopUp();
         error.ManagerMaxSlotsError();
     }
+}
+
+void CafeManagerWindow::on_chefRejectButton_clicked()
+{
+    Reject(ui->chefTable, ui);
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_cashierRejectButton_clicked()
+{
+    Reject(ui->cashierTable, ui);
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_waiterRejectButton_clicked()
+{
+    Reject(ui->waiterTable, ui);
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_rejectedUnreject_clicked()
+{
+    if (!ui->rejectedTable->currentIndex().isValid() || ui->rejectedTable->rowCount() <= 0 )
+    {
+        PopUp error = PopUp();
+        error.ManagerNullSelectionError();
+        return;
+    }
+
+    int row = ui->rejectedTable->currentIndex().row();
+    int bidID = ui->rejectedTable->item(row, 0)->text().toInt();
+
+    auto bidder = GetUserByBidIDController(bidID).Execute();
+
+    Response<void> unapproveResponse = UnapproveBidController(bidID).Execute();
+
+    if(unapproveResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        PopUp error = PopUp();
+        error.ManagerUnapprovalError();
+    }
+
+
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_chefApproveButton_clicked()
+{
+    Approve(ui->chefTable, ui);
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_cashierApproveButton_clicked()
+{
+    Approve(ui->cashierTable, ui);
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_waiterApproveButton_clicked()
+{
+    Approve(ui->waiterTable, ui);
+    ReloadTables(ui);
+}
+
+
+void CafeManagerWindow::on_rejectedApprove_clicked()
+{
+    Approve(ui->rejectedTable, ui);
+    ReloadTables(ui);
 }
 

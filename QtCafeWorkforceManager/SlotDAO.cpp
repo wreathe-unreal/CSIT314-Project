@@ -26,11 +26,8 @@ Response<QVector<Slot>> SlotDataAccessObject::GetAllSlots()
         QDate date = QDate::fromString(query.value("SlotDate").toString());
         QTime startTime = QTime::fromString(query.value("SlotStart").toString());
         QTime endTime = QTime::fromString(query.value("SlotEnd").toString());
-        int curChefs = query.value("CurChefs").toInt();
-        int curCashiers = query.value("CurCashiers").toInt();
-        int curWaiters = query.value("CurWaiters").toInt();
 
-        Slot Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
+        Slot Slot(id, date, startTime, endTime);
         response.Data.push_back(Slot);
     }
 
@@ -95,14 +92,11 @@ Response<QVector<Slot>> SlotDataAccessObject::CreateSlot(Slot newSlot)
 
     // If no overlaps found, insert the new Slot
     QSqlQuery query;
-    query.prepare("INSERT INTO Slot (SlotDate, SlotStart, SlotEnd, CurChefs, CurCashiers, CurWaiters) "
-                    "VALUES (:date, :start, :end, :curChefs, :curCashiers, :curWaiters)");
+    query.prepare("INSERT INTO Slot (SlotDate, SlotStart, SlotEnd) "
+                    "VALUES (:date, :start, :end)");
     query.bindValue(":date", newSlot.Date.toString());
     query.bindValue(":start", newSlot.StartTime.toString());
     query.bindValue(":end", newSlot.EndTime.toString());
-    query.bindValue(":curChefs", newSlot.CurChefs);
-    query.bindValue(":curCashiers", newSlot.CurCashiers);
-    query.bindValue(":curWaiters", newSlot.CurWaiters);
 
     if (!query.exec())
     {
@@ -150,11 +144,8 @@ Response<Slot> SlotDataAccessObject::GetSlot(int slotID)
         QDate date = QDate::fromString(query.value("SlotDate").toString());
         QTime startTime = QTime::fromString(query.value("SlotStart").toString());
         QTime endTime = QTime::fromString(query.value("SlotEnd").toString());
-        int curChefs = query.value("CurChefs").toInt();
-        int curCashiers = query.value("CurCashiers").toInt();
-        int curWaiters = query.value("CurWaiters").toInt();
 
-        Slot slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
+        Slot slot(id, date, startTime, endTime);
         response.Result = EDatabaseResult::EDR_SUCCESS;
         response.Data = slot;
         return response;
@@ -196,11 +187,8 @@ Response<QVector<Slot>> SlotDataAccessObject::SearchDate(QDate date)
         QDate date = QDate::fromString(query.value("SlotDate").toString());
         QTime startTime = QTime::fromString(query.value("SlotStart").toString());
         QTime endTime = QTime::fromString(query.value("SlotEnd").toString());
-        int curChefs = query.value("CurChefs").toInt();
-        int curCashiers = query.value("CurCashiers").toInt();
-        int curWaiters = query.value("CurWaiters").toInt();
 
-        Slot Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
+        Slot Slot(id, date, startTime, endTime);
         response.Data.push_back(Slot);
     }
 
@@ -346,15 +334,11 @@ Response<QVector<Slot>> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
 
     // slot exists, proceed with update
     QSqlQuery query;
-    query.prepare("UPDATE Slot SET SlotDate = :date, SlotStart = :start, SlotEnd = :end, CurChefs = :curChefs, CurCashiers = :curCashiers, CurWaiters = :curWaiters WHERE SlotID = :slotid");
+    query.prepare("UPDATE Slot SET SlotDate = :date, SlotStart = :start, SlotEnd = :end WHERE SlotID = :slotid");
     query.bindValue(":slotid", editedSlot.SlotID);
     query.bindValue(":date", editedSlot.Date.toString());
     query.bindValue(":start", editedSlot.StartTime.toString());
     query.bindValue(":end", editedSlot.EndTime.toString());
-    query.bindValue(":curChefs", editedSlot.CurChefs);
-    query.bindValue(":curCashiers", editedSlot.CurCashiers);
-    query.bindValue(":curWaiters", editedSlot.CurWaiters);
-
     if (query.exec())
     {
         qDebug() << "Update slot succeded.";            qDebug() << "Error: The new work slot overlaps with an existing Slot.";

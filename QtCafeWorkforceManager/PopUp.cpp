@@ -296,6 +296,20 @@ void PopUp::ManagerMaxSlotsError()
     this->exec();
 }
 
+void PopUp::ManagerUnapprovalError()
+{
+    this->Error();
+    ui->popupText->setText("Database error when unapproving staff member!");
+    this->exec();
+}
+
+void PopUp::ManagerRejectError()
+{
+    this->Error();
+    ui->popupText->setText("Database error when rejecting staff member!");
+    this->exec();
+}
+
 
 //
 // MANAGER ALERTS END

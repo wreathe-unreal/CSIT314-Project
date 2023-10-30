@@ -172,3 +172,18 @@ Response<QVector<User> > GetBiddersBySlotIDController::Execute()
 {
     return QApplicationGlobal::BidDAO.GetBidders(this->SlotID);
 }
+
+Response<void> UnapproveBidController::Execute()
+{
+    return QApplicationGlobal::BidDAO.UnapproveBid(this->BidID);
+}
+
+Response<void> RejectBidController::Execute()
+{
+    return QApplicationGlobal::BidDAO.RejectBid(this->BidID);
+}
+
+Response<QVector<Bid> > GetUserRejectedBidsController::Execute()
+{
+    return QApplicationGlobal::BidDAO.GetRejected(this->UserID);
+}

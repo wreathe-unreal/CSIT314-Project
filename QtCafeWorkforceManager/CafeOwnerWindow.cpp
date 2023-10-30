@@ -24,7 +24,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     ui->editButton->setEnabled(false);
 
     ui->slotTable->setSortingEnabled(true);
-    ui->slotTable->setColumnCount(7);
+    ui->slotTable->setColumnCount(4);
     ui->slotTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->slotTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -36,18 +36,9 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     horizontalHeader->setStretchLastSection(true);
 
     QStringList headers;
-    headers << "Slot ID" << "Date" << "Start Time" << "End Time" << " Current Chefs" << "Current Cashiers" << "Current Waiters";
+    headers << "Slot ID" << "Date" << "Start Time" << "End Time";
 
     ui->slotTable->setHorizontalHeaderLabels(headers);
-    int chefsColumnIndex = 4; // Index of "Current Chefs" column
-    int cashiersColumnIndex = 5; // Index of "Current Cashiers" column
-    int waitersColumnIndex = 6; // Index of "Current Waiters" column
-
-    int smallerWidth = 100; // Choose a width that fits your needs
-
-    ui->slotTable->setColumnWidth(chefsColumnIndex, smallerWidth);
-    ui->slotTable->setColumnWidth(cashiersColumnIndex, smallerWidth);
-    ui->slotTable->setColumnWidth(waitersColumnIndex, smallerWidth);
 
     Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
     if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS)
@@ -63,18 +54,12 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
             QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
-            QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
-            QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
 
             // Add those items to the table
             ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
             ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
             ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
             ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setItem(row, 4, curChefs);
-            ui->slotTable->setItem(row, 5, curCashiers);
-            ui->slotTable->setItem(row, 6, curWaiters);
             ui->slotTable->setSortingEnabled(true);
         }
     }
@@ -121,18 +106,12 @@ void CafeOwnerWindow::on_createButton_clicked()
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
             QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
-            QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
-            QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
 
             // Add those items to the table
             ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
             ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
             ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
             ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setItem(row, 4, curChefs);
-            ui->slotTable->setItem(row, 5, curCashiers);
-            ui->slotTable->setItem(row, 6, curWaiters);
             ui->slotTable->setSortingEnabled(true);
         }
     }
@@ -210,18 +189,12 @@ void CafeOwnerWindow::on_deleteButton_clicked()
                     QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
                     QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
                     QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-                    QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
-                    QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
-                    QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
 
                     // Add those items to the table
                     ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
                     ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
                     ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
                     ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-                    ui->slotTable->setItem(row, 4, curChefs);
-                    ui->slotTable->setItem(row, 5, curCashiers);
-                    ui->slotTable->setItem(row, 6, curWaiters);
                     ui->slotTable->setSortingEnabled(true);
                 }
             }
@@ -263,9 +236,6 @@ void CafeOwnerWindow::on_slotTable_clicked(const QModelIndex &index)
     QTableWidgetItem *date = ui->slotTable->item(row, 1);
     QTableWidgetItem *startTime = ui->slotTable->item(row, 2);
     QTableWidgetItem *endTime = ui->slotTable->item(row, 3);
-    QTableWidgetItem *curChefs = ui->slotTable->item(row, 4);
-    QTableWidgetItem *curCashiers = ui->slotTable->item(row, 5);
-    QTableWidgetItem *curWaiters = ui->slotTable->item(row, 6);
 
     ui->slotIDEdit->setText(slotID->text());
 
@@ -318,9 +288,6 @@ void CafeOwnerWindow::on_editButton_clicked()
     slotChanged.Date = ui->calendarEdit->selectedDate();
     slotChanged.StartTime = ui->startEditEdit->time();
     slotChanged.EndTime = ui->endEditEdit->time();
-    slotChanged.CurChefs = ui->slotTable->item(row, 4)->text().toInt();
-    slotChanged.CurCashiers = ui->slotTable->item(row, 5)->text().toInt();
-    slotChanged.CurWaiters = ui->slotTable->item(row, 6)->text().toInt();
 
     Response<QVector<Slot>> updateSlotsResponse = UpdateSlotController(slotChanged).Execute();
 
@@ -355,18 +322,12 @@ void CafeOwnerWindow::on_editButton_clicked()
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
             QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
-            QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
-            QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
 
             // Add those items to the table
             ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
             ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
             ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
             ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setItem(row, 4, curChefs);
-            ui->slotTable->setItem(row, 5, curCashiers);
-            ui->slotTable->setItem(row, 6, curWaiters);
             ui->slotTable->setSortingEnabled(true);
         }
 
@@ -412,18 +373,12 @@ void CafeOwnerWindow::on_searchButton_clicked()
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
             QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
-            QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
-            QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
 
             // Add those items to the table
             ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
             ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
             ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
             ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setItem(row, 4, curChefs);
-            ui->slotTable->setItem(row, 5, curCashiers);
-            ui->slotTable->setItem(row, 6, curWaiters);
             ui->slotTable->setSortingEnabled(true);
         }
     }
@@ -472,18 +427,12 @@ void CafeOwnerWindow::on_showAllButton_clicked()
             QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
             QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
             QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *curChefs = new QTableWidgetItem(QString::number(slot.getCurChefs()));
-            QTableWidgetItem *curCashiers = new QTableWidgetItem(QString::number(slot.getCurCashiers()));
-            QTableWidgetItem *curWaiters = new QTableWidgetItem(QString::number(slot.getCurWaiters()));
 
             // Add those items to the table
             ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
             ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
             ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
             ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setItem(row, 4, curChefs);
-            ui->slotTable->setItem(row, 5, curCashiers);
-            ui->slotTable->setItem(row, 6, curWaiters);
             ui->slotTable->setSortingEnabled(true);
         }
     }

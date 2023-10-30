@@ -51,7 +51,9 @@ public:
 
     void ManagerNullSelectionError();
     void ManagerApprovalError();
+    void ManagerUnapprovalError();
     void ManagerMaxSlotsError();
+    void ManagerRejectError();
 private:
     Ui::PopUp *ui;
 };

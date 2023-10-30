@@ -17,21 +17,6 @@ class Slot : public IEntity
         QDate getDate();
         void setDate(QDate newSlotDate);
 
-        int getCurChefs() const;
-        void setCurChefs(int newCurChefs);
-
-        int getCurCashiers() const;
-        void setCurCashiers(int newCurCashiers);
-
-
-        int getCurWaiters() const;
-        void setCurWaiters(int newCurWaiters);
-
-        bool isChefRoleFull() const;
-        bool isCashierRoleFull() const;
-        bool isWaiterRoleFull() const;
-        bool isSlotFull() const;
-
         QTime getStartTime();
         void setStartTime(QTime time) { this->StartTime = time;}
 
@@ -51,15 +36,12 @@ class Slot : public IEntity
         virtual void ToString() override { qDebug() << getSlotID(); }
 
         //full constructor
-        Slot(int ID, QDate date, QTime startTime, QTime endTime, int curChefs,int curCashiers, int curWaiters)
+        Slot(int ID, QDate date, QTime startTime, QTime endTime)
         {
             this->SlotID = ID;
             this->Date = date;
             this->StartTime = startTime;
             this->EndTime = endTime;
-            this->CurChefs = curChefs;
-            this->CurCashiers = curCashiers;
-            this->CurWaiters = curWaiters;
         };
 
         //full constructor
@@ -69,18 +51,12 @@ class Slot : public IEntity
             this->Date = date;
             this->StartTime = startTime;
             this->EndTime = endTime;
-            this->CurChefs = 0;
-            this->CurCashiers = 0;
-            this->CurWaiters = 0;
         };
 
         int SlotID;
         QDate Date;
         QTime StartTime;
         QTime EndTime;
-        int CurChefs;
-        int CurCashiers;
-        int CurWaiters;
 
 };
 

@@ -159,6 +159,21 @@ Response<QVector<Bid>> BidDataAccessObject::GetPending()
     return bidResponse;
 }
 
+Response<QVector<Bid>> BidDataAccessObject::GetRejected(int UserID)
+{
+    Response <QVector<Bid>> response = QApplicationGlobal::BidDAO.SearchByUserID(UserID);
+    QVector<Bid> rejected;
+    for(auto& b : response.Data)
+    {
+        if(b.EBS == 2)
+        {
+            rejected.push_back(b);
+        }
+    }
+    response.Data = rejected;
+    return response;
+}
+
 Response<QVector<Bid>> BidDataAccessObject::SearchByUserID(int userID)
 {
     Response<QVector<Bid>> response;
@@ -472,6 +487,56 @@ Response<void> BidDataAccessObject::ApproveBid(int bidid)
 
     QSqlQuery query(DATABASE);
     query.prepare("UPDATE Bid SET EBS = 1 WHERE BidID = :bidID");
+    query.bindValue(":bidID", bidid);
+
+    if (!query.exec())
+    {
+        qWarning() << "Update failed:" << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response; // Update successful
+}
+
+Response<void> BidDataAccessObject::UnapproveBid(int bidid)
+{
+    Response<void> response;
+    if (!DATABASE.isOpen())
+    {
+        qWarning() << "Failed to open database:" << DATABASE.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query(DATABASE);
+    query.prepare("UPDATE Bid SET EBS = 0 WHERE BidID = :bidID");
+    query.bindValue(":bidID", bidid);
+
+    if (!query.exec())
+    {
+        qWarning() << "Update failed:" << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response; // Update successful
+}
+
+Response<void> BidDataAccessObject::RejectBid(int bidid)
+{
+    Response<void> response;
+    if (!DATABASE.isOpen())
+    {
+        qWarning() << "Failed to open database:" << DATABASE.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query(DATABASE);
+    query.prepare("UPDATE Bid SET EBS = 2 WHERE BidID = :bidID");
     query.bindValue(":bidID", bidid);
 
     if (!query.exec())

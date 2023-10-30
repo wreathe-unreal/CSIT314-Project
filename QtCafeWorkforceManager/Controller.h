@@ -353,3 +353,37 @@ class GetBiddersBySlotIDController : public IController
         }
         Response<QVector<User>> Execute();
 };
+
+class UnapproveBidController : public IController
+{
+    public:
+        int BidID;
+        UnapproveBidController(int bidID)
+        {
+            this->BidID = bidID;
+        }
+        Response<void> Execute();
+};
+
+class RejectBidController : public IController
+{
+    public:
+        int BidID;
+        RejectBidController(int bidID)
+        {
+            this->BidID = bidID;
+        }
+        Response<void> Execute();
+};
+
+class GetUserRejectedBidsController : public IController
+{
+    public:
+        int UserID;
+        GetUserRejectedBidsController(int userID)
+        {
+            this->UserID = userID;
+        }
+
+        Response<QVector<Bid>> Execute();
+};

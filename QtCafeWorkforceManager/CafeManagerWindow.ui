@@ -37,10 +37,13 @@
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>50</y>
-      <width>401</width>
+      <y>30</y>
+      <width>411</width>
       <height>251</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="currentIndex">
      <number>0</number>
@@ -237,6 +240,55 @@ color:dimgray;</string>
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_6">
+     <attribute name="title">
+      <string>Rejected Bids</string>
+     </attribute>
+     <widget class="QTableWidget" name="rejectedTable">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>381</width>
+        <height>171</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="rejectedApprove">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>190</y>
+        <width>80</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(97, 255, 137);
+color:dimgray;</string>
+      </property>
+      <property name="text">
+       <string>Approve ↓</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="rejectedUnreject">
+      <property name="geometry">
+       <rect>
+        <x>310</x>
+        <y>190</y>
+        <width>80</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(255, 170, 0);
+color: dimgray;</string>
+      </property>
+      <property name="text">
+       <string>Unreject</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
    <widget class="QTabWidget" name="tabWidget_2">
     <property name="geometry">
@@ -259,7 +311,7 @@ color:dimgray;</string>
        <rect>
         <x>280</x>
         <y>40</y>
-        <width>411</width>
+        <width>381</width>
         <height>201</height>
        </rect>
       </property>
@@ -285,9 +337,9 @@ color: dimgray;</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>10</y>
+        <y>40</y>
         <width>261</width>
-        <height>221</height>
+        <height>191</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -300,7 +352,7 @@ color: dimgray;</string>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>710</x>
+        <x>700</x>
         <y>210</y>
         <width>281</width>
         <height>28</height>
@@ -312,7 +364,7 @@ color: dimgray;</string>
          <item>
           <widget class="QLabel" name="label_2">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="text">
             <string>Chefs:</string>
@@ -324,6 +376,9 @@ color: dimgray;</string>
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
           </widget>
          </item>
         </layout>
@@ -332,6 +387,9 @@ color: dimgray;</string>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QLabel" name="label">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Cashiers:</string>
            </property>
@@ -342,6 +400,9 @@ color: dimgray;</string>
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
           </widget>
          </item>
         </layout>
@@ -350,6 +411,9 @@ color: dimgray;</string>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <widget class="QLabel" name="label_3">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Waiters:</string>
            </property>
@@ -360,6 +424,9 @@ color: dimgray;</string>
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
           </widget>
          </item>
         </layout>
@@ -369,9 +436,9 @@ color: dimgray;</string>
      <widget class="QTableWidget" name="staffTable">
       <property name="geometry">
        <rect>
-        <x>700</x>
+        <x>670</x>
         <y>40</y>
-        <width>301</width>
+        <width>331</width>
         <height>171</height>
        </rect>
       </property>
@@ -379,8 +446,8 @@ color: dimgray;</string>
      <widget class="QLabel" name="label_4">
       <property name="geometry">
        <rect>
-        <x>710</x>
-        <y>15</y>
+        <x>680</x>
+        <y>10</y>
         <width>49</width>
         <height>21</height>
        </rect>
@@ -394,16 +461,28 @@ color: dimgray;</string>
        <string>Staff</string>
       </property>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>290</x>
         <y>0</y>
-        <width>226</width>
+        <width>253</width>
         <height>37</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Workslots for</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QDateEdit" name="dateEdit">
          <property name="enabled">
@@ -416,19 +495,24 @@ color: dimgray;</string>
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QLabel" name="label_5">
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Workslots</string>
-         </property>
-        </widget>
-       </item>
       </layout>
+     </widget>
+     <widget class="QPushButton" name="showWorkslotsButton">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>10</y>
+        <width>131</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: dodgerblue;
+color: dimgray;</string>
+      </property>
+      <property name="text">
+       <string>( Show All Workslots )</string>
+      </property>
      </widget>
     </widget>
    </widget>

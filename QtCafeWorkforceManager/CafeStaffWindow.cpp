@@ -158,7 +158,7 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
 
     ui->rejectedTable->verticalHeader()->setVisible(false);
     ui->rejectedTable->setSortingEnabled(true);
-    ui->rejectedTable->setColumnCount(3);
+    ui->rejectedTable->setColumnCount(4);
     ui->rejectedTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->rejectedTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->rejectedTable->setSelectionMode(QAbstractItemView::NoSelection);
@@ -173,10 +173,10 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     QStringList headers;
     headers << "Slot ID" << "Date" << "Start Time" << "End Time";
 
-    QStringList headers2;
-    headers2 << "Date" << "Start Time" << "End Time";
 
 
+    ui->pendingTable->setHorizontalHeaderLabels(headers);
+    ui->rejectedTable->setHorizontalHeaderLabels(headers);
     ui->assignedTable->setHorizontalHeaderLabels(headers);
     ui->availableTable->setHorizontalHeaderLabels(headers);
     ui->availableTable->setColumnWidth(0, 40);
@@ -184,8 +184,7 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     ui->rejectedTable->setColumnWidth(1, 80);
     ui->pendingTable->setColumnWidth(1, 80);
     ui->pendingTable->setColumnWidth(0,60);
-    ui->pendingTable->setHorizontalHeaderLabels(headers);
-    ui->rejectedTable->setHorizontalHeaderLabels(headers2);
+    ui->rejectedTable->setColumnWidth(0, 40);
 
     EStaffRole esr = static_cast<EStaffRole>(user.ESR);
 
@@ -248,13 +247,39 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
         QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
 
         // Add those items to the table
-        ui->assignedTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-        ui->assignedTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-        ui->assignedTable->setItem(row, 2, startTime);  //3 is the column number for profile
-        ui->assignedTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+        ui->assignedTable->setItem(row, 0, slotID);
+        ui->assignedTable->setItem(row, 1, date);
+        ui->assignedTable->setItem(row, 2, startTime);
+        ui->assignedTable->setItem(row, 3, endTime);
         ui->assignedTable->setSortingEnabled(true);
     }
     ui->assignedTable->setSortingEnabled(true);
+
+    Response<QVector<Bid>> rejected = GetUserRejectedBidsController(QApplicationGlobal::CurrentUserID).Execute();
+
+    ui->rejectedTable->setSortingEnabled(false);
+    for (auto& b : rejected.Data)
+    {
+        Response<Slot> slotResponse = GetSlotController(b.SlotID).Execute();
+        Slot slot = slotResponse.Data;
+        int row = ui->rejectedTable->rowCount();
+        ui->rejectedTable->insertRow(row); // Insert a new row
+
+        // Create a new item for each piece of data/*
+        QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+        QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+        QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+        QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+        // Add those items to the table
+        ui->rejectedTable->setItem(row, 0, slotID);
+        ui->rejectedTable->setItem(row, 1, date);
+        ui->rejectedTable->setItem(row, 2, startTime);
+        ui->rejectedTable->setItem(row, 3, endTime);
+    }
+    ui->rejectedTable->setSortingEnabled(true);
+
+
 }
 
 CafeStaffWindow::~CafeStaffWindow()

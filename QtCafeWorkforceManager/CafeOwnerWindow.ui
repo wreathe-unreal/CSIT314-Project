@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>857</width>
-    <height>600</height>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>560</x>
-      <y>40</y>
+      <y>180</y>
       <width>271</width>
       <height>181</height>
      </rect>
@@ -36,10 +36,10 @@
    <widget class="QTableWidget" name="slotTable">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>270</y>
-      <width>811</width>
-      <height>261</height>
+      <x>20</x>
+      <y>260</y>
+      <width>531</width>
+      <height>251</height>
      </rect>
     </property>
    </widget>
@@ -53,7 +53,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -72,7 +72,7 @@
        <string notr="true">background-color: green;</string>
       </property>
       <property name="text">
-       <string>Create Workslot</string>
+       <string>Create Workslot ↓</string>
       </property>
      </widget>
      <widget class="QCalendarWidget" name="calendarCreate">
@@ -241,7 +241,7 @@
           <string notr="true">background-color: red;</string>
          </property>
          <property name="text">
-          <string>Delete</string>
+          <string>Delete X</string>
          </property>
         </widget>
        </item>
@@ -266,7 +266,7 @@
 color: black;</string>
       </property>
       <property name="text">
-       <string>Search</string>
+       <string>Search ↓</string>
       </property>
      </widget>
      <widget class="QCalendarWidget" name="calendarSearch">
