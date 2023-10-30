@@ -54,6 +54,9 @@ public:
     void ManagerUnapprovalError();
     void ManagerMaxSlotsError();
     void ManagerRejectError();
+    void OwnerSlotSearchResult(int nResults);
+    void ManagerSearchEmptyError();
+    void ManagerSearchError();
 private:
     Ui::PopUp *ui;
 };

@@ -31,11 +31,8 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
 
                 if(bidSlotResponse.Result == EDatabaseResult::EDR_FAILURE)
                 {
-                    QMessageBox errorMsgBox;
-                    errorMsgBox.setWindowTitle("Slot Error"); // Set the window title
-                    errorMsgBox.setText("Could not build slot!"); // Set the text to display
-                    errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-                    errorMsgBox.exec();
+                    PopUp error;
+                    error.StaffSlotBuildError();
                     continue;
                 }
 
@@ -303,12 +300,8 @@ void CafeStaffWindow::on_editInfoButton_clicked()
     userResponse.Data.MaxSlots = ui->maxSlotsBox->value();
     if(UpdateUserController(userResponse.Data, QApplicationGlobal::CurrentUsername).Execute().Result == EDatabaseResult::EDR_FAILURE)
     {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle("Update Failed");
-        msgBox.setIcon(QMessageBox::Warning);
-        msgBox.setWindowFlags(msgBox.windowFlags() & ~Qt::WindowCloseButtonHint);
-        msgBox.setText("Update user information failed, invalid user.");
-        msgBox.exec();
+        PopUp error;
+        error.StaffInfoUpdateFail();
         return;
     }
 
@@ -321,13 +314,8 @@ void CafeStaffWindow::on_editInfoButton_clicked()
     ui->workslotText->setText(workSlotFraction);
     ui->maxSlotsBox->setValue(userResponse.Data.MaxSlots);
 
-    QMessageBox successMsgBox;
-    successMsgBox.setWindowTitle("Success!"); // Set the window title
-    successMsgBox.setText("Your info has been updated."); // Set the text to display
-    successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-    // Show the message box as a modal dialog
-    successMsgBox.exec();
+    PopUp dialogBox;
+    dialogBox.StaffInfoUpdated();
     return;
 }
 
@@ -338,11 +326,8 @@ void CafeStaffWindow::on_bidButton_clicked()
 
     if(selectedAvailableRows.isEmpty())
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Please select at least one slot to bid!");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
+        PopUp error;
+        error.StaffBidEmptyError();
         return;
     }
 
@@ -366,19 +351,13 @@ void CafeStaffWindow::on_bidButton_clicked()
 
     if(!allBidsSuccessful)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Bid Conflict!"); // Set the window title
-        errorMsgBox.setText("A bid for one or more of the selected slots already exists!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-        errorMsgBox.exec();
+        PopUp error;
+        error.StaffBidConflictError();
     }
     else
     {
-        QMessageBox msgBox;
-        msgBox.setWindowTitle("Bid Confirmed!"); // Set the window title
-        msgBox.setText("Your bids have been submitted."); // Set the text to display
-        msgBox.setIcon(QMessageBox::Information); // Set an icon for the message box
-        msgBox.exec();
+        PopUp dialogBox;
+        dialogBox.StaffBidSubmitted();
         ui->bidButton->setEnabled(false);
     }
 
@@ -444,11 +423,8 @@ void CafeStaffWindow::on_deleteButton_clicked()
 
     if (deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!");
-        successMsgBox.setText("All selected bids have been deleted.");
-        successMsgBox.setIcon(QMessageBox::Information);
-        successMsgBox.exec();
+        PopUp dialogBox;
+        dialogBox.StaffBidDeleted();
 
         ui->deleteButton->setEnabled(false);
         ui->deleteButton->setStyleSheet("background-color:rgb(235, 69, 69); color:gray;");
@@ -458,11 +434,8 @@ void CafeStaffWindow::on_deleteButton_clicked()
     }
     else
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Some or all of the selected slots could not be deleted.");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
+        PopUp error;
+        error.StaffBidDeleteError();
     }
 }
 
@@ -474,19 +447,13 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
 
     if(searchResponse.Data.size() <= 0)
     {
-        QMessageBox warning;
-        warning.setWindowTitle("No Results"); // Set the window title
-        warning.setText("Worklot search found no results."); // Set the text to display
-        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp error;
+        error.StaffSearchEmptyError();
     }
     if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
-        QMessageBox warning;
-        warning.setWindowTitle("Error"); // Set the window title
-        warning.setText("Slot search encountered an error."); // Set the text to display
-        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp error;
+        error.StaffSearchError();
     }
 
     if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
@@ -541,13 +508,9 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
         ui->availableTable->setSortingEnabled(true);
         if(ui->availableTable->rowCount() > 0)
         {
-            QMessageBox successMsgBox;
-            successMsgBox.setWindowTitle("Success!"); // Set the window title
-            successMsgBox.setText("Slot search successful: " + QString::number(ui->availableTable->rowCount()) + " results found."); // Set the text to display
-            successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+            PopUp dialogBox;
+            dialogBox.StaffSlotSearchResult(QString::number(ui->availableTable->rowCount()));
 
-            // Show the message box as a modal dialog
-            successMsgBox.exec();
         }
         else
         {
@@ -576,45 +539,30 @@ void CafeStaffWindow::on_updateButton_clicked()
 
     if(selectedAvailableRows.count() != 1)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Please select exactly one replacement work slot!");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
+        PopUp dialogBox;
+        dialogBox.StaffUpdateBidSelectionError();
         return;
     }
 
     if(selectedPendingRows.count() != 1)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Please select exactly one bid to update!");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
+        PopUp dialogBox;
+        dialogBox.StaffUpdateBidEmptyError();
         return;
     }
 
     if(ui->availableTable->currentRow() == -1 || ui->availableTable->selectedItems().isEmpty())
     {
+        PopUp dialogBox;
+        dialogBox.StaffUpdateBidEmptyError();
         QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("No replacement work slot selected!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
         return;
     }
 
     if(ui->pendingTable->currentRow() == -1 || ui->pendingTable->selectedItems().isEmpty())
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("No bid to update selected!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp dialogBox;
+        dialogBox.StaffUpdateBidSelectionError();
         return;
     }
 
@@ -627,11 +575,8 @@ void CafeStaffWindow::on_updateButton_clicked()
 
     if(InsertBidController(newBid).Execute().Result == EDatabaseResult::EDR_FAILURE)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Bid Conflict!"); // Set the window title
-        errorMsgBox.setText("A bid for this workslot already exists!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-        errorMsgBox.exec();
+        PopUp dialogBox;
+        dialogBox.StaffBidConflictError();
         return;
         ui->bidButton->setEnabled(false);
         return;
@@ -659,11 +604,8 @@ void CafeStaffWindow::on_updateButton_clicked()
         error.exec();
     }
 
-    QMessageBox msgBox;
-    msgBox.setWindowTitle("Bid Confirmed!"); // Set the window title
-    msgBox.setText("Your bid has been submitted."); // Set the text to display
-    msgBox.setIcon(QMessageBox::Information); // Set an icon for the message box
-    msgBox.exec();
+    PopUp dialogBox;
+    dialogBox.StaffBidSubmitted();
     ui->bidButton->setEnabled(false);
 
     ReloadSlots(ui);

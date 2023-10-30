@@ -150,21 +150,15 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     if(slotResponse.Data.size() <= 0)
     {
         ClearTables(ui);
-        QMessageBox warning;
-        warning.setWindowTitle("No Results"); // Set the window title
-        warning.setText("Worklot search found no results."); // Set the text to display
-        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp dialogBox;
+        dialogBox.ManagerSearchEmptyError();
     }
 
     if(slotResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         ClearTables(ui);
-        QMessageBox warning;
-        warning.setWindowTitle("Error"); // Set the window title
-        warning.setText("Slot search encountered an error."); // Set the text to display
-        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp dialogBox;
+        dialogBox.ManagerSearchError();
     }
 
     ui->slotTable->setFocus();
@@ -197,13 +191,9 @@ void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
 
     if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("Slot search successful: " + QString::number(searchResponse.Data.size()) + " results found."); // Set the text to display
-        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+        PopUp dialogBox;
+        dialogBox.StaffSlotSearchResult(QString::number(searchResponse.Data.size()));
 
-        // Show the message box as a modal dialog
-        successMsgBox.exec();
 
         ui->slotTable->setRowCount(0);
         ui->slotTable->setSortingEnabled(false);
@@ -233,20 +223,14 @@ void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
     if(searchResponse.Data.size() <= 0)
     {
         ClearTables(ui);
-        QMessageBox warning;
-        warning.setWindowTitle("No Results"); // Set the window title
-        warning.setText("Worklot search found no results."); // Set the text to display
-        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp dialogBox;
+        dialogBox.ManagerSearchEmptyError();
     }
     if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         ClearTables(ui);
-        QMessageBox warning;
-        warning.setWindowTitle("Error"); // Set the window title
-        warning.setText("Slot search encountered an error."); // Set the text to display
-        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp dialogBox;
+        dialogBox.ManagerSearchError();
     }
     ui->slotTable->setFocus();
     ui->slotTable->selectRow(0);
@@ -498,21 +482,15 @@ void CafeManagerWindow::on_showWorkslotsButton_clicked()
     if(slotResponse.Data.size() <= 0)
     {
         ClearTables(ui);
-        QMessageBox warning;
-        warning.setWindowTitle("No Results"); // Set the window title
-        warning.setText("Worklot search found no results."); // Set the text to display
-        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp dialogBox;
+        dialogBox.ManagerSearchEmptyError();
     }
 
     if(slotResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         ClearTables(ui);
-        QMessageBox warning;
-        warning.setWindowTitle("Error"); // Set the window title
-        warning.setText("Slot search encountered an error."); // Set the text to display
-        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp dialogBox;
+        dialogBox.ManagerSearchError();
     }
 
     ui->slotTable->setFocus();

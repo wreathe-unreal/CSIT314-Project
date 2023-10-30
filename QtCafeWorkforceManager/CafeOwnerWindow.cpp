@@ -6,6 +6,7 @@
 #include "Response.h"
 #include "qdatetime.h"
 #include "ui_CafeOwnerWindow.h"
+#include "PopUp.h"
 
 #include <QMessageBox>
 
@@ -84,13 +85,8 @@ void CafeOwnerWindow::on_createButton_clicked()
 
     if(createSlotResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("Work slot has been created."); // Set the text to display
-        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-        // Show the message box as a modal dialog
-        successMsgBox.exec();
+        PopUp dialogBox = PopUp();
+        dialogBox.OwnerSlotCreated();
 
         ui->slotTable->setRowCount(0);
 
@@ -117,13 +113,8 @@ void CafeOwnerWindow::on_createButton_clicked()
     }
     else
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("The work slot could not be created."); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.OwnerSlotCreateError();
     }
 }
 
@@ -139,13 +130,8 @@ void CafeOwnerWindow::on_deleteButton_clicked()
 
     if(ui->slotTable->currentRow() == -1)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("No work slot selected!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.OwnerSlotNullError();
         return;
     }
 
@@ -163,13 +149,8 @@ void CafeOwnerWindow::on_deleteButton_clicked()
 
         if(deleteSlotResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
-            QMessageBox successMsgBox;
-            successMsgBox.setWindowTitle("Success!"); // Set the window title
-            successMsgBox.setText("Slot has been deleted."); // Set the text to display
-            successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-            // Show the message box as a modal dialog
-            successMsgBox.exec();
+            PopUp dialogBox = PopUp();
+            dialogBox.OwnerSlotDeleted();
 
             Response<QVector<Slot>> getSlotsResponse = GetSlotsController().Execute();
 
@@ -201,13 +182,8 @@ void CafeOwnerWindow::on_deleteButton_clicked()
         }
         else
         {
-            QMessageBox errorMsgBox;
-            errorMsgBox.setWindowTitle("Error!"); // Set the window title
-            errorMsgBox.setText("The slot could not be deleted."); // Set the text to display
-            errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-            // Show the message box as a modal dialog
-            errorMsgBox.exec();
+            PopUp dialogBox = PopUp();
+            dialogBox.OwnerSlotDeleteError();
         }
     }
 }
@@ -259,24 +235,14 @@ void CafeOwnerWindow::on_editButton_clicked()
 {
     if(ui->startEditEdit->time() >= ui->endEditEdit->time())
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("Work slot has no duration!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.OwnerSlotDurationError();
         return;
     }
     if(ui->slotTable->currentRow() == -1)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("No slot selected!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.OwnerSlotNullError();
         return;
     }
 
@@ -293,13 +259,8 @@ void CafeOwnerWindow::on_editButton_clicked()
 
     if(updateSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("Slot has been updated."); // Set the text to display
-        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-        // Show the message box as a modal dialog
-        successMsgBox.exec();
+        PopUp dialogBox= PopUp();
+        dialogBox.OwnerSlotUpdated();
 
         ui->calendarEdit->setEnabled(false);
         ui->startEditEdit->setEnabled(false);
@@ -334,13 +295,8 @@ void CafeOwnerWindow::on_editButton_clicked()
     }
     else
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("The slot could not be updated."); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.OwnerSlotUpdateError();
     }
 }
 
@@ -351,13 +307,8 @@ void CafeOwnerWindow::on_searchButton_clicked()
 
     if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("Slot search successful: " + QString::number(searchResponse.Data.size()) + " results found."); // Set the text to display
-        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-        // Show the message box as a modal dialog
-        successMsgBox.exec();
+        PopUp dialogBox = PopUp();
+        dialogBox.OwnerSlotSearchResult(searchResponse.Data.size());
 
         ui->slotTable->setRowCount(0);
 

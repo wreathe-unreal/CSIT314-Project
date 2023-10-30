@@ -2,6 +2,7 @@
 #include "QApplicationGlobal.h"
 #include "ui_SysAdminWindow.h"
 #include "AuthWindow.h"
+#include "PopUp.h"
 
 #include <QMessageBox>
 
@@ -177,14 +178,8 @@ void SysAdminWindow::on_editButton_clicked()
 {
     if(ui->userTable->currentRow() == -1)
     {
-            QMessageBox errorMsgBox;
-            errorMsgBox.setWindowTitle("Error!"); // Set the window title
-            errorMsgBox.setText("No user selected!"); // Set the text to display
-            errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-            ui->editButton->setStyleSheet("background-color: rgb(97, 255, 137); color: gainsboro;");
-
-            // Show the message box as a modal dialog
-            errorMsgBox.exec();
+            PopUp error = PopUp();
+            error.AdminNoUserError();
             return;
     }
 
@@ -211,23 +206,14 @@ void SysAdminWindow::on_editButton_clicked()
 
     if(updateResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("User has been updated."); // Set the text to display
-        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
+            PopUp dialogBox = PopUp();
+            dialogBox.AdminUserUpdated();
 
-        // Show the message box as a modal dialog
-        successMsgBox.exec();
     }
     else
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("The user could not be updated."); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+            PopUp error = PopUp();
+            error.AdminUserUpdateError();
     }
 
 
@@ -296,13 +282,8 @@ void SysAdminWindow::on_createButton_clicked()
     Response<void> createResponse = CreateUserController(user).Execute();
     if(createResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        QMessageBox successMsgBox;
-        successMsgBox.setWindowTitle("Success!"); // Set the window title
-        successMsgBox.setText("User has been created."); // Set the text to display
-        successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-        // Show the message box as a modal dialog
-        successMsgBox.exec();
+        PopUp dialogBox = PopUp();
+        dialogBox.AdminUserCreated();
 
         Response<QVector<User>> usersResponse = GetUsersController().Execute();
 
@@ -340,13 +321,8 @@ void SysAdminWindow::on_createButton_clicked()
     }
     else
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("The user could not be created."); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.AdminUserCreateError();
     }
 
     ui->fullNameCreate->clear();
@@ -407,13 +383,8 @@ void SysAdminWindow::on_deleteButton_clicked()
 {
     if(ui->userTable->currentRow() == -1)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("No user selected!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.AdminNoUserError();
         return;
     }
 
@@ -431,13 +402,8 @@ void SysAdminWindow::on_deleteButton_clicked()
 
         if(deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
-            QMessageBox successMsgBox;
-            successMsgBox.setWindowTitle("Success!"); // Set the window title
-            successMsgBox.setText("User has been deleted."); // Set the text to display
-            successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-            // Show the message box as a modal dialog
-            successMsgBox.exec();
+            PopUp dialogBox = PopUp();
+            dialogBox.AdminUserDeleted();
 
             Response<QVector<User>> usersResponse = GetUsersController().Execute();
 
@@ -475,13 +441,8 @@ void SysAdminWindow::on_deleteButton_clicked()
         }
         else
         {
-            QMessageBox errorMsgBox;
-            errorMsgBox.setWindowTitle("Error!"); // Set the window title
-            errorMsgBox.setText("The user could not be deleted."); // Set the text to display
-            errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-            // Show the message box as a modal dialog
-            errorMsgBox.exec();
+            PopUp error = PopUp();
+            error.AdminUserDeleteError();
         }
         ui->fullNameEdit->clear();
         ui->usernameEdit->clear();
@@ -540,13 +501,8 @@ void SysAdminWindow::on_searchButton_clicked()
     }
     else
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!"); // Set the window title
-        errorMsgBox.setText("No users with specified User Profile."); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-
-        // Show the message box as a modal dialog
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.AdminEUPSearchError();
     }
 
 }

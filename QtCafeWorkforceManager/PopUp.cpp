@@ -210,7 +210,12 @@ void PopUp::StaffBidUpdated()
 //
 // OWNER ALERTS
 //
+void PopUp::OwnerSlotSearchResult(int nResults)
+{
+    this->Success();
+    ui->popupText->setText("Slot search successful: " + QString::number(nResults) + " results found.");
 
+}
 void PopUp::OwnerSlotCreated()
 {
     this->Success();
@@ -307,6 +312,20 @@ void PopUp::ManagerRejectError()
 {
     this->Error();
     ui->popupText->setText("Database error when rejecting staff member!");
+    this->exec();
+}
+
+void PopUp::ManagerSearchEmptyError()
+{
+    this->Error();
+    ui->popupText->setText("Worklot search found no results.");
+    this->exec();
+}
+
+void PopUp::ManagerSearchError()
+{
+    this->Error();
+    ui->popupText->setText("Slot search encountered an error.");
     this->exec();
 }
 
