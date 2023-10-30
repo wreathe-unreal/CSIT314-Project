@@ -29,157 +29,274 @@ void PopUp::Error()
     ui->popupIcon->repaint();
 }
 
-void PopUp::noUser()
+//
+// ADMIN ALERTS
+//
+
+void PopUp::AdminNoUserError()
 {
+    this->Error();
     ui->popupText->setText("No user selected!");
+    this->exec();
 }
 
-void PopUp::userUpdate()
+void PopUp::AdminUserUpdated()
 {
+    this->Success();
     ui->popupText->setText("User is successfully updated.");
+    this->exec();
 }
 
-void PopUp::userUpdateFail()
+void PopUp::AdminUserUpdateError()
 {
+    this->Error();
     ui->popupText->setText("User is not updated.");
+    this->exec();
 }
 
-void PopUp::userCreate()
+void PopUp::AdminUserCreated()
 {
+    this->Success();
     ui->popupText->setText("User is successfully created.");
+    this->exec();
 }
 
-void PopUp::userCreateFail()
+void PopUp::AdminUserCreateError()
 {
+    this->Error();
     ui->popupText->setText("User is not created.");
+    this->exec();
 }
 
-void PopUp::userDelete()
+void PopUp::AdminUserDeleted()
 {
+    this->Success();
     ui->popupText->setText("User is successfully deleted.");
+    this->exec();
 }
 
-void PopUp::userDeleteFail()
+void PopUp::AdminUserDeleteError()
 {
+    this->Error();
     ui->popupText->setText("User is not deleted.");
+    this->exec();
 }
 
-void PopUp::nullUser()
+void PopUp::AdminEUPSearchError()
 {
+    this->Error();
     ui->popupText->setText("No user with the specified User Profile found.");
+    this->exec();
 }
 
-void PopUp::slotError()
+//
+// ADMIN ALERTS END
+//
+
+//
+// STAFF ALERTS
+//
+
+void PopUp::StaffSlotBuildError()
 {
+    this->Error();
     ui->popupText->setText("Could not build and display work slots.");
+    this->exec();
 }
 
-void PopUp::infoUpdate()
+void PopUp::StaffInfoUpdated()
 {
+    this->Success();
     ui->popupText->setText("Your information has been updated!");
+    this->exec();
 }
 
-void PopUp::infoUpdateFail()
+void PopUp::StaffInfoUpdateFail()
 {
+    this->Error();
     ui->popupText->setText("Your information was not updated.");
+    this->exec();
 }
 
-void PopUp::bidEmpty()
+void PopUp::StaffBidEmptyError()
 {
+    this->Error();
     ui->popupText->setText("Please select one slot to bid for.");
+    this->exec();
 }
 
-void PopUp::bidConflict()
+void PopUp::StaffBidConflictError()
 {
+    this->Error();
     ui->popupText->setText("One of the selected bid(s) has already been bid for!");
+    this->exec();
 }
 
-void PopUp::bidSuccess()
+void PopUp::StaffBidSubmitted()
 {
+    this->Success();
     ui->popupText->setText("You have successfully submitted your bid(s).");
+    this->exec();
 }
 
-void PopUp::bidDelete()
+void PopUp::StaffBidDeleted()
 {
+    this->Success();
     ui->popupText->setText("You have successfully deleted your bid(s).");
+    this->exec();
 }
 
-void PopUp::bidDeleteFail()
+void PopUp::StaffBidDeleteError()
 {
+    this->Error();
     ui->popupText->setText("One of the selected bid(s) could not be deleted.");
+    this->exec();
 }
 
-void PopUp::searchSuccess(QString str)
+void PopUp::StaffSlotSearchResult(QString str)
 {
+    this->Success();
     ui->popupText->setText("Slot search success! " + str + " results found.");
+    this->exec();
 }
 
-void PopUp::searchFail()
+void PopUp::StaffSearchEmptyError()
 {
+    this->Error();
     ui->popupText->setText("Search resulted in 0 work slots found.");
+    this->exec();
 }
 
-void PopUp::searchError()
+void PopUp::StaffSearchError()
 {
+    this->Error();
     ui->popupText->setText("Error encountered while searching for work slots.");
+    this->exec();
 }
 
-void PopUp::updateMulti()
+void PopUp::StaffUpdateBidSelectionError()
 {
+    this->Error();
     ui->popupText->setText("Only one bid can be updated to another single bid at a time!");
+    this->exec();
 }
 
-void PopUp::updateEmpty()
+void PopUp::StaffUpdateBidEmptyError()
 {
+    this->Error();
     ui->popupText->setText("No bid was selected to be updated for/with.");
+    this->exec();
 }
 
-void PopUp::updateFail()
+void PopUp::StaffDeleteDuringUpdateError()
 {
+    this->Error();
     ui->popupText->setText("Could not update bid while deleting an older bid.");
+    this->exec();
 }
 
-void PopUp::updateSuccess()
+void PopUp::StaffBidUpdated()
 {
+    this->Success();
     ui->popupText->setText("Your bid has been successfully updated.");
+    this->exec();
 }
 
-void PopUp::slotCreate()
+//
+// STAFF ALERTS END
+//
+
+
+//
+// OWNER ALERTS
+//
+
+void PopUp::OwnerSlotCreated()
 {
+    this->Success();
     ui->popupText->setText("Work slot has been successfully created.");
+    this->exec();
 }
 
-void PopUp::slotCreateFail()
+void PopUp::OwnerSlotCreateError()
 {
+    this->Error();
     ui->popupText->setText("Work slot could not be created.");
+    this->exec();
 }
 
-void PopUp::slotNull()
+void PopUp::OwnerSlotNullError()
 {
+    this->Error();
     ui->popupText->setText("No work slot was selected.");
+    this->exec();
 }
 
-void PopUp::slotDelete()
+void PopUp::OwnerSlotDeleted()
 {
+    this->Success();
     ui->popupText->setText("Work slot has been successfully deleted.");
+    this->exec();
 }
 
-void PopUp::slotDeleteFail()
+void PopUp::OwnerSlotDeleteError()
 {
+    this->Error();
     ui->popupText->setText("Work slot could not be deleted.");
+    this->exec();
 }
 
-void PopUp::slotDurationNull()
+void PopUp::OwnerSlotDurationError()
 {
+    this->Error();
     ui->popupText->setText("Work slot has no valid duration!");
+    this->exec();
 }
 
-void PopUp::slotUpdate()
+void PopUp::OwnerSlotUpdated()
 {
+    this->Success();
     ui->popupText->setText("Work slot has been successfully updated.");
+    this->exec();
 }
 
-void PopUp::slotUpdateFail()
+void PopUp::OwnerSlotUpdateError()
 {
+    this->Error();
     ui->popupText->setText("Work slot could not be updated.");
+    this->exec();
 }
+
+//
+// OWNER ALERTS END
+//
+
+//
+// MANAGER ALERTS
+//
+
+void PopUp::ManagerNullSelectionError()
+{
+    this->Error();
+    ui->popupText->setText("No staff member was selected!");
+    this->exec();
+}
+
+void PopUp::ManagerApprovalError()
+{
+    this->Error();
+    ui->popupText->setText("Database error when approving staff member!");
+    this->exec();
+}
+
+void PopUp::ManagerMaxSlotsError()
+{
+    this->Error();
+    ui->popupText->setText("User is already working at their maximum requested capacity!");
+    this->exec();
+}
+
+
+//
+// MANAGER ALERTS END
+//

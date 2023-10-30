@@ -2,6 +2,7 @@
 #include "CafeManagerWindow.h"
 #include "Controller.h"
 #include "Enums.h"
+#include "PopUp.h"
 #include "Response.h"
 #include "Slot.h"
 #include "ui_CafeManagerWindow.h"
@@ -352,9 +353,11 @@ void CafeManagerWindow::on_unapproveButton_clicked()
 
 void CafeManagerWindow::on_approveButton_clicked()
 {
+
     if (!ui->bidTable->currentIndex().isValid() || ui->bidTable->rowCount() <= 0 )
     {
-        //nothing selected error
+        PopUp error = PopUp();
+        error.ManagerNullSelectionError();
         return;
     }
 
@@ -367,21 +370,23 @@ void CafeManagerWindow::on_approveButton_clicked()
 
     if(bidder.Data.getMaxSlots() > bidderSlots.Data.size())
     {
-        auto approveResponse = ApproveBidController(bidID).Execute();
+        Response<void> approveResponse = ApproveBidController(bidID).Execute();
 
         if(approveResponse.Result == EDatabaseResult::EDR_FAILURE)
         {
-                //query error
+            PopUp error = PopUp();
+            error.ManagerApprovalError();
         }
 
         int row = ui->slotTable->currentIndex().row();
-        auto thisSlot = GetSlotController(ui->slotTable->item(row, 0)->text().toInt()).Execute();
+        Response<Slot> thisSlot = GetSlotController(ui->slotTable->item(row, 0)->text().toInt()).Execute();
         ReloadTables(thisSlot.Data, ui);
         SetRoleText(thisSlot.Data, ui);
     }
     else
     {
-        //max slots error
+        PopUp error = PopUp();
+        error.ManagerMaxSlotsError();
     }
 }
 

@@ -19,11 +19,17 @@
      <x>90</x>
      <y>10</y>
      <width>301</width>
-     <height>31</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="text">
     <string>TextLabel</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
    </property>
   </widget>
   <widget class="QPushButton" name="popupButton">

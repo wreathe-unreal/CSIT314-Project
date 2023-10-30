@@ -463,7 +463,6 @@ Response<QVector<User>> BidDataAccessObject::GetBidders(int slotID)
 Response<void> BidDataAccessObject::ApproveBid(int bidid)
 {
     Response<void> response;
-
     if (!DATABASE.isOpen())
     {
         qWarning() << "Failed to open database:" << DATABASE.lastError().text();

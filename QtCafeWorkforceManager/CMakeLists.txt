@@ -47,6 +47,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         BidDAO.h
         BidDAO.cpp
         Response.h
+        PopUp.cpp PopUp.h PopUp.ui
 
 
     )

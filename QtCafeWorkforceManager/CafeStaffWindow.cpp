@@ -1,6 +1,7 @@
 #include "AuthWindow.h"
 #include "CafeStaffWindow.h"
 #include "Enums.h"
+#include "PopUp.h"
 #include "QApplicationGlobal.h"
 #include "ui_CafeStaffWindow.h"
 
@@ -628,11 +629,9 @@ void CafeStaffWindow::on_updateButton_clicked()
 
     if(deleteResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Delete Failed!"); // Set the window title
-        errorMsgBox.setText("Could not update bid during deletion of old bid!"); // Set the text to display
-        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
-        errorMsgBox.exec();
+        PopUp error = PopUp();
+        error.StaffDeleteDuringUpdateError();
+        error.exec();
     }
 
     QMessageBox msgBox;
