@@ -145,10 +145,25 @@ Response<QVector<Bid>> SearchBidsBySlotIDController::Execute()
 
 Response<QVector<User>> SearchUsersBySlotIDController::Execute()
 {
-    return QApplicationGlobal::SlotDAO.GetStaff(this->SlotID);
+    return QApplicationGlobal::BidDAO.GetStaff(this->SlotID);
 }
 
 Response<User> GetUserByBidIDController::Execute()
 {
     return QApplicationGlobal::BidDAO.GetUserByBidID(this->BidID);
+}
+
+Response<void> ApproveBidController::Execute()
+{
+    return QApplicationGlobal::BidDAO.ApproveBid(this->BidID);
+}
+
+Response<Bid> GetBidController::Execute()
+{
+    return QApplicationGlobal::BidDAO.GetBid(this->BidID);
+}
+
+Response<QVector<User> > GetApprovedUsersBySlot::Execute()
+{
+    return QApplicationGlobal::BidDAO.GetStaff(this->SlotID);
 }

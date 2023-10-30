@@ -663,19 +663,17 @@ Response<void> UserDataAccessObject::SetName(QString username, QString newName)
     return response;
 }
 
-Response<QVector<Slot>> UserDataAccessObject::GetSlotsByUser(QString username)
+Response<QVector<Slot>> UserDataAccessObject::GetSlotsByUser(int userID)
 {
     Response<QVector<Slot>> response;
 
-    Response<User> user = GetUser(username);
-
     QSqlQuery query;
-    // Then, get the SlotIDs from the UserSlot table for the found UserID
-    query.prepare("SELECT SlotID FROM UserSlot WHERE UserID = ?");
-    query.addBindValue(user.Data.UserID);
+    // Get the SlotIDs from the Bid table where EBS = 1 for the given UserID
+    query.prepare("SELECT SlotID FROM Bid WHERE UserID = ? AND EBS = 1");
+    query.addBindValue(userID);
     if (!query.exec())
     {
-        qWarning() << "Failed to execute UserSlot query:" << query.lastError();
+        qWarning() << "Failed to execute Bid query:" << query.lastError();
         response.Result = EDatabaseResult::EDR_FAILURE;
         return response;
     }
@@ -684,26 +682,17 @@ Response<QVector<Slot>> UserDataAccessObject::GetSlotsByUser(QString username)
     {
         int slotID = query.value(0).toInt();
 
-        // Then, for each SlotID, get the Slot details from the Slot table
-        QSqlQuery slotQuery;
-        slotQuery.prepare("SELECT * FROM Slot WHERE SlotID = ?");
-        slotQuery.addBindValue(slotID);
-        if (slotQuery.exec() && slotQuery.next()) {
-            Slot slot;
-            slot.setSlotID(slotQuery.value("SlotID").toInt());
-            slot.setDate(QDate::fromString(slotQuery.value("SlotDate").toString()));
-            slot.setStartTime(QTime::fromString(slotQuery.value("SlotStart").toString()));
-            slot.setEndTime(QTime::fromString(slotQuery.value("SlotEnd").toString()));
-            slot.setCurChefs(slotQuery.value("CurChefs").toInt());
-            slot.setCurCashiers(slotQuery.value("CurCashiers").toInt());
-            slot.setCurWaiters(slotQuery.value("CurWaiters").toInt());
-
-            response.Data.push_back(slot);
+        // Use GetSlot function to get the Slot details for each SlotID
+        Response<Slot> slotResponse = GetSlotController(slotID).Execute();
+        if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS)
+        {
+            response.Data.push_back(slotResponse.Data);
         }
         else
         {
-            qWarning() << "Failed to execute Slot query or slot not found:" << slotQuery.lastError();
+            qWarning() << "Failed to get slot details for SlotID:" << slotID;
             response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
         }
     }
 

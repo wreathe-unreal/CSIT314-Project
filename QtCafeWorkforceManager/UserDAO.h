@@ -30,7 +30,7 @@ class UserDataAccessObject
     Response<QVector<User>> GetUsers();
     Response<QString> GetName(QString username);
     Response<void> SetName(QString username, QString newName);
-    Response<QVector<Slot>> GetSlotsByUser(QString username);
+    Response<QVector<Slot>> GetSlotsByUser(int userid);
     Response<bool> GetbActive(QString username);
     Response<void> SuspendUser(QString username);
     Response<int> GetUserID(QString username);

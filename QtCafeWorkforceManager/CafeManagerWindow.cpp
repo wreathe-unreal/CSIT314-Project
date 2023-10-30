@@ -351,6 +351,30 @@ void CafeManagerWindow::on_approveButton_clicked()
         return;
     }
 
+    int row = ui->bidTable->currentIndex().row();
+    int bidID = ui->bidTable->item(row, 0)->text().toInt();
 
+    auto bidder = GetUserByBidIDController(bidID).Execute();
+    auto bidderSlots = SearchSlotsByUserIDController(bidder.Data.UserID).Execute();
+
+
+    if(bidder.Data.getMaxSlots() > bidderSlots.Data.size())
+    {
+        auto approveResponse = ApproveBidController(bidID).Execute();
+
+        if(approveResponse.Result == EDatabaseResult::EDR_FAILURE)
+        {
+                //query error
+        }
+
+        int row = ui->slotTable->currentIndex().row();
+        auto thisSlot = GetSlotController(ui->slotTable->item(row, 0)->text().toInt()).Execute();
+        ReloadTables(thisSlot.Data, ui);
+        SetRoleText(thisSlot.Data, ui);
+    }
+    else
+    {
+        //max slots error
+    }
 }
 

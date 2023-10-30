@@ -309,3 +309,36 @@ class GetUserByBidIDController : public IController
         }
         Response<User> Execute();
 };
+
+class ApproveBidController : public IController
+{
+    public:
+        int BidID;
+        ApproveBidController(int bidid)
+        {
+            this->BidID = bidid;
+        }
+        Response<void> Execute();
+};
+
+class GetBidController : public IController
+{
+    public:
+        int BidID;
+        GetBidController(int bidid)
+        {
+            this->BidID = bidid;
+        }
+        Response<Bid> Execute();
+};
+
+class GetApprovedUsersBySlot : public IController
+{
+    public:
+        int SlotID;
+        GetApprovedUsersBySlot(int slotID)
+        {
+            this->SlotID = slotID;
+        }
+        Response<QVector<User>> Execute();
+};

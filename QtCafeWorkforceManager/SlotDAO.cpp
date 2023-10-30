@@ -170,80 +170,6 @@ Response<Slot> SlotDataAccessObject::GetSlot(int slotID)
     return response;
 }
 
-Response<QVector<User> > SlotDataAccessObject::GetStaff(int slotID)
-{
-    Response<QVector<User>> response;
-    QVector<User> users;
-
-    // Assuming you have a QSqlDatabase connection setup
-    QSqlDatabase db = QSqlDatabase::database(); // Default connection
-
-    // Check if the connection is open
-    if(!db.isOpen())
-    {
-        // Handle error (maybe set some error status in the Response object)
-        // Example:
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Could not open DB.");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
-        response.Result = EDatabaseResult::EDR_FAILURE;
-        return response;
-    }
-
-    QSqlQuery query(db);
-    query.prepare("SELECT UserID FROM UserSlot WHERE SlotID = :slotID");
-    query.bindValue(":slotID", slotID);
-
-    if(!query.exec())
-    {
-        // Handle error
-        Response<QVector<User>> errorResponse;
-        qDebug() << "Error getting users:" << query.lastError();
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Could not get users associated with slot.");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
-        response.Result = EDatabaseResult::EDR_FAILURE;
-        return errorResponse;
-    }
-
-    QVector<int> userIDs;
-    while(query.next())
-    {
-        userIDs.append(query.value(0).toInt());
-    }
-
-    //Loop through each UserID and fetch the User details
-    for(int userID : userIDs)
-    {
-        QSqlQuery userQuery(db);
-        userQuery.prepare("SELECT * FROM User WHERE UserID = :userID");
-        userQuery.bindValue(":userID", userID);
-
-        if(userQuery.exec() && userQuery.next())
-        {
-            User user;
-            user.UserID = userQuery.value("UserID").toInt();
-            user.setUsername(userQuery.value("Username").toString());
-            user.setPassword(userQuery.value("Password").toString());
-            user.setEUP(userQuery.value("EUP").toInt());
-            user.setESR(userQuery.value("ESR").toInt());
-            user.setbActive(userQuery.value("bActive").toBool());
-            user.setFullName(userQuery.value("FullName").toString());
-
-            users.push_back(user);
-        }
-    }
-
-    //Populate the QVector<User> and wrap it in a Response and return
-    response.Data = users;
-    // Set any other response attributes if necessary
-    return response;
-}
-
 Response<QVector<Slot>> SlotDataAccessObject::SearchDate(QDate date)
 {
     Response<QVector<Slot>> response;
@@ -295,11 +221,11 @@ Response<QVector<User>> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
 
     QSqlQuery query;
 
-    // First, get the UserIDs from the UserSlot table
-    query.prepare("SELECT UserID FROM UserSlot WHERE SlotID = ?");
-    query.addBindValue("SlotID");
+    // Get the UserIDs from the Bid table for the given SlotID
+    query.prepare("SELECT UserID FROM Bid WHERE SlotID = ?");
+    query.addBindValue(SlotID);
     if (!query.exec()) {
-        qWarning() << "Failed to execute UserSlot query:" << query.lastError();
+        qWarning() << "Failed to execute Bid query:" << query.lastError();
         response.Result = EDatabaseResult::EDR_FAILURE;
         return response;
     }
@@ -460,7 +386,7 @@ Response<QVector<Slot>> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
 
 Response<QVector<Slot>> SlotDataAccessObject::SearchByUserID(int userID)
 {
-    Response <QVector<Slot>> response;
+    Response<QVector<Slot>> response;
 
     if (!DATABASE.isOpen())
     {
@@ -469,7 +395,8 @@ Response<QVector<Slot>> SlotDataAccessObject::SearchByUserID(int userID)
         return response;
     }
 
-    QSqlQuery query("SELECT * FROM Slot WHERE SlotID IN (SELECT SlotID FROM UserSlot WHERE UserID = ?)");
+    // Updated query to get SlotID from Bid table where EBS is 1 (approved bid) for the given userID
+    QSqlQuery query("SELECT SlotID FROM Bid WHERE UserID = ? AND EBS = 1");
     query.addBindValue(userID);
 
     // Error checking after query execution
@@ -481,18 +408,21 @@ Response<QVector<Slot>> SlotDataAccessObject::SearchByUserID(int userID)
         return response;  // return the empty QVector or handle the error as appropriate
     }
 
+    QVector<int> slotIDs;
     while (query.next())
     {
-        int id = query.value("SlotID").toInt();
-        QDate date = QDate::fromString(query.value("SlotDate").toString());
-        QTime startTime = QTime::fromString(query.value("SlotStart").toString());
-        QTime endTime = QTime::fromString(query.value("SlotEnd").toString());
-        int curChefs = query.value("CurChefs").toInt();
-        int curCashiers = query.value("CurCashiers").toInt();
-        int curWaiters = query.value("CurWaiters").toInt();
+        slotIDs.push_back(query.value("SlotID").toInt());
+    }
 
-        Slot userSlot = Slot(id, date, startTime, endTime, curChefs, curCashiers, curWaiters);
-        response.Data.push_back(userSlot);
+    // For each slotID, use GetSlot(int slotID) to get the Slot details and append it to the response Data.
+    for (int slotID : slotIDs)
+    {
+        Response<Slot> slotResponse = GetSlotController(slotID).Execute();
+
+        if (slotResponse.Result == EDatabaseResult::EDR_SUCCESS)
+        {
+            response.Data.push_back(slotResponse.Data);
+        }
     }
 
     response.Result = EDatabaseResult::EDR_SUCCESS;

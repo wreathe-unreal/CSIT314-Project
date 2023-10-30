@@ -4,6 +4,52 @@
 #include "Response.h"
 #include <QMessageBox>
 
+Response<Bid> BidDataAccessObject::GetBid(int bidID)
+{
+    Response<Bid> bidResponse;
+
+    if (!DATABASE.isOpen())
+    {
+        qWarning("Error: connection with database failed");
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Database Connection Failure");
+        errorMsgBox.setText("Database connection failure.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        bidResponse.Result = EDatabaseResult::EDR_FAILURE;
+        return bidResponse;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM Bid WHERE BidID = :bidid");
+    query.bindValue(":bidid", bidID);
+
+    if (query.exec() && query.next())
+    {
+        Bid bid;
+        bid.BidID = query.value("BidID").toInt();
+        bid.UserID = query.value("UserID").toInt();
+        bid.SlotID = query.value("SlotID").toInt();
+        bid.EBS = query.value("EBS").toInt();
+
+        bidResponse.Data = bid;
+    }
+    else
+    {
+        bidResponse.Result = EDatabaseResult::EDR_FAILURE;
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Bid Access Failure");
+        errorMsgBox.setText("Could not retrieve bid data!");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        qWarning() << "GetBid() ERROR: " << query.lastError().text();
+        return bidResponse;
+    }
+
+    bidResponse.Result = EDatabaseResult::EDR_SUCCESS;
+    return bidResponse;
+}
+
 Response<void> BidDataAccessObject::Insert(Bid newBid)
 {
 
@@ -308,4 +354,82 @@ Response<User> BidDataAccessObject::GetUserByBidID(int bidid)
 
     response.Result = EDatabaseResult::EDR_SUCCESS;
     return response;
+}
+
+Response<QVector<User>> BidDataAccessObject::GetStaff(int slotID)
+{
+    Response<QVector<User>> response;
+    QVector<User> users;
+
+    // Check if the connection is open
+    if(!DATABASE.isOpen())
+    {
+        // Handle error (maybe set some error status in the Response object)
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not open DB.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query(DATABASE);
+    query.prepare("SELECT UserID FROM Bid WHERE SlotID = :slotID AND EBS = 1");
+    query.bindValue(":slotID", slotID);
+
+    if(!query.exec())
+    {
+        // Handle error
+        qDebug() << "Error getting users:" << query.lastError();
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not get users associated with slot.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Returning the same response object here instead of creating a new one.
+    }
+
+    while(query.next())
+    {
+        int userID = query.value(0).toInt();
+        Response<User> userResponse = GetUserController(userID).Execute();
+        if(userResponse.Result == EDatabaseResult::EDR_SUCCESS) // Assuming you have an EDR_SUCCESS status
+        {
+            users.push_back(userResponse.Data);
+        }
+        // Otherwise, handle the error or continue
+    }
+
+    // Populate the QVector<User> and wrap it in a Response and return
+    response.Data = users;
+    // Set any other response attributes if necessary
+    return response;
+}
+
+Response<void> BidDataAccessObject::ApproveBid(int bidid)
+{
+    Response<void> response;
+
+    if (!DATABASE.isOpen())
+    {
+        qWarning() << "Failed to open database:" << DATABASE.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query(DATABASE);
+    query.prepare("UPDATE Bid SET EBS = 1 WHERE BidID = :bidID");
+    query.bindValue(":bidID", bidid);
+
+    if (!query.exec())
+    {
+        qWarning() << "Update failed:" << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response; // Update successful
 }

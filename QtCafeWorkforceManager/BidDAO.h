@@ -8,6 +8,7 @@
 class BidDataAccessObject
 {
     public:
+        Response<Bid> GetBid(int bidID);
         Response<void> Insert(Bid newBid);
         Response<QVector<Bid>> GetBids();
         Response<QVector<Bid>> GetPending();
@@ -17,6 +18,8 @@ class BidDataAccessObject
         Response<QVector<Bid>> SearchBySlotID(int slotID);
         Response<void> Delete(int bidID);
         Response<User>  GetUserByBidID(int bidid);
+        Response<void> ApproveBid(int bidid);
+        Response<QVector<User>> GetStaff(int slotID);
 
 
 
