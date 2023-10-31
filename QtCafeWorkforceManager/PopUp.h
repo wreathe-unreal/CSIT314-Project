@@ -13,6 +13,11 @@ class PopUp : public QDialog
     Q_OBJECT
 
 public:
+    QIcon WarningIcon;
+    QIcon CriticalIcon;
+    QIcon QuestionIcon;
+    QIcon InformationIcon;
+
     explicit PopUp(QWidget *parent = nullptr);
     ~PopUp();
     void Success();

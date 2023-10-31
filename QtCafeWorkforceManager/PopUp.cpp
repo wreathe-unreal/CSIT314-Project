@@ -1,11 +1,19 @@
 #include "PopUp.h"
+#include "QApplicationGlobal.h"
 #include "ui_PopUp.h"
+
+#include <QStyle>
 
 PopUp::PopUp(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::PopUp)
 {
     ui->setupUi(this);
+    QStyle *style = QApplicationGlobal::style();
+    WarningIcon = style->standardIcon(QStyle::SP_MessageBoxWarning); // For warning icon
+    CriticalIcon = style->standardIcon(QStyle::SP_MessageBoxCritical);
+    InformationIcon = style->standardIcon(QStyle::SP_MessageBoxInformation);
+    QuestionIcon = style->standardIcon(QStyle::SP_MessageBoxQuestion);
 }
 
 PopUp::~PopUp()
@@ -16,17 +24,15 @@ PopUp::~PopUp()
 void PopUp::Success()
 {
     this->setWindowTitle("Success!");
-    QIcon icon = QIcon::fromTheme("dialog-information");
-    ui->popupIcon->setPixmap(icon.pixmap(QSize(61,61)));
-    ui->popupIcon->repaint();
+    ui->popupIcon->setPixmap(InformationIcon.pixmap(QSize(61,61)));
+    ui->popupIcon->show();
 }
 
 void PopUp::Error()
 {
     this->setWindowTitle("Error!");
-    QIcon icon = QIcon::fromTheme("dialog-critical");
-    ui->popupIcon->setPixmap(icon.pixmap(QSize(61,61)));
-    ui->popupIcon->repaint();
+    ui->popupIcon->setPixmap(CriticalIcon.pixmap(QSize(61,61)));
+    ui->popupIcon->show();
 }
 
 //
@@ -85,6 +91,7 @@ void PopUp::AdminUserDeleteError()
 void PopUp::AdminEUPSearchError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("No user with the specified User Profile found.");
     this->exec();
 }
@@ -121,6 +128,7 @@ void PopUp::StaffInfoUpdateFail()
 void PopUp::StaffBidEmptyError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("Please select one slot to bid for.");
     this->exec();
 }
@@ -128,6 +136,7 @@ void PopUp::StaffBidEmptyError()
 void PopUp::StaffBidConflictError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("One of the selected bid(s) has already been bid for!");
     this->exec();
 }
@@ -163,6 +172,7 @@ void PopUp::StaffSlotSearchResult(QString str)
 void PopUp::StaffSearchEmptyError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("Search resulted in 0 work slots found.");
     this->exec();
 }
@@ -177,6 +187,7 @@ void PopUp::StaffSearchError()
 void PopUp::StaffUpdateBidSelectionError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("Only one bid can be updated to another single bid at a time!");
     this->exec();
 }
@@ -184,6 +195,7 @@ void PopUp::StaffUpdateBidSelectionError()
 void PopUp::StaffUpdateBidEmptyError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("No bid was selected to be updated for/with.");
     this->exec();
 }
@@ -233,6 +245,7 @@ void PopUp::OwnerSlotCreateError()
 void PopUp::OwnerSlotNullError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("No work slot was selected.");
     this->exec();
 }
@@ -254,6 +267,7 @@ void PopUp::OwnerSlotDeleteError()
 void PopUp::OwnerSlotDurationError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("Work slot has no valid duration!");
     this->exec();
 }
@@ -297,6 +311,7 @@ void PopUp::ManagerApprovalError()
 void PopUp::ManagerMaxSlotsError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("User is already working at their maximum requested capacity!");
     this->exec();
 }
@@ -318,6 +333,7 @@ void PopUp::ManagerRejectError()
 void PopUp::ManagerSearchEmptyError()
 {
     this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
     ui->popupText->setText("Worklot search found no results.");
     this->exec();
 }
