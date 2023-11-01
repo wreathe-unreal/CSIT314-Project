@@ -49,7 +49,8 @@ Response<void> CreateUserController::Execute()
 
 Response<void> DeleteUserController::Execute()
 {
-    return QApplicationGlobal::UserDAO.Delete(this->UsernameToDelete);
+    return QApplicationGlobal::UserDAO.Delete(this->UserIDToDelete);
+
 }
 
 Response<QVector<User>> SearchByEUPController::Execute()

@@ -48,19 +48,18 @@ bool UnitTests::Assert()
     qDebug() << "Assert: GetBids suceeeded.";
     InjectBids = bidResponse.Data;
 
-    //copy the bids we will inject later and first, delete them
-    QVector<Bid> deleteBids = InjectBids;
-    //we delete bids first since they have no dependencies, then slots, then users
-    for(auto& bid : deleteBids)
+    QVector<User> deleteUsers = InjectUsers;
+    for(auto& user : deleteUsers)
     {
-        if(DeleteBidController(bid.getBidID()).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(DeleteUserController(user.UserID).Execute().Result == EDatabaseResult::EDR_FAILURE)
         {
-            qDebug() << "Assert: DeleteBid failed.";
+            qDebug() << "Assert: DeleteBids failed.";
+            qDebug() << "Assert: DeleteUser failed.";
             return false;
         }
     }
-    qDebug() << "Assert: DeleteBid succeeded.";
-
+    qDebug() << "Assert: DeleteBids succeeded.";
+    qDebug() << "Assert: DeleteUser succeeded.";
 
     QVector<Slot> deleteSlots = InjectSlots;
     for(auto& slot : deleteSlots)
@@ -72,19 +71,6 @@ bool UnitTests::Assert()
         }
     }
     qDebug() << "Assert: DeleteSlot succeeded.";
-
-
-    QVector<User> deleteUsers = InjectUsers;
-    for(auto& user : deleteUsers)
-    {
-        if(DeleteUserController(user.getUsername()).Execute().Result == EDatabaseResult::EDR_FAILURE)
-        {
-            qDebug() << "Assert: DeleteUser failed.";
-            return false;
-        }
-    }
-    qDebug() << "Assert: DeleteUser succeeded.";
-
 
     //now we inject/create
     for(auto& user : InjectUsers)

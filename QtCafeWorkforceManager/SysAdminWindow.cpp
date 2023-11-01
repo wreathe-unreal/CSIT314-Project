@@ -396,9 +396,9 @@ void SysAdminWindow::on_deleteButton_clicked()
     // Check which button was clicked
     if (reply == QMessageBox::Yes)
     {
-        QString UsernameToDelete = ui->userTable->item(ui->userTable->currentRow(), 1)->text();
+        int userIDToDelete = ui->userTable->item(ui->userTable->currentRow(), 0)->text().toInt();
 
-        Response<void> deleteResponse = DeleteUserController(UsernameToDelete).Execute();
+        Response<void> deleteResponse = DeleteUserController(userIDToDelete).Execute();
 
         if(deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {

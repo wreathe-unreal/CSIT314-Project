@@ -557,7 +557,7 @@ Response<void> UserDataAccessObject::SetESR(QString username, EStaffRole role)
 
 }
 
-Response<void> UserDataAccessObject::Delete(QString username)
+Response<void> UserDataAccessObject::Delete(int userID)
 {
     Response<void> response;
 
@@ -570,11 +570,9 @@ Response<void> UserDataAccessObject::Delete(QString username)
 
     QSqlQuery query;
 
-    // Prepare SQL statement to delete user with the given username
-    query.prepare("DELETE FROM User WHERE Username = :username");
-
-    query.bindValue(":username", username);
-
+    // Prepare SQL statement to delete all of a user's bids first
+    query.prepare("DELETE FROM Bid WHERE UserID = :userid");
+    query.bindValue(":userid", userID);
     if (!query.exec())
     {
         qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
@@ -582,9 +580,24 @@ Response<void> UserDataAccessObject::Delete(QString username)
         return response;
     }
 
-    if (query.numRowsAffected() == 0)
+
+    QSqlQuery query2;
+
+    // Prepare SQL statement to delete user with the given username
+    query2.prepare("DELETE FROM User WHERE UserID = :userid2");
+
+    query2.bindValue(":userid2", userID);
+
+    if (!query2.exec())
     {
-        qDebug() << "No user found with the provided username.";
+        qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    if (query2.numRowsAffected() == 0)
+    {
+        qDebug() << "No user found with the provided userID.";
         response.Result = EDatabaseResult::EDR_FAILURE;
         return response;
     }
@@ -614,6 +627,7 @@ Response<QVector<User>> UserDataAccessObject::GetUsers()
         while (query.next())
         {
             User user;
+            user.UserID = query.value("UserID").toInt();
             user.Username = query.value("Username").toString();
             user.Password = query.value("Password").toString();
             user.EUP = query.value("EUP").toInt();

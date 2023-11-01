@@ -26,7 +26,7 @@ class UserDataAccessObject
     Response<void> SetMaxSlots(QString username, int maxSlots);
     Response<void> SetEUP(QString username, EUserProfile profile);
     Response<void> SetESR(QString username, EStaffRole role);
-    Response<void> Delete(QString username);
+    Response<void> Delete(int userID);
     Response<QVector<User>> GetUsers();
     Response<QString> GetName(QString username);
     Response<void> SetName(QString username, QString newName);

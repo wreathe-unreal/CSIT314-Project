@@ -71,11 +71,11 @@ class CreateUserController : public IController
 class DeleteUserController : public IController
 {
    public:
-       QString UsernameToDelete;
+       int UserIDToDelete;
 
-       DeleteUserController(QString usernameToDelete)
+       DeleteUserController(int userIDToDelete)
        {
-            this->UsernameToDelete = usernameToDelete;
+            this->UserIDToDelete = userIDToDelete;
        }
 
        Response<void> Execute();
