@@ -247,7 +247,7 @@ Response<QVector<User>> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
     return response;
 }
 
-Response<void> SlotDataAccessObject::DeleteSlot(int SlotID)
+Response<void> SlotDataAccessObject::DeleteSlot(int slotID)
 {
     Response<void> response;
 
@@ -260,14 +260,14 @@ Response<void> SlotDataAccessObject::DeleteSlot(int SlotID)
 
     QSqlQuery query;
 
-    // Prepare SQL statement to delete user with the given username
+    // Prepare SQL statement to delete slot with a given slotid
     query.prepare("DELETE FROM Slot WHERE SlotID = :slotid");
 
-    query.bindValue(":slotid", SlotID);
+    query.bindValue(":slotid", slotID);
 
     if (!query.exec())
     {
-        qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
+        qDebug() << "Error: Failed to delete slot. Error:" << query.lastError().text();
         response.Result = EDatabaseResult::EDR_FAILURE;
         return response;
     }
@@ -283,6 +283,8 @@ Response<void> SlotDataAccessObject::DeleteSlot(int SlotID)
         response.Result = EDatabaseResult::EDR_SUCCESS;
         return response;
     }
+
+    DATABASE.close();
 }
 
 Response<QVector<Slot>> SlotDataAccessObject::UpdateSlot(Slot editedSlot)

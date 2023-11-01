@@ -12,7 +12,6 @@ BidDataAccessObject QApplicationGlobal::BidDAO;
 QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(argc, argv)
 {
     CafeDB = QSqlDatabase::addDatabase("QSQLITE");
-    CafeDB.setDatabaseName("../QtCafeWorkforceManager/CafeDB.db");
 
     if (!CafeDB.open())
     {

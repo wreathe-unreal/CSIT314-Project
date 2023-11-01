@@ -110,6 +110,50 @@ Response<void> BidDataAccessObject::Insert(Bid newBid)
 
 }
 
+Response<QVector<Bid> > BidDataAccessObject::GetBids()
+{
+
+    Response<QVector<Bid>> bidsResponse;
+
+    if (!DATABASE.isOpen())
+    {
+        qWarning("Error: connection with database failed");
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Database Connection Failure");
+        errorMsgBox.setText("Database connection failure.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        bidsResponse.Result = EDatabaseResult::EDR_FAILURE;
+        return bidsResponse;
+    }
+
+    QSqlQuery query("SELECT * FROM Bid");
+
+    QVector<Bid> bids;
+    while (query.next())
+    {
+        Bid bid;
+        bid.BidID = query.value("BidID").toInt();
+        bid.UserID = query.value("UserID").toInt();
+        bid.SlotID = query.value("SlotID").toInt();
+        bid.EBS = query.value("EBS").toInt();
+
+        bids.append(bid);
+    }
+
+    if (bids.isEmpty())
+    {
+        bidsResponse.Result = EDatabaseResult::EDR_FAILURE;
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Bid Access Failure");
+        errorMsgBox.setText("Could not retrieve bid data or there are no bids!");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        qWarning() << "GetAllBids() ERROR: " << query.lastError().text();
+        return bidsResponse;
+    }
+}
+
 Response<QVector<Bid>> BidDataAccessObject::GetPending()
 {
     Response<QVector<Bid>> bidResponse;

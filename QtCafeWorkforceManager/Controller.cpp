@@ -187,3 +187,8 @@ Response<QVector<Bid> > GetUserRejectedBidsController::Execute()
 {
     return QApplicationGlobal::BidDAO.GetRejected(this->UserID);
 }
+
+Response<QVector<Bid> > GetBidsController::Execute()
+{
+    return QApplicationGlobal::BidDAO.GetBids();
+}

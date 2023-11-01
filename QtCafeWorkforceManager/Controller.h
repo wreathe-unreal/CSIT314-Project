@@ -387,3 +387,13 @@ class GetUserRejectedBidsController : public IController
 
         Response<QVector<Bid>> Execute();
 };
+
+class GetBidsController : public IController
+{
+    public:
+        GetBidsController()
+        {
+
+        }
+        Response<QVector<Bid>> Execute();
+};

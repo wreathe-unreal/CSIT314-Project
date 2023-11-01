@@ -109,10 +109,10 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
         QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
 
         // Add those items to the table
-        ui->availableTable->setItem(row, 0, slotID);       // 1 is the column number for the Username
-        ui->availableTable->setItem(row, 1, date);         // 2 is the column number for the HashedPassword
-        ui->availableTable->setItem(row, 2, startTime);   //3 is the column number for profile
-        ui->availableTable->setItem(row, 3, endTime);     // 4 is the column number for the Role etc
+        ui->availableTable->setItem(row, 0, slotID);
+        ui->availableTable->setItem(row, 1, date);
+        ui->availableTable->setItem(row, 2, startTime);
+        ui->availableTable->setItem(row, 3, endTime);
         ui->availableTable->setSortingEnabled(true);
 
     }
