@@ -247,7 +247,7 @@ Response<QVector<User>> SlotDataAccessObject::GetUsersBySlotID(int SlotID)
     return response;
 }
 
-Response<void> SlotDataAccessObject::DeleteSlot(int slotID)
+Response<void> SlotDataAccessObject::DeleteSlot(int SlotID)
 {
     Response<void> response;
 
@@ -260,14 +260,14 @@ Response<void> SlotDataAccessObject::DeleteSlot(int slotID)
 
     QSqlQuery query;
 
-    // Prepare SQL statement to delete slot with a given slotid
+    // Prepare SQL statement to delete user with the given username
     query.prepare("DELETE FROM Slot WHERE SlotID = :slotid");
 
-    query.bindValue(":slotid", slotID);
+    query.bindValue(":slotid", SlotID);
 
     if (!query.exec())
     {
-        qDebug() << "Error: Failed to delete slot. Error:" << query.lastError().text();
+        qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
         response.Result = EDatabaseResult::EDR_FAILURE;
         return response;
     }
@@ -283,8 +283,6 @@ Response<void> SlotDataAccessObject::DeleteSlot(int slotID)
         response.Result = EDatabaseResult::EDR_SUCCESS;
         return response;
     }
-
-    DATABASE.close();
 }
 
 Response<QVector<Slot>> SlotDataAccessObject::UpdateSlot(Slot editedSlot)
@@ -403,7 +401,7 @@ Response<QVector<Slot>> SlotDataAccessObject::SearchByUserID(int userID)
     // For each slotID, use GetSlot(int slotID) to get the Slot details and append it to the response Data.
     for (int slotID : slotIDs)
     {
-        Response<Slot> slotResponse = GetSlotController(slotID).Execute();
+        Response<Slot> slotResponse = GetSlotController::Invoke(slotID);
 
         if (slotResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {

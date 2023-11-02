@@ -145,7 +145,7 @@ void CafeOwnerWindow::on_deleteButton_clicked()
     {
         int slotIDToDelete = ui->slotTable->item(ui->slotTable->currentRow(), 0)->text().toInt();
 
-        Response<void> deleteSlotResponse = DeleteSlotController(slotIDToDelete).Execute();
+        Response<void> deleteSlotResponse = DeleteSlotController::Invoke(slotIDToDelete);
 
         if(deleteSlotResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
@@ -255,7 +255,7 @@ void CafeOwnerWindow::on_editButton_clicked()
     slotChanged.StartTime = ui->startEditEdit->time();
     slotChanged.EndTime = ui->endEditEdit->time();
 
-    Response<QVector<Slot>> updateSlotsResponse = UpdateSlotController(slotChanged).Execute();
+    Response<QVector<Slot>> updateSlotsResponse = UpdateSlotController::Invoke(slotChanged);
 
     if(updateSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
@@ -303,7 +303,7 @@ void CafeOwnerWindow::on_editButton_clicked()
 
 void CafeOwnerWindow::on_searchButton_clicked()
 {
-    Response<QVector<Slot>> searchResponse = SearchSlotByDayController(ui->calendarSearch->selectedDate()).Execute();
+    Response<QVector<Slot>> searchResponse = SearchSlotsByQDateController::Invoke(ui->calendarSearch->selectedDate());
 
     if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
     {

@@ -12,7 +12,7 @@
 void ReloadSlots(Ui::CafeStaffWindow* ui)
 {
     //get user pending bids and add to bid table
-    Response<QVector<Bid>> pendingBidsResponse = GetPendingBidsController().Execute();
+    Response<QVector<Bid>> pendingBidsResponse = GetPendingBidsController::Invoke();
 
     if(pendingBidsResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
@@ -27,7 +27,7 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
                 int row = ui->pendingTable->rowCount();
                 ui->pendingTable->insertRow(row); // Insert a new row
 
-                Response<Slot> bidSlotResponse = GetSlotController(pendingBidsResponse.Data[i].SlotID).Execute();
+                Response<Slot> bidSlotResponse = GetSlotController::Invoke(pendingBidsResponse.Data[i].SlotID);
 
                 if(bidSlotResponse.Result == EDatabaseResult::EDR_FAILURE)
                 {
@@ -58,8 +58,8 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
     }
 
     Response<QVector<Slot>> slotsResponse = GetSlotsController().Execute();
-    Response<QVector<Bid>> searchUserBidsResponse = SearchBidsByUserIDController(QApplicationGlobal::CurrentUserID).Execute();
-    Response<QVector<Slot>> searchUserSlotsResponse = SearchSlotsByUserIDController(QApplicationGlobal::CurrentUserID).Execute();
+    Response<QVector<Bid>> searchUserBidsResponse = SearchBidsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
+    Response<QVector<Slot>> searchUserSlotsResponse = SearchSlotsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
 
 
     //available workslots are workslots for which the user has no bids or assigned workslots
@@ -109,10 +109,10 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
         QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
 
         // Add those items to the table
-        ui->availableTable->setItem(row, 0, slotID);
-        ui->availableTable->setItem(row, 1, date);
-        ui->availableTable->setItem(row, 2, startTime);
-        ui->availableTable->setItem(row, 3, endTime);
+        ui->availableTable->setItem(row, 0, slotID);       // 1 is the column number for the Username
+        ui->availableTable->setItem(row, 1, date);         // 2 is the column number for the HashedPassword
+        ui->availableTable->setItem(row, 2, startTime);   //3 is the column number for profile
+        ui->availableTable->setItem(row, 3, endTime);     // 4 is the column number for the Role etc
         ui->availableTable->setSortingEnabled(true);
 
     }
@@ -122,7 +122,7 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
 
 CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::CafeStaffWindow)
 {
-    User user = GetUserController(QApplicationGlobal::CurrentUserID).Execute().Data;
+    User user = GetUserController::Invoke(QApplicationGlobal::CurrentUserID).Data;
     Bid newBid;
 
     ui->setupUi(this);
@@ -206,7 +206,7 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
         msgBox.exec();
 
         esr = static_cast<EStaffRole>(comboBox.currentIndex() + 1);
-        SetESRController(QApplicationGlobal::CurrentUsername, esr).Execute();
+        SetESRController::Invoke(QApplicationGlobal::CurrentUsername, esr);
     }
 
     ui->firstNameText->setText(user.FullName);
@@ -222,7 +222,7 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
 
     ReloadSlots(ui);
 
-    Response<QVector<Slot>> userSlotsResponse = SearchSlotsByUserIDController(QApplicationGlobal::CurrentUserID).Execute();
+    Response<QVector<Slot>> userSlotsResponse = SearchSlotsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
 
 
     int curSlots = userSlotsResponse.Data.size();
@@ -252,12 +252,12 @@ CafeStaffWindow::CafeStaffWindow(QWidget *parent) :QMainWindow(parent), ui(new U
     }
     ui->assignedTable->setSortingEnabled(true);
 
-    Response<QVector<Bid>> rejected = GetUserRejectedBidsController(QApplicationGlobal::CurrentUserID).Execute();
+    Response<QVector<Bid>> rejected = GetRejectedBidsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
 
     ui->rejectedTable->setSortingEnabled(false);
     for (auto& b : rejected.Data)
     {
-        Response<Slot> slotResponse = GetSlotController(b.SlotID).Execute();
+        Response<Slot> slotResponse = GetSlotController::Invoke(b.SlotID);
         Slot slot = slotResponse.Data;
         int row = ui->rejectedTable->rowCount();
         ui->rejectedTable->insertRow(row); // Insert a new row
@@ -295,17 +295,17 @@ void CafeStaffWindow::OnLogoutTriggered()
 
 void CafeStaffWindow::on_editInfoButton_clicked()
 {
-    Response<User> userResponse = GetUserController(QApplicationGlobal::CurrentUsername).Execute();
+    Response<User> userResponse = GetUserController::Invoke(QApplicationGlobal::CurrentUsername);
     userResponse.Data.FullName = ui->firstNameText->text();
     userResponse.Data.MaxSlots = ui->maxSlotsBox->value();
-    if(UpdateUserController(userResponse.Data, QApplicationGlobal::CurrentUsername).Execute().Result == EDatabaseResult::EDR_FAILURE)
+    if(UpdateUserController::Invoke(userResponse.Data, QApplicationGlobal::CurrentUsername).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp error;
         error.StaffInfoUpdateFail();
         return;
     }
 
-    Response<QVector<Slot>> userSlotsResponse = SearchSlotsByUserIDController(QApplicationGlobal::CurrentUserID).Execute();
+    Response<QVector<Slot>> userSlotsResponse = SearchSlotsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
 
     int curSlots = userSlotsResponse.Data.size();
 
@@ -342,7 +342,7 @@ void CafeStaffWindow::on_bidButton_clicked()
         newBid.UserID = QApplicationGlobal::CurrentUserID;
         newBid.EBS = 0; // pending EBidStatus
 
-        if(InsertBidController(newBid).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(CreateBidController::Invoke(newBid).Result == EDatabaseResult::EDR_FAILURE)
         {
             allBidsSuccessful = false;
             break;  // You can decide whether you want to break on the first failure or continue trying to bid for the other slots
@@ -395,7 +395,7 @@ void CafeStaffWindow::on_pendingTable_clicked(const QModelIndex &index)
 
 void CafeStaffWindow::on_deleteButton_clicked()
 {
-    Response<QVector<Bid>> pendingBids = GetPendingBidsController().Execute();
+    Response<QVector<Bid>> pendingBids = GetPendingBidsController::Invoke();
 
     Response<void> deleteResponse;
     QModelIndexList selectedRows = ui->pendingTable->selectionModel()->selectedRows();
@@ -407,7 +407,7 @@ void CafeStaffWindow::on_deleteButton_clicked()
         {
             if (bid.SlotID == ui->pendingTable->item(row, 0)->text().toInt() && bid.UserID == QApplicationGlobal::CurrentUserID)
             {
-                deleteResponse = DeleteBidController(bid.BidID).Execute();
+                deleteResponse = DeleteBidController::Invoke(bid.BidID);
 
                 if (deleteResponse.Result != EDatabaseResult::EDR_SUCCESS)
                 {
@@ -443,7 +443,7 @@ void CafeStaffWindow::on_deleteButton_clicked()
 void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
 {
 
-    Response<QVector<Slot>> searchResponse = SearchSlotByDayController(ui->workslotCalendar->selectedDate()).Execute();
+    Response<QVector<Slot>> searchResponse = SearchSlotsByQDateController::Invoke(ui->workslotCalendar->selectedDate());
 
     if(searchResponse.Data.size() <= 0)
     {
@@ -467,7 +467,7 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
 
         for (auto& slot : searchResponse.Data)
         {
-            Response<QVector<User>> bidders = GetBiddersBySlotIDController(slot.SlotID).Execute();
+            Response<QVector<User>> bidders = GetBiddersBySlotIDController::Invoke(slot.SlotID);
 
             qDebug() << bidders.Data.size();
 
@@ -573,7 +573,7 @@ void CafeStaffWindow::on_updateButton_clicked()
     newBid.UserID = QApplicationGlobal::CurrentUserID;
     newBid.EBS = 0; // pending EBidStatus
 
-    if(InsertBidController(newBid).Execute().Result == EDatabaseResult::EDR_FAILURE)
+    if(CreateBidController::Invoke(newBid).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp dialogBox;
         dialogBox.StaffBidConflictError();
@@ -584,7 +584,7 @@ void CafeStaffWindow::on_updateButton_clicked()
 
     int pendingRow = ui->pendingTable->currentRow();
     int pendingSlotID = ui->pendingTable->item(pendingRow, 0)->text().toInt();
-    Response<QVector<Bid>> bidSlotResponse = SearchBidsBySlotIDController(pendingSlotID).Execute();
+    Response<QVector<Bid>> bidSlotResponse = SearchBidsBySlotIDController::Invoke(pendingSlotID);
 
 
     Response<void> deleteResponse;
@@ -592,7 +592,7 @@ void CafeStaffWindow::on_updateButton_clicked()
     {
         if(b.UserID == QApplicationGlobal::CurrentUserID)
         {
-            deleteResponse = DeleteBidController(b.BidID).Execute();
+            deleteResponse = DeleteBidController::Invoke(b.BidID);
 
         }
     }

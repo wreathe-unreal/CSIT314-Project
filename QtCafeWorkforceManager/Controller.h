@@ -7,7 +7,6 @@
 #include <QString>
 #include <QVector>
 #include "Response.h"
-
 class IController
 {
     public:
@@ -18,16 +17,29 @@ class IController
 class AuthorizeController : public IController
 {
    public:
-    QString Username;
-    QString Password;
 
-   AuthorizeController(QString username, QString password)
-   {
-       this->Username = username;
-       this->Password = password;
-   }
+        static Response<EUserProfile> Invoke(QString username, QString password)
+        {
+            AuthorizeController controller = AuthorizeController(username, password);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<EUserProfile> GetResponse()
+        {
+            return DBResponse;
+        }
 
-   Response<EUserProfile> Execute();
+    private:
+        static Response<EUserProfile> DBResponse;
+        QString Username;
+        QString Password;
+        AuthorizeController(QString username, QString password)
+        {
+           this->Username = username;
+           this->Password = password;
+        }
+
+       Response<EUserProfile> Execute();
 
 };
 
@@ -35,29 +47,66 @@ class AuthorizeController : public IController
 class GetUsersController : public IController
 {
     public:
-   Response<QVector<User>> Execute();
+        static Response<QVector<User>> Invoke()
+        {
+           GetUsersController controller = GetUsersController();
+           DBResponse = controller.Execute();
+           return DBResponse;
+        }
+        static Response<QVector<User>> GetResponse()
+        {
+           return DBResponse;
+        }
+
+    private:
+        static Response<QVector<User>>  DBResponse;
+        Response<QVector<User>> Execute();
 };
 
 class UpdateUserController : public IController
 {
-    public:
-        QString UsernameBeforeUpdate;
+   public:
+       static Response<void> Invoke(User updatedUser, QString usernameBeforeUpdate)
+        {
+           UpdateUserController controller = UpdateUserController(updatedUser, usernameBeforeUpdate);
+           DBResponse = controller.Execute();
+           return DBResponse;
+        }
+
+        static Response<void> GetResponse()
+        {
+           return DBResponse;
+        }
+
+   private:
+        static Response<void> DBResponse;
+        UpdateUserController(User updatedUser, QString usernameBeforeUpdate)
+        {
+           this->UpdatedUser = updatedUser;
+           this->UsernameBeforeUpdate = usernameBeforeUpdate;
+        }
+       QString UsernameBeforeUpdate;
        User UpdatedUser;
-
-       UpdateUserController(User updatedUser, QString usernameBeforeUpdate)
-       {
-            this->UpdatedUser = updatedUser;
-            this->UsernameBeforeUpdate = usernameBeforeUpdate;
-       }
-
-
        Response<void> Execute();
 };
 
 class CreateUserController : public IController
 {
    public:
+       static Response<void> Invoke(User newUser)
+       {
+           CreateUserController controller = CreateUserController(newUser);
+           DBResponse = controller.Execute();
+           return DBResponse;
+       }
+       static Response<void> GetResponse()
+       {
+           return DBResponse;
+       }
+
+   private:
        User NewUser;
+       static Response<void> DBResponse;
 
        CreateUserController(User newUser)
        {
@@ -71,22 +120,47 @@ class CreateUserController : public IController
 class DeleteUserController : public IController
 {
    public:
-       int UserIDToDelete;
-
-       DeleteUserController(int userIDToDelete)
+       static Response<void> Invoke(int userid)
        {
-            this->UserIDToDelete = userIDToDelete;
+            DeleteUserController controller = DeleteUserController(userid);
+            DBResponse = controller.Execute();
+            return DBResponse;
+       }
+       static Response<void> GetResponse()
+       {
+            return DBResponse;
+       }
+
+   private:
+       static Response<void> DBResponse;
+       int UserID;
+
+       DeleteUserController(int userID)
+       {
+            this->UserID = userID;
        }
 
        Response<void> Execute();
 };
 
-class SearchByEUPController : public IController
+class SearchUsersByEUPController : public IController
 {
    public:
-       EUserProfile profile;
+       static Response<QVector<User>> Invoke(EUserProfile userProfile)
+       {
+            SearchUsersByEUPController controller = SearchUsersByEUPController(userProfile);
+            DBResponse = controller.Execute();
+            return DBResponse;
 
-       SearchByEUPController(EUserProfile userProfile)
+       }
+       static Response<QVector<User>> GetResponse()
+       {
+            return DBResponse;
+       }
+   private:
+       EUserProfile profile;
+       static Response<QVector<User>> DBResponse;
+       SearchUsersByEUPController(EUserProfile userProfile)
        {
             this->profile = userProfile;
        }
@@ -98,7 +172,20 @@ class SearchByEUPController : public IController
 class CreateSlotController: public IController
 {
    public:
+       static Response<QVector<Slot>> Invoke(Slot newSlot)
+       {
+            CreateSlotController controller = CreateSlotController(newSlot);
+            DBResponse = controller.Execute();
+            return DBResponse;
+       }
+       static Response<QVector<Slot>> GetResponse()
+       {
+            return DBResponse;
+       }
+
+   public:
        Slot NewSlot;
+       static Response<QVector<Slot>> DBResponse;
        CreateSlotController(Slot newslot)
        {
             this->NewSlot = newslot;
@@ -110,12 +197,38 @@ class CreateSlotController: public IController
 class GetSlotsController: public IController
 {
    public:
+       static Response<QVector<Slot>> Invoke()
+       {
+            GetSlotsController controller = GetSlotsController();
+            DBResponse = controller.Execute();
+            return DBResponse;
+       }
+       static Response<QVector<Slot>> GetResponse()
+       {
+            return DBResponse;
+       }
+
+   public:
+       static Response<QVector<Slot>> DBResponse;
+       GetSlotsController(){}
        Response<QVector<Slot>> Execute();
 };
 
 class DeleteSlotController: public IController
 {
-    public:
+   public:
+       static Response<void> Invoke(int slotID)
+       {
+            DeleteSlotController controller = DeleteSlotController(slotID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+       }
+       static Response<void> GetResponse()
+       {
+            return DBResponse;
+       }
+   private:
+       static Response<void> DBResponse;
         int SlotID;
         DeleteSlotController(int slotID)
         {
@@ -127,6 +240,19 @@ class DeleteSlotController: public IController
 class UpdateSlotController: public IController
 {
     public:
+        static Response<QVector<Slot>> Invoke(Slot updatedSlot)
+        {
+            UpdateSlotController controller = UpdateSlotController(updatedSlot);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+
+        static Response<QVector<Slot>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Slot>> DBResponse;
         Slot SlotToEdit;
         UpdateSlotController(Slot slotToEdit)
         {
@@ -136,11 +262,23 @@ class UpdateSlotController: public IController
         Response<QVector<Slot>> Execute();
 };
 
-class SearchSlotByDayController : public IController
+class SearchSlotsByQDateController : public IController
 {
     public:
+        static Response<QVector<Slot>> Invoke(QDate date)
+        {
+            SearchSlotsByQDateController controller = SearchSlotsByQDateController(date);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<Slot>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Slot>> DBResponse;
         QDate Date;
-        SearchSlotByDayController(QDate date)
+        SearchSlotsByQDateController(QDate date)
         {
             this->Date = date;
         }
@@ -151,6 +289,18 @@ class SearchSlotByDayController : public IController
 class SearchSlotsByUserIDController : public IController
 {
     public:
+        static Response<QVector<Slot>> Invoke(int userID)
+        {
+            SearchSlotsByUserIDController controller = SearchSlotsByUserIDController(userID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<Slot>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Slot>> DBResponse;
         int UserID;
         SearchSlotsByUserIDController(int userID)
         {
@@ -163,6 +313,18 @@ class SearchSlotsByUserIDController : public IController
 class SetESRController : public IController
 {
     public:
+        static Response<void> Invoke(QString username, EStaffRole newESR)
+        {
+            SetESRController controller = SetESRController(username, newESR);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
         QString Username;
         EStaffRole NewESR;
 
@@ -176,7 +338,18 @@ class SetESRController : public IController
 
 class SetNameController : public IController
 {
-    public:
+        static Response<void> Invoke(QString username, QString newName)
+        {
+            SetNameController controller = SetNameController(username, newName);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
         QString Username;
         QString NewName;
         SetNameController(QString username, QString newName)
@@ -191,6 +364,18 @@ class SetNameController : public IController
 class SetMaxSlotsController : public IController
 {
     public:
+        static Response<void> Invoke(QString username, int maxSlots)
+        {
+            SetMaxSlotsController controller = SetMaxSlotsController(username, maxSlots);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    public:
+        static Response<void> DBResponse;
         QString Username;
         int MaxSlots;
         SetMaxSlotsController(QString username, int maxSlots)
@@ -205,6 +390,24 @@ class SetMaxSlotsController : public IController
 class GetUserController : public IController
 {
     public:
+        static Response<User> Invoke(QString username)
+        {
+            GetUserController controller = GetUserController(username);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<User> Invoke(int userID)
+        {
+            GetUserController controller = GetUserController(userID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<User> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<User> DBResponse;
         QString Username;
         int UserID;
 
@@ -223,11 +426,23 @@ class GetUserController : public IController
         Response<User> Execute();
 };
 
-class InsertBidController : public IController
+class CreateBidController : public IController
 {
     public:
+        static Response<void> Invoke(Bid newBid)
+        {
+            CreateBidController controller = CreateBidController(newBid);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
         Bid NewBid;
-        InsertBidController(Bid newBid)
+        CreateBidController(Bid newBid)
         {
             this->NewBid = newBid;
         }
@@ -237,6 +452,18 @@ class InsertBidController : public IController
 class GetPendingBidsController : public IController
 {
     public:
+        static Response<QVector<Bid>> Invoke()
+        {
+            GetPendingBidsController controller = GetPendingBidsController();
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<Bid>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Bid>> DBResponse;
         GetPendingBidsController()
         {
 
@@ -247,6 +474,18 @@ class GetPendingBidsController : public IController
 class GetSlotController : public IController
 {
     public:
+        static Response<Slot> Invoke(int slotID)
+        {
+            GetSlotController controller = GetSlotController(slotID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<Slot> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<Slot> DBResponse;
         int SlotID;
         GetSlotController(int slotID)
         {
@@ -258,6 +497,18 @@ class GetSlotController : public IController
 class SearchBidsByUserIDController : public IController
 {
     public:
+        static Response<QVector<Bid>> Invoke(int userID)
+        {
+            SearchBidsByUserIDController controller = SearchBidsByUserIDController(userID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<Bid>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Bid>> DBResponse;
         int UserID;
         SearchBidsByUserIDController(int userID)
         {
@@ -269,6 +520,18 @@ class SearchBidsByUserIDController : public IController
 class DeleteBidController : public IController
 {
     public:
+        static Response<void> Invoke(int bidID)
+        {
+            DeleteBidController controller = DeleteBidController(bidID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
         int BidID;
         DeleteBidController(int bidID)
         {
@@ -280,6 +543,18 @@ class DeleteBidController : public IController
 class SearchBidsBySlotIDController : public IController
 {
     public:
+        static Response<QVector<Bid>> Invoke(int slotID)
+        {
+            SearchBidsBySlotIDController controller = SearchBidsBySlotIDController(slotID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<Bid>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Bid>> DBResponse;
         int SlotID;
         SearchBidsBySlotIDController(int slotID)
         {
@@ -288,11 +563,23 @@ class SearchBidsBySlotIDController : public IController
         Response<QVector<Bid>> Execute();
 };
 
-class SearchWorkersBySlotIDController : public IController
+class GetStaffController : public IController
 {
     public:
+        static Response<QVector<User>> Invoke(int slotID)
+        {
+            GetStaffController controller = GetStaffController(slotID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<User>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<User>> DBResponse;
         int SlotID;
-        SearchWorkersBySlotIDController(int slotid)
+        GetStaffController(int slotid)
         {
             this->SlotID = slotid;
         }
@@ -302,6 +589,19 @@ class SearchWorkersBySlotIDController : public IController
 class GetUserByBidIDController : public IController
 {
     public:
+        static Response<User> Invoke(int bidID)
+        {
+            GetUserByBidIDController controller = GetUserByBidIDController(bidID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<User> GetResponse()
+        {
+            return DBResponse;
+        }
+
+    private:
+        static Response<User> DBResponse;
         int BidID;
         GetUserByBidIDController(int bidID)
         {
@@ -313,6 +613,18 @@ class GetUserByBidIDController : public IController
 class ApproveBidController : public IController
 {
     public:
+        static Response<void> Invoke(int bidid)
+        {
+            ApproveBidController controller = ApproveBidController(bidid);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
         int BidID;
         ApproveBidController(int bidid)
         {
@@ -324,6 +636,18 @@ class ApproveBidController : public IController
 class GetBidController : public IController
 {
     public:
+        static Response<Bid> Invoke(int bidid)
+        {
+            GetBidController controller = GetBidController(bidid);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<Bid> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<Bid> DBResponse;
         int BidID;
         GetBidController(int bidid)
         {
@@ -332,20 +656,42 @@ class GetBidController : public IController
         Response<Bid> Execute();
 };
 
-class GetApprovedUsersBySlotController : public IController
+class GetBidsController : public IController
 {
     public:
-        int SlotID;
-        GetApprovedUsersBySlotController(int slotID)
+        static Response<QVector<Bid>> Invoke()
         {
-            this->SlotID = slotID;
+            GetBidsController controller = GetBidsController();
+            DBResponse = controller.Execute();
+            return DBResponse;
         }
-        Response<QVector<User>> Execute();
+        static Response<QVector<Bid>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Bid>> DBResponse;
+        GetBidsController()
+        {
+        }
+        Response<QVector<Bid>> Execute();
 };
 
 class GetBiddersBySlotIDController : public IController
 {
     public:
+        static Response<QVector<User>> Invoke(int slotID)
+        {
+            GetBiddersBySlotIDController controller = GetBiddersBySlotIDController(slotID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<User>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<User>> DBResponse;
         int SlotID;
         GetBiddersBySlotIDController(int slotID)
         {
@@ -357,6 +703,18 @@ class GetBiddersBySlotIDController : public IController
 class UnapproveBidController : public IController
 {
     public:
+        static Response<void> Invoke(int bidid)
+        {
+            UnapproveBidController controller = UnapproveBidController(bidid);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
         int BidID;
         UnapproveBidController(int bidID)
         {
@@ -368,6 +726,18 @@ class UnapproveBidController : public IController
 class RejectBidController : public IController
 {
     public:
+        static Response<void> Invoke(int bidid)
+        {
+            RejectBidController controller = RejectBidController(bidid);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
         int BidID;
         RejectBidController(int bidID)
         {
@@ -376,11 +746,23 @@ class RejectBidController : public IController
         Response<void> Execute();
 };
 
-class GetUserRejectedBidsController : public IController
+class GetRejectedBidsByUserIDController : public IController
 {
     public:
+        static Response<QVector<Bid>> Invoke(int userID)
+        {
+            GetRejectedBidsByUserIDController controller = GetRejectedBidsByUserIDController(userID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<QVector<Bid>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<Bid>> DBResponse;
         int UserID;
-        GetUserRejectedBidsController(int userID)
+        GetRejectedBidsByUserIDController(int userID)
         {
             this->UserID = userID;
         }
@@ -388,12 +770,25 @@ class GetUserRejectedBidsController : public IController
         Response<QVector<Bid>> Execute();
 };
 
-class GetBidsController : public IController
+class GetIdleStaffController : public IController
 {
     public:
-        GetBidsController()
+        static Response<QVector<User>> Invoke(int slotID)
         {
-
+            GetIdleStaffController controller = GetIdleStaffController(slotID);
+            DBResponse = controller.Execute();
+            return DBResponse;
         }
-        Response<QVector<Bid>> Execute();
+        static Response<QVector<User>> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<QVector<User>>  DBResponse;
+        int SlotID;
+        GetIdleStaffController(int slotID)
+        {
+            this->SlotID = slotID;
+        }
+        Response<QVector<User>> Execute();
 };

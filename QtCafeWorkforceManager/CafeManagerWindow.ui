@@ -17,8 +17,8 @@
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>40</y>
+      <x>100</x>
+      <y>30</y>
       <width>351</width>
       <height>231</height>
      </rect>
@@ -36,9 +36,9 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>560</x>
       <y>30</y>
-      <width>411</width>
+      <width>481</width>
       <height>251</height>
      </rect>
     </property>
@@ -55,7 +55,7 @@
      <widget class="QPushButton" name="approveButton">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>290</x>
         <y>180</y>
         <width>80</width>
         <height>24</height>
@@ -74,7 +74,7 @@ color:dimgray;</string>
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>381</width>
+        <width>451</width>
         <height>161</height>
        </rect>
       </property>
@@ -82,7 +82,7 @@ color:dimgray;</string>
      <widget class="QPushButton" name="rejectButton">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>380</x>
         <y>180</y>
         <width>80</width>
         <height>24</height>
@@ -103,9 +103,9 @@ color:dimgray;</string>
      <widget class="QTableWidget" name="chefTable">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>20</y>
-        <width>361</width>
+        <x>10</x>
+        <y>10</y>
+        <width>451</width>
         <height>161</height>
        </rect>
       </property>
@@ -113,8 +113,8 @@ color:dimgray;</string>
      <widget class="QPushButton" name="chefApproveButton">
       <property name="geometry">
        <rect>
-        <x>200</x>
-        <y>190</y>
+        <x>280</x>
+        <y>180</y>
         <width>80</width>
         <height>24</height>
        </rect>
@@ -130,8 +130,8 @@ color:dimgray;</string>
      <widget class="QPushButton" name="chefRejectButton">
       <property name="geometry">
        <rect>
-        <x>290</x>
-        <y>190</y>
+        <x>370</x>
+        <y>180</y>
         <width>80</width>
         <height>24</height>
        </rect>
@@ -153,7 +153,7 @@ color:dimgray;</string>
        <rect>
         <x>10</x>
         <y>11</y>
-        <width>371</width>
+        <width>461</width>
         <height>161</height>
        </rect>
       </property>
@@ -161,7 +161,7 @@ color:dimgray;</string>
      <widget class="QPushButton" name="cashierApproveButton">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>290</x>
         <y>180</y>
         <width>80</width>
         <height>24</height>
@@ -178,7 +178,7 @@ color:dimgray;</string>
      <widget class="QPushButton" name="cashierRejectButton">
       <property name="geometry">
        <rect>
-        <x>290</x>
+        <x>380</x>
         <y>180</y>
         <width>80</width>
         <height>24</height>
@@ -201,7 +201,7 @@ color:dimgray;</string>
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>381</width>
+        <width>461</width>
         <height>171</height>
        </rect>
       </property>
@@ -209,7 +209,7 @@ color:dimgray;</string>
      <widget class="QPushButton" name="waiterApproveButton">
       <property name="geometry">
        <rect>
-        <x>200</x>
+        <x>280</x>
         <y>190</y>
         <width>80</width>
         <height>24</height>
@@ -226,7 +226,7 @@ color:dimgray;</string>
      <widget class="QPushButton" name="waiterRejectButton">
       <property name="geometry">
        <rect>
-        <x>290</x>
+        <x>370</x>
         <y>190</y>
         <width>80</width>
         <height>24</height>
@@ -240,6 +240,38 @@ color:dimgray;</string>
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_7">
+     <attribute name="title">
+      <string>Idle Staff</string>
+     </attribute>
+     <widget class="QTableWidget" name="idleStaffTable">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>461</width>
+        <height>171</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="assignButton">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>190</y>
+        <width>80</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: rgb(97, 255, 137);
+color:dimgray;</string>
+      </property>
+      <property name="text">
+       <string>Assign ↓</string>
+      </property>
+     </widget>
+    </widget>
     <widget class="QWidget" name="tab_6">
      <attribute name="title">
       <string>Rejected Bids</string>
@@ -249,7 +281,7 @@ color:dimgray;</string>
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>381</width>
+        <width>461</width>
         <height>171</height>
        </rect>
       </property>
@@ -257,7 +289,7 @@ color:dimgray;</string>
      <widget class="QPushButton" name="rejectedApprove">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>290</x>
         <y>190</y>
         <width>80</width>
         <height>24</height>
@@ -274,7 +306,7 @@ color:dimgray;</string>
      <widget class="QPushButton" name="rejectedUnreject">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>380</x>
         <y>190</y>
         <width>80</width>
         <height>24</height>
@@ -447,9 +479,9 @@ color: dimgray;</string>
       <property name="geometry">
        <rect>
         <x>680</x>
-        <y>10</y>
-        <width>49</width>
-        <height>21</height>
+        <y>0</y>
+        <width>141</width>
+        <height>41</height>
        </rect>
       </property>
       <property name="font">
@@ -458,7 +490,7 @@ color: dimgray;</string>
        </font>
       </property>
       <property name="text">
-       <string>Staff</string>
+       <string>Assigned Staff</string>
       </property>
      </widget>
      <widget class="QWidget" name="layoutWidget">
@@ -466,7 +498,7 @@ color: dimgray;</string>
        <rect>
         <x>290</x>
         <y>0</y>
-        <width>253</width>
+        <width>258</width>
         <height>37</height>
        </rect>
       </property>

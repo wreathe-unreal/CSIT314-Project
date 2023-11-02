@@ -1,6 +1,8 @@
 #ifndef CAFEMANAGERWINDOW_H
 #define CAFEMANAGERWINDOW_H
 
+#include "Bid.h"
+
 #include <QMainWindow>
 #include <QTableWidget>
 
@@ -18,6 +20,7 @@ public:
 
     void Reject(QTableWidget *tableWidget, Ui::CafeManagerWindow *ui);
     void Approve(QTableWidget *tableWidget, Ui::CafeManagerWindow *ui);
+    void Assign(QTableWidget *tableWidget, Ui::CafeManagerWindow *ui, Bid newBid);
 private slots:
     void on_calendarWidget_clicked(const QDate &date);
 
@@ -46,6 +49,8 @@ private slots:
     void on_waiterApproveButton_clicked();
 
     void on_rejectedApprove_clicked();
+
+    void on_assignButton_clicked();
 
 private:
     Ui::CafeManagerWindow *ui;

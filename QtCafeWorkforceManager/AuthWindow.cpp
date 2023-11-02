@@ -33,13 +33,13 @@ AuthWindow::~AuthWindow()
 
 void AuthWindow::on_LoginButton_clicked()
 {
-    Response<EUserProfile> authResponse = AuthorizeController(ui->QLE_Username->text(), ui->QLE_Password->text()).Execute();
+    Response<EUserProfile> authResponse = AuthorizeController::Invoke(ui->QLE_Username->text(), ui->QLE_Password->text());
     bool bUserAuthd = authResponse.Result == EDatabaseResult::EDR_SUCCESS ? true : false;
     bool bIsActive = false;
 
     if(bUserAuthd)
     {
-        Response<User> user = GetUserController(ui->QLE_Username->text()).Execute();
+        Response<User> user = GetUserController::Invoke(ui->QLE_Username->text());
         bIsActive = user.Data.bActive;
     }
 

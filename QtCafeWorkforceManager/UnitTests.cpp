@@ -1,9 +1,5 @@
 #include "UnitTests.h"
-#include "QApplicationGlobal.h"
 #include "Controller.h"
-#include "BidDAO.h"
-#include "UserDAO.h"
-#include "SlotDAO.h"
 #include "Slot.h"
 #include "User.h"
 #include "Bid.h"
@@ -21,7 +17,7 @@ UnitTests::UnitTests()
 
 bool UnitTests::Assert()
 {
-    Response<QVector<User>> userResponse = GetUsersController().Execute();
+    Response<QVector<User>> userResponse = GetUsersController::Invoke();
     if (userResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         qDebug() << "Assert: GetUsers failed.";
@@ -29,8 +25,7 @@ bool UnitTests::Assert()
     }
     qDebug() << "Assert: GetUsers succeeded.";
     InjectUsers = userResponse.Data;
-
-    Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
+    Response<QVector<Slot>> slotResponse = GetSlotsController::Invoke();
     if (slotResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         qDebug() << "Assert: GetSlots failed.";
@@ -39,7 +34,7 @@ bool UnitTests::Assert()
     qDebug() << "Assert: GetSlots succeeded.";
     InjectSlots = slotResponse.Data;
 
-    Response<QVector<Bid>> bidResponse = GetBidsController().Execute();
+    Response<QVector<Bid>> bidResponse = GetBidsController::Invoke();
     if (bidResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         qDebug() << "Assert: GetBids failed.";
@@ -51,7 +46,7 @@ bool UnitTests::Assert()
     QVector<User> deleteUsers = InjectUsers;
     for(auto& user : deleteUsers)
     {
-        if(DeleteUserController(user.UserID).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(DeleteUserController::Invoke(user.UserID).Result == EDatabaseResult::EDR_FAILURE)
         {
             qDebug() << "Assert: DeleteBids failed.";
             qDebug() << "Assert: DeleteUser failed.";
@@ -61,10 +56,12 @@ bool UnitTests::Assert()
     qDebug() << "Assert: DeleteBids succeeded.";
     qDebug() << "Assert: DeleteUser succeeded.";
 
+    QVector<Bid> bids = GetBidsController::Invoke().Data;
+
     QVector<Slot> deleteSlots = InjectSlots;
     for(auto& slot : deleteSlots)
     {
-        if(DeleteSlotController(slot.SlotID).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(DeleteSlotController::Invoke(slot.SlotID).Result == EDatabaseResult::EDR_FAILURE)
         {
             qDebug() << "Assert: DeleteSlot failed.";
             return false;
@@ -75,7 +72,7 @@ bool UnitTests::Assert()
     //now we inject/create
     for(auto& user : InjectUsers)
     {
-        if(CreateUserController(user).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(CreateUserController::Invoke(user).Result == EDatabaseResult::EDR_FAILURE)
         {
             qDebug() << "Assert: CreateUser failed.";
             return false;
@@ -86,7 +83,7 @@ bool UnitTests::Assert()
 
     for(auto& slot : InjectSlots)
     {
-        if(CreateSlotController(slot).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(CreateSlotController::Invoke(slot).Result == EDatabaseResult::EDR_FAILURE)
         {
             qDebug() << "Assert: CreateSlot failed.";
             return false;
@@ -94,10 +91,9 @@ bool UnitTests::Assert()
     }
     qDebug() << "Assert: CreateSlot succeeded.";
 
-
     for(auto& bid : InjectBids)
     {
-        if(InsertBidController(bid).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(CreateBidController::Invoke(bid).Result == EDatabaseResult::EDR_FAILURE)
         {
             qDebug() << "Assert: InsertBid failed.";
             return false;
@@ -116,7 +112,7 @@ bool UnitTests::Assert()
         user.setEUP(3);
         user.setESR(3);
         user.setMaxSlots(100);
-        if(UpdateUserController(user, oldUsername).Execute().Result == EDatabaseResult::EDR_FAILURE)
+        if(UpdateUserController::Invoke(user, oldUsername).Result == EDatabaseResult::EDR_FAILURE)
         {
             qDebug() << "Assert: UpdateUser failed.";
             return false;

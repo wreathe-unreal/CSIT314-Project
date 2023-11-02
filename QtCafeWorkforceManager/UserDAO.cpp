@@ -557,7 +557,7 @@ Response<void> UserDataAccessObject::SetESR(QString username, EStaffRole role)
 
 }
 
-Response<void> UserDataAccessObject::Delete(int userID)
+Response<void> UserDataAccessObject::Delete(int userid)
 {
     Response<void> response;
 
@@ -570,9 +570,11 @@ Response<void> UserDataAccessObject::Delete(int userID)
 
     QSqlQuery query;
 
-    // Prepare SQL statement to delete all of a user's bids first
-    query.prepare("DELETE FROM Bid WHERE UserID = :userid");
-    query.bindValue(":userid", userID);
+    // Prepare SQL statement to delete user with the given username
+    query.prepare("DELETE FROM User WHERE UserID = :userid");
+
+    query.bindValue(":userid", userid);
+
     if (!query.exec())
     {
         qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
@@ -580,24 +582,10 @@ Response<void> UserDataAccessObject::Delete(int userID)
         return response;
     }
 
-
-    QSqlQuery query2;
-
-    // Prepare SQL statement to delete user with the given username
-    query2.prepare("DELETE FROM User WHERE UserID = :userid2");
-
-    query2.bindValue(":userid2", userID);
-
-    if (!query2.exec())
+    if (query.numRowsAffected() == 0)
     {
-        qDebug() << "Error: Failed to delete user. Error:" << query.lastError().text();
-        response.Result = EDatabaseResult::EDR_FAILURE;
-        return response;
-    }
-
-    if (query2.numRowsAffected() == 0)
-    {
-        qDebug() << "No user found with the provided userID.";
+        qDebug() << userid;
+        qDebug() << "No user found with the provided username.";
         response.Result = EDatabaseResult::EDR_FAILURE;
         return response;
     }
@@ -697,7 +685,7 @@ Response<QVector<Slot>> UserDataAccessObject::GetSlotsByUser(int userID)
         int slotID = query.value(0).toInt();
 
         // Use GetSlot function to get the Slot details for each SlotID
-        Response<Slot> slotResponse = GetSlotController(slotID).Execute();
+        Response<Slot> slotResponse = GetSlotController::Invoke(slotID);
         if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
             response.Data.push_back(slotResponse.Data);

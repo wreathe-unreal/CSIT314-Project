@@ -42,8 +42,9 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui:
     ui->userTable->verticalHeader()->setVisible(false);
 
     ui->userTable->setSortingEnabled(true);
-    ui->userTable->setColumnCount(7);
+    ui->userTable->setColumnCount(8);
     ui->userTable->columnWidth(450);
+    ui->userTable->setColumnWidth(0, 50);
     ui->userTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->userTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -54,12 +55,12 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui:
     horizontalHeader->setStretchLastSection(true);
 
     QStringList headers;
-    headers <<"Full Name" << "Username" << "Password" << "User Profile" << "Staff Role" << "Max Slots" << "Is Active?";
+    headers <<"UserID" << "Full Name" << "Username" << "Password" << "User Profile" << "Staff Role" << "Max Slots" << "Is Active?";
 
     ui->userTable->setHorizontalHeaderLabels(headers);
 
 
-    Response<QVector<User>> usersResponse = GetUsersController().Execute();
+    Response<QVector<User>> usersResponse = GetUsersController::Invoke();
 
     if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
@@ -69,6 +70,7 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui:
             ui->userTable->insertRow(row); // Insert a new row
 
             // Create a new item for each piece of data/*
+            QTableWidgetItem *userID = new QTableWidgetItem(QString::number(user.UserID));
             QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
             QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
             QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
@@ -79,13 +81,14 @@ SysAdminWindow::SysAdminWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui:
             QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
 
             // Add those items to the table
-            ui->userTable->setItem(row, 0, fullNameItem); //0 is the column number for full name
-            ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
-            ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
-            ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
-            ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
-            ui->userTable->setItem(row, 5, maxSlotsItem);
-            ui->userTable->setItem(row, 6, bActiveItem);
+            ui->userTable->setItem(row, 0, userID);
+            ui->userTable->setItem(row, 1, fullNameItem);
+            ui->userTable->setItem(row, 2, usernameItem);
+            ui->userTable->setItem(row, 3, passwordItem);
+            ui->userTable->setItem(row, 4, profileItem);
+            ui->userTable->setItem(row, 5, roleItem);
+            ui->userTable->setItem(row, 6, maxSlotsItem);
+            ui->userTable->setItem(row, 7, bActiveItem);
         }
     }
 
@@ -109,16 +112,16 @@ void SysAdminWindow::on_userTable_clicked(const QModelIndex &index)
          ui->tabWidget->setCurrentIndex(1);
 
         //since we must lookup the database by the old username we store it on the window's class every time the table is clicked
-        UsernameBeforeEdit = ui->userTable->item(row, 1)->text();
+        UsernameBeforeEdit = ui->userTable->item(row, 2)->text();
 
         // Retrieve the items from the table
-        QTableWidgetItem *fullNameItem = ui->userTable->item(row, 0);
-        QTableWidgetItem *usernameItem = ui->userTable->item(row, 1);
-        QTableWidgetItem *passwordItem = ui->userTable->item(row, 2);
-        QTableWidgetItem *profileItem = ui->userTable->item(row, 3);
-        QTableWidgetItem *roleItem = ui->userTable->item(row, 4);
-        QTableWidgetItem *maxSlotsItem = ui->userTable->item(row, 5);
-        QTableWidgetItem *bActiveItem = ui->userTable->item(row, 6);
+        QTableWidgetItem *fullNameItem = ui->userTable->item(row, 1);
+        QTableWidgetItem *usernameItem = ui->userTable->item(row, 2);
+        QTableWidgetItem *passwordItem = ui->userTable->item(row, 3);
+        QTableWidgetItem *profileItem = ui->userTable->item(row, 4);
+        QTableWidgetItem *roleItem = ui->userTable->item(row, 5);
+        QTableWidgetItem *maxSlotsItem = ui->userTable->item(row, 6);
+        QTableWidgetItem *bActiveItem = ui->userTable->item(row, 7);
 
         // Check if the items are valid
         if (!usernameItem || !passwordItem || !profileItem || !roleItem || !maxSlotsItem || !bActiveItem)
@@ -199,10 +202,10 @@ void SysAdminWindow::on_editButton_clicked()
     }
     else
     {
-            user.setESR(ui->roleCombo->currentIndex() + 1);
+            user.setESR(ui->roleCombo->currentIndex());
     }
 
-    Response<void> updateResponse = UpdateUserController(user, UsernameBeforeEdit).Execute();
+    Response<void> updateResponse = UpdateUserController::Invoke(user, UsernameBeforeEdit);
 
     if(updateResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
@@ -217,7 +220,7 @@ void SysAdminWindow::on_editButton_clicked()
     }
 
 
-    Response<QVector<User>> usersResponse = GetUsersController().Execute();
+    Response<QVector<User>> usersResponse = GetUsersController::Invoke();
 
     if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
@@ -229,6 +232,7 @@ void SysAdminWindow::on_editButton_clicked()
                 ui->userTable->insertRow(row); // Insert a new row
 
                 // Create a new item for each piece of data/*
+                QTableWidgetItem *userID = new QTableWidgetItem(QString::number(user.UserID));
                 QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
                 QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
                 QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
@@ -239,13 +243,14 @@ void SysAdminWindow::on_editButton_clicked()
                 QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
 
                 // Add those items to the table
-                ui->userTable->setItem(row, 0, fullNameItem);
-                ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
-                ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
-                ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
-                ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
-                ui->userTable->setItem(row, 5, maxSlotsItem);
-                ui->userTable->setItem(row, 6, bActiveItem);
+                ui->userTable->setItem(row, 0, userID);
+                ui->userTable->setItem(row, 1, fullNameItem);
+                ui->userTable->setItem(row, 2, usernameItem);
+                ui->userTable->setItem(row, 3, passwordItem);
+                ui->userTable->setItem(row, 4, profileItem);
+                ui->userTable->setItem(row, 5, roleItem);
+                ui->userTable->setItem(row, 6, maxSlotsItem);
+                ui->userTable->setItem(row, 7, bActiveItem);
         }
     }
 
@@ -279,13 +284,13 @@ void SysAdminWindow::on_createButton_clicked()
     user.setEUP(static_cast<int>(QStringToEUserProfile(ui->profileComboCreate->currentText())));
     user.setESR(static_cast<int>(QStringToEStaffRole(ui->roleComboCreate->currentText())));
 
-    Response<void> createResponse = CreateUserController(user).Execute();
+    Response<void> createResponse = CreateUserController::Invoke(user);
     if(createResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         PopUp dialogBox = PopUp();
         dialogBox.AdminUserCreated();
 
-        Response<QVector<User>> usersResponse = GetUsersController().Execute();
+        Response<QVector<User>> usersResponse = GetUsersController::Invoke();
 
         if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
@@ -298,6 +303,7 @@ void SysAdminWindow::on_createButton_clicked()
                     ui->userTable->insertRow(row); // Insert a new row
 
                     // Create a new item for each piece of data/*
+                    QTableWidgetItem *userID = new QTableWidgetItem(QString::number(user.UserID));
                     QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
                     QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
                     QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
@@ -308,13 +314,14 @@ void SysAdminWindow::on_createButton_clicked()
                     QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
 
                     // Add those items to the table
-                    ui->userTable->setItem(row, 0, fullNameItem);
-                    ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
-                    ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
-                    ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
-                    ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
-                    ui->userTable->setItem(row, 5, maxSlotsItem);
-                    ui->userTable->setItem(row, 6, bActiveItem);
+                    ui->userTable->setItem(row, 0, userID);
+                    ui->userTable->setItem(row, 1, fullNameItem);
+                    ui->userTable->setItem(row, 2, usernameItem);
+                    ui->userTable->setItem(row, 3, passwordItem);
+                    ui->userTable->setItem(row, 4, profileItem);
+                    ui->userTable->setItem(row, 5, roleItem);
+                    ui->userTable->setItem(row, 6, maxSlotsItem);
+                    ui->userTable->setItem(row, 7, bActiveItem);
                     ui->userTable->setSortingEnabled(true);
                 }
         }
@@ -396,16 +403,17 @@ void SysAdminWindow::on_deleteButton_clicked()
     // Check which button was clicked
     if (reply == QMessageBox::Yes)
     {
-        int userIDToDelete = ui->userTable->item(ui->userTable->currentRow(), 0)->text().toInt();
+        int userID = ui->userTable->item(ui->userTable->currentRow(), 0)->text().toInt();
 
-        Response<void> deleteResponse = DeleteUserController(userIDToDelete).Execute();
+
+        Response<void> deleteResponse = DeleteUserController::Invoke(userID);
 
         if(deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
         {
             PopUp dialogBox = PopUp();
             dialogBox.AdminUserDeleted();
 
-            Response<QVector<User>> usersResponse = GetUsersController().Execute();
+            Response<QVector<User>> usersResponse = GetUsersController::Invoke();
 
             if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
             {
@@ -418,6 +426,7 @@ void SysAdminWindow::on_deleteButton_clicked()
                         ui->userTable->insertRow(row); // Insert a new row
 
                         // Create a new item for each piece of data/*
+                        QTableWidgetItem *userID = new QTableWidgetItem(QString::number(user.UserID));
                         QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
                         QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
                         QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
@@ -428,13 +437,14 @@ void SysAdminWindow::on_deleteButton_clicked()
                         QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
 
                         // Add those items to the table
-                        ui->userTable->setItem(row, 0, fullNameItem);
-                        ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
-                        ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
-                        ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
-                        ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
-                        ui->userTable->setItem(row, 5, maxSlotsItem);
-                        ui->userTable->setItem(row, 6, bActiveItem);
+                        ui->userTable->setItem(row, 0, userID);
+                        ui->userTable->setItem(row, 1, fullNameItem);
+                        ui->userTable->setItem(row, 2, usernameItem);
+                        ui->userTable->setItem(row, 3, passwordItem);
+                        ui->userTable->setItem(row, 4, profileItem);
+                        ui->userTable->setItem(row, 5, roleItem);
+                        ui->userTable->setItem(row, 6, maxSlotsItem);
+                        ui->userTable->setItem(row, 7, bActiveItem);
                         ui->userTable->setSortingEnabled(true);
                     }
             }
@@ -466,7 +476,7 @@ void SysAdminWindow::on_deleteButton_clicked()
 
 void SysAdminWindow::on_searchButton_clicked()
 {
-    Response<QVector<User>> eupSearch = SearchByEUPController(IntToEUserProfile(ui->searchCombo->currentIndex())).Execute();
+    Response<QVector<User>> eupSearch = SearchUsersByEUPController::Invoke(IntToEUserProfile(ui->searchCombo->currentIndex()));
 
     if(eupSearch.Result == EDatabaseResult::EDR_SUCCESS && eupSearch.Data.size() > 0)
     {
@@ -479,6 +489,7 @@ void SysAdminWindow::on_searchButton_clicked()
                 ui->userTable->insertRow(row); // Insert a new row
 
                 // Create a new item for each piece of data/*
+                QTableWidgetItem *userID = new QTableWidgetItem(QString::number(user.UserID));
                 QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
                 QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
                 QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
@@ -489,13 +500,14 @@ void SysAdminWindow::on_searchButton_clicked()
                 QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
 
                 // Add those items to the table
-                ui->userTable->setItem(row, 0, fullNameItem);
-                ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
-                ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
-                ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
-                ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
-                ui->userTable->setItem(row, 5, maxSlotsItem);
-                ui->userTable->setItem(row, 6, bActiveItem);
+                ui->userTable->setItem(row, 0, userID);
+                ui->userTable->setItem(row, 1, fullNameItem);
+                ui->userTable->setItem(row, 2, usernameItem);
+                ui->userTable->setItem(row, 3, passwordItem);
+                ui->userTable->setItem(row, 4, profileItem);
+                ui->userTable->setItem(row, 5, roleItem);
+                ui->userTable->setItem(row, 6, maxSlotsItem);
+                ui->userTable->setItem(row, 7, bActiveItem);
                 ui->userTable->setSortingEnabled(true);
         }
     }
@@ -519,7 +531,7 @@ void SysAdminWindow::OnLogoutTriggered()
 
 void SysAdminWindow::on_showAllUsersButton_clicked()
 {
-    Response<QVector<User>> usersResponse = GetUsersController().Execute();
+    Response<QVector<User>> usersResponse = GetUsersController::Invoke();
 
     if(usersResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
@@ -532,6 +544,7 @@ void SysAdminWindow::on_showAllUsersButton_clicked()
                 ui->userTable->insertRow(row); // Insert a new row
 
                 // Create a new item for each piece of data/*
+                QTableWidgetItem *userID = new QTableWidgetItem(QString::number(user.UserID));
                 QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
                 QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
                 QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
@@ -542,13 +555,14 @@ void SysAdminWindow::on_showAllUsersButton_clicked()
                 QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
 
                 // Add those items to the table
-                ui->userTable->setItem(row, 0, fullNameItem);
-                ui->userTable->setItem(row, 1, usernameItem); // 1 is the column number for the Username
-                ui->userTable->setItem(row, 2, passwordItem); // 2 is the column number for the HashedPassword
-                ui->userTable->setItem(row, 3, profileItem);  //3 is the column number for profile
-                ui->userTable->setItem(row, 4, roleItem); // 4 is the column number for the Role etc
-                ui->userTable->setItem(row, 5, maxSlotsItem);
-                ui->userTable->setItem(row, 6, bActiveItem);
+                ui->userTable->setItem(row, 0, userID);
+                ui->userTable->setItem(row, 1, fullNameItem);
+                ui->userTable->setItem(row, 2, usernameItem);
+                ui->userTable->setItem(row, 3, passwordItem);
+                ui->userTable->setItem(row, 4, profileItem);
+                ui->userTable->setItem(row, 5, roleItem);
+                ui->userTable->setItem(row, 6, maxSlotsItem);
+                ui->userTable->setItem(row, 7, bActiveItem);
                 ui->userTable->setSortingEnabled(true);
         }
     }

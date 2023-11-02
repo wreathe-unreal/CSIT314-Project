@@ -48,7 +48,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         BidDAO.cpp
         Response.h
         PopUp.cpp PopUp.h PopUp.ui
-        UnitTests.h UnitTests.cpp
+        UnitTests.cpp UnitTests.h
 
 
     )

@@ -3,6 +3,75 @@
 #include "QApplicationGlobal.h"
 #include "Response.h"
 #include <QMessageBox>
+Response<QVector<int>> BidDataAccessObject::GetSlotIDsByUserID(int userID)
+{
+    Response<QVector<int>> response;
+
+    QSqlQuery query;
+    // Get the SlotIDs from the Bid table where EBS = 1 for the given UserID
+    query.prepare("SELECT SlotID FROM Bid WHERE UserID = ? AND EBS = 1");
+    query.addBindValue(userID);
+    if (!query.exec())
+    {
+        qWarning() << "Failed to execute Bid query:" << query.lastError();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    while (query.next())
+    {
+        int slotID = query.value(0).toInt();
+        response.Data.push_back(slotID);
+    }
+
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
+}
+
+Response<QVector<int> > BidDataAccessObject::GetBiddersBySlotID(int slotID)
+{
+    Response<QVector<int>> response;
+
+    // Check if the connection is open
+    if(!DATABASE.isOpen())
+    {
+        // Handle error (maybe set some error status in the Response object)
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not open DB.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query(DATABASE);
+    query.prepare("SELECT UserID FROM Bid WHERE SlotID = :slotID");
+    query.bindValue(":slotID", slotID);
+
+    if(!query.exec())
+    {
+        // Handle errors
+        qDebug() << "Erorr getting user IDS:" << query.lastError();
+        QMessageBox errorMsgBox;
+        errorMsgBox.setWindowTitle("Error!");
+        errorMsgBox.setText("Could not get user IDs associated with bid SLOTID.");
+        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.exec();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response; // Returning the same response object here instead of creating a new one.
+    }
+
+    while(query.next())
+    {
+        int userID = query.value(0).toInt();
+
+        response.Data.push_back(userID);
+    }
+
+    response.Result = EDatabaseResult::EDR_SUCCESS;
+    return response;
+}
 
 Response<Bid> BidDataAccessObject::GetBid(int bidID)
 {
@@ -112,46 +181,51 @@ Response<void> BidDataAccessObject::Insert(Bid newBid)
 
 Response<QVector<Bid> > BidDataAccessObject::GetBids()
 {
-
-    Response<QVector<Bid>> bidsResponse;
+    Response<QVector<Bid>> bidResponse;
 
     if (!DATABASE.isOpen())
     {
         qWarning("Error: connection with database failed");
         QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Database Connection Failure");
-        errorMsgBox.setText("Database connection failure.");
-        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.setWindowTitle("Database Connection Failure"); // Set the window title
+        errorMsgBox.setText("Database connection failure."); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
-        bidsResponse.Result = EDatabaseResult::EDR_FAILURE;
-        return bidsResponse;
+        bidResponse.Result = EDatabaseResult::EDR_FAILURE;
+        return bidResponse; // Return the empty vector
     }
 
-    QSqlQuery query("SELECT * FROM Bid");
+    QSqlQuery query;
+    query.prepare("SELECT * FROM Bid");
 
-    QVector<Bid> bids;
-    while (query.next())
+    if (query.exec())
     {
-        Bid bid;
-        bid.BidID = query.value("BidID").toInt();
-        bid.UserID = query.value("UserID").toInt();
-        bid.SlotID = query.value("SlotID").toInt();
-        bid.EBS = query.value("EBS").toInt();
+        while (query.next())
+        {
+            User user;
+            Bid bid;
+            bid.BidID = query.value("BidID").toInt();
+            bid.UserID = query.value("UserID").toInt();
+            bid.SlotID = query.value("SlotID").toInt();
+            bid.EBS = query.value("EBS").toInt();
 
-        bids.append(bid);
+            bidResponse.Data.push_back(bid);
+        }
     }
-
-    if (bids.isEmpty())
+    else
     {
-        bidsResponse.Result = EDatabaseResult::EDR_FAILURE;
+        bidResponse.Result = EDatabaseResult::EDR_FAILURE;
         QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Bid Access Failure");
-        errorMsgBox.setText("Could not retrieve bid data or there are no bids!");
-        errorMsgBox.setIcon(QMessageBox::Critical);
+        errorMsgBox.setWindowTitle("Bid Access Failure"); // Set the window title
+        errorMsgBox.setText("Could not get bids!"); // Set the text to display
+        errorMsgBox.setIcon(QMessageBox::Critical); // Set an icon for the message box
         errorMsgBox.exec();
-        qWarning() << "GetAllBids() ERROR: " << query.lastError().text();
-        return bidsResponse;
+        qWarning() << "GetBids() ERROR: " << query.lastError().text();
+        return bidResponse;
     }
+
+    bidResponse.Result = EDatabaseResult::EDR_SUCCESS;
+    return bidResponse;
 }
 
 Response<QVector<Bid>> BidDataAccessObject::GetPending()
@@ -415,10 +489,9 @@ Response<User> BidDataAccessObject::GetUserByBidID(int bidid)
     return response;
 }
 
-Response<QVector<User>> BidDataAccessObject::GetStaff(int slotID)
+Response<QVector<int>> BidDataAccessObject::GetStaff(int slotID)
 {
-    Response<QVector<User>> response;
-    QVector<User> users;
+    Response<QVector<int>> response;
 
     // Check if the connection is open
     if(!DATABASE.isOpen())
@@ -440,7 +513,7 @@ Response<QVector<User>> BidDataAccessObject::GetStaff(int slotID)
     if(!query.exec())
     {
         // Handle error
-        qDebug() << "Error getting users:" << query.lastError();
+        qDebug() << "Error getting user IDs associated with bid SLOTID:" << query.lastError();
         QMessageBox errorMsgBox;
         errorMsgBox.setWindowTitle("Error!");
         errorMsgBox.setText("Could not get users associated with slot.");
@@ -450,71 +523,13 @@ Response<QVector<User>> BidDataAccessObject::GetStaff(int slotID)
         return response; // Returning the same response object here instead of creating a new one.
     }
 
+    // Retrieve and set the data
     while(query.next())
     {
-        int userID = query.value(0).toInt();
-        Response<User> userResponse = GetUserController(userID).Execute();
-        if(userResponse.Result == EDatabaseResult::EDR_SUCCESS) // Assuming you have an EDR_SUCCESS status
-        {
-            users.push_back(userResponse.Data);
-        }
-        // Otherwise, handle the error or continue
+        int userId = query.value(0).toInt();
+        response.Data.push_back(userId);
     }
 
-    // Populate the QVector<User> and wrap it in a Response and return
-    response.Data = users;
-    // Set any other response attributes if necessary
-    return response;
-}
-
-Response<QVector<User>> BidDataAccessObject::GetBidders(int slotID)
-{
-    Response<QVector<User>> response;
-    QVector<User> users;
-
-    // Check if the connection is open
-    if(!DATABASE.isOpen())
-    {
-        // Handle error (maybe set some error status in the Response object)
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Could not open DB.");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
-        response.Result = EDatabaseResult::EDR_FAILURE;
-        return response;
-    }
-
-    QSqlQuery query(DATABASE);
-    query.prepare("SELECT UserID FROM Bid WHERE SlotID = :slotID");
-    query.bindValue(":slotID", slotID);
-
-    if(!query.exec())
-    {
-        // Handle error
-        qDebug() << "Error getting users:" << query.lastError();
-        QMessageBox errorMsgBox;
-        errorMsgBox.setWindowTitle("Error!");
-        errorMsgBox.setText("Could not get users associated with slot.");
-        errorMsgBox.setIcon(QMessageBox::Critical);
-        errorMsgBox.exec();
-        response.Result = EDatabaseResult::EDR_FAILURE;
-        return response; // Returning the same response object here instead of creating a new one.
-    }
-
-    while(query.next())
-    {
-        int userID = query.value(0).toInt();
-        Response<User> userResponse = GetUserController(userID).Execute();
-        if(userResponse.Result == EDatabaseResult::EDR_SUCCESS) // Assuming you have an EDR_SUCCESS status
-        {
-            users.push_back(userResponse.Data);
-        }
-        // Otherwise, handle the error or continue
-    }
-
-    // Populate the QVector<User> and wrap it in a Response and return
-    response.Data = users;
     // Set any other response attributes if necessary
     return response;
 }

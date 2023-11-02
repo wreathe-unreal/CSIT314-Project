@@ -19,10 +19,13 @@ class BidDataAccessObject
         Response<void> Delete(int bidID);
         Response<User>  GetUserByBidID(int bidid);
         Response<void> ApproveBid(int bidid);
-        Response<QVector<User>> GetStaff(int slotID);
-        Response<QVector<User>> GetBidders(int slotID);
+        Response<QVector<int>> GetStaff(int slotID);
+        Response<QVector<User>> GetBidder(int slotID);
         Response<void> RejectBid(int bidid);
         Response<void> UnapproveBid(int bidid);
+        Response<QVector<int> > GetSlotIDsByUserID(int userID);
+        Response<QVector<int>> GetBiddersBySlotID(int slotID);
+
 };
 
 #endif // BIDDAO_H
