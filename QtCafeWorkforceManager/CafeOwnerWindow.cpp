@@ -1,7 +1,6 @@
 #include "AuthWindow.h"
 #include "CafeOwnerWindow.h"
 #include "Controller.h"
-#include "QApplicationGlobal.h"
 #include "Slot.h"
 #include "Response.h"
 #include "qdatetime.h"
@@ -9,6 +8,35 @@
 #include "PopUp.h"
 
 #include <QMessageBox>
+
+void CafeOwnerWindow::RebuildTable(QTableWidget* table)
+{
+    table->setRowCount(0);
+
+    Response<QVector<Slot>> getSlotsResponse = GetSlotsController::Invoke();
+    if(getSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
+    {
+        for (auto& slot : getSlotsResponse.Data)
+        {
+            table->setSortingEnabled(false);
+            int row = table->rowCount();
+            table->insertRow(row); // Insert a new row
+
+            // Create a new item for each piece of data/*
+            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+            // Add those items to the table
+            table->setItem(row, 0, slotID); // 1 is the column number for the Username
+            table->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+            table->setItem(row, 2, startTime);  //3 is the column number for profile
+            table->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            table->setSortingEnabled(true);
+        }
+    }
+}
 
 CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -41,29 +69,7 @@ CafeOwnerWindow::CafeOwnerWindow(QWidget *parent) :
 
     ui->slotTable->setHorizontalHeaderLabels(headers);
 
-    Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
-    if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS)
-    {
-        for (auto& slot : slotResponse.Data)
-        {
-            ui->slotTable->setSortingEnabled(false);
-            int row = ui->slotTable->rowCount();
-            ui->slotTable->insertRow(row); // Insert a new row
-
-            // Create a new item for each piece of data/*
-            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-
-            // Add those items to the table
-            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setSortingEnabled(true);
-        }
-    }
+    RebuildTable(ui->slotTable);
 
     connect(ui->actionLogout, &QAction::triggered, this, &CafeOwnerWindow::OnLogoutTriggered);
 }
@@ -81,35 +87,15 @@ void CafeOwnerWindow::on_createButton_clicked()
     QTime end = ui->endEdit->time();
     Slot newSlot(date, start, end);
 
-    Response<QVector<Slot>> createSlotResponse = CreateSlotController(newSlot).Execute();
+    Response<QVector<Slot>> createSlotResponse = CreateSlotController::Invoke(newSlot);
 
     if(createSlotResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
         PopUp dialogBox = PopUp();
         dialogBox.OwnerSlotCreated();
 
-        ui->slotTable->setRowCount(0);
+        RebuildTable(ui->slotTable);
 
-        for (auto& slot : createSlotResponse.Data)
-        {
-            ui->slotTable->setSortingEnabled(false);
-            int row = ui->slotTable->rowCount();
-            ui->slotTable->insertRow(row); // Insert a new row
-
-
-            // Create a new item for each piece of data/*
-            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-
-            // Add those items to the table
-            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setSortingEnabled(true);
-        }
     }
     else
     {
@@ -152,32 +138,11 @@ void CafeOwnerWindow::on_deleteButton_clicked()
             PopUp dialogBox = PopUp();
             dialogBox.OwnerSlotDeleted();
 
-            Response<QVector<Slot>> getSlotsResponse = GetSlotsController().Execute();
+            Response<QVector<Slot>> getSlotsResponse = GetSlotsController::Invoke();
 
             if(getSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
             {
-                ui->slotTable->setRowCount(0);
-
-                for (auto& slot : getSlotsResponse.Data)
-                {
-                    ui->slotTable->setSortingEnabled(false);
-                    int row = ui->slotTable->rowCount();
-                    ui->slotTable->insertRow(row); // Insert a new row
-
-
-                    // Create a new item for each piece of data/*
-                    QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-                    QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-                    QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-                    QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-
-                    // Add those items to the table
-                    ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-                    ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-                    ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
-                    ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-                    ui->slotTable->setSortingEnabled(true);
-                }
+                RebuildTable(ui->slotTable);
             }
         }
         else
@@ -255,9 +220,7 @@ void CafeOwnerWindow::on_editButton_clicked()
     slotChanged.StartTime = ui->startEditEdit->time();
     slotChanged.EndTime = ui->endEditEdit->time();
 
-    Response<QVector<Slot>> updateSlotsResponse = UpdateSlotController::Invoke(slotChanged);
-
-    if(updateSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
+    if(UpdateSlotController::Invoke(slotChanged).Result == EDatabaseResult::EDR_SUCCESS)
     {
         PopUp dialogBox= PopUp();
         dialogBox.OwnerSlotUpdated();
@@ -271,27 +234,7 @@ void CafeOwnerWindow::on_editButton_clicked()
 
         ui->slotTable->setRowCount(0);
 
-        for (auto& slot : updateSlotsResponse.Data)
-        {
-            ui->slotTable->setSortingEnabled(false);
-            int row = ui->slotTable->rowCount();
-            ui->slotTable->insertRow(row); // Insert a new row
-
-
-            // Create a new item for each piece of data/*
-            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-
-            // Add those items to the table
-            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setSortingEnabled(true);
-        }
-
+        RebuildTable(ui->slotTable);
     }
     else
     {
@@ -303,9 +246,12 @@ void CafeOwnerWindow::on_editButton_clicked()
 
 void CafeOwnerWindow::on_searchButton_clicked()
 {
-    Response<QVector<Slot>> searchResponse = SearchSlotsByQDateController::Invoke(ui->calendarSearch->selectedDate());
 
-    if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
+    QDate searchDate = ui->calendarSearch->selectedDate();
+    Response<QVector<Slot>> searchResponse = SearchSlotsByQDateController::Invoke(searchDate);
+
+    if(SearchSlotsByQDateController::Invoke(searchDate).Result == EDatabaseResult::EDR_SUCCESS
+        && SearchSlotsByQDateController::GetResponse().Data.size() > 0)
     {
         PopUp dialogBox = PopUp();
         dialogBox.OwnerSlotSearchResult(searchResponse.Data.size());
@@ -363,29 +309,8 @@ void CafeOwnerWindow::OnLogoutTriggered()
 
 void CafeOwnerWindow::on_showAllButton_clicked()
 {
-    ui->slotTable->setRowCount(0);
-    Response<QVector<Slot>> getSlotsResponse = GetSlotsController().Execute();
-    if(getSlotsResponse.Result == EDatabaseResult::EDR_SUCCESS)
-    {
-        for (auto& slot : getSlotsResponse.Data)
-        {
-            ui->slotTable->setSortingEnabled(false);
-            int row = ui->slotTable->rowCount();
-            ui->slotTable->insertRow(row); // Insert a new row
-
-            // Create a new item for each piece of data/*
-            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-
-            // Add those items to the table
-            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->slotTable->setSortingEnabled(true);
-        }
-    }
+    RebuildTable(ui->slotTable);
 }
+
+
 

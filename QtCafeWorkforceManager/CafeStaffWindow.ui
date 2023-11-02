@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Cafe Staff Portal</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">CafeStaffWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">

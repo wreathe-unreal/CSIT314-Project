@@ -2,6 +2,7 @@
 #define CAFEOWNERWINDOW_H
 
 #include <QMainWindow>
+#include <QTableWidget>
 
 namespace Ui {
 class CafeOwnerWindow;
@@ -15,6 +16,7 @@ class CafeOwnerWindow : public QMainWindow
         explicit CafeOwnerWindow(QWidget *parent = nullptr);
         ~CafeOwnerWindow();
 
+        void RebuildTable(QTableWidget *table);
     private slots:
 
         void on_createButton_clicked();

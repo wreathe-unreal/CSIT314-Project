@@ -33,18 +33,19 @@ AuthWindow::~AuthWindow()
 
 void AuthWindow::on_LoginButton_clicked()
 {
-    Response<EUserProfile> authResponse = AuthorizeController::Invoke(ui->QLE_Username->text(), ui->QLE_Password->text());
-    bool bUserAuthd = authResponse.Result == EDatabaseResult::EDR_SUCCESS ? true : false;
+    QString password = ui->QLE_Password->text();
+    QString username = ui->QLE_Username->text();
     bool bIsActive = false;
 
-    if(bUserAuthd)
+    if(AuthorizeController::Invoke(username, password).Result == EDatabaseResult::EDR_SUCCESS)
     {
-        Response<User> user = GetUserController::Invoke(ui->QLE_Username->text());
+        Response<User> user = GetUserController::Invoke(username);
         bIsActive = user.Data.bActive;
     }
 
+    bool bUserAuthorized = AuthorizeController::GetResponse().Result == EDatabaseResult::EDR_SUCCESS ? true : false;
 
-    if(!bIsActive || !bUserAuthd)
+    if(!bIsActive || !bUserAuthorized)
     {
         QPalette palette;
         palette.setColor(QPalette::Text, QColorConstants::Red);
@@ -54,30 +55,26 @@ void AuthWindow::on_LoginButton_clicked()
         return;
     }
 
-    switch(authResponse.Data)
+    switch(AuthorizeController::GetResponse().Data)
     {
         case EUserProfile::EUP_SysAdmin:
             SysAdminWindow* SysAdminView;
             SysAdminView = new SysAdminWindow;
-            SysAdminView->setStyleSheet("SysAdminWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
             SysAdminView->show();
             break;
         case EUserProfile::EUP_CafeOwner:
             CafeOwnerWindow* CafeOwnerView;
             CafeOwnerView = new CafeOwnerWindow;
-            CafeOwnerView->setStyleSheet("CafeOwnerWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
             CafeOwnerView->show();
             break;
         case EUserProfile::EUP_CafeManager:
             CafeManagerWindow* CafeManagerView;
             CafeManagerView = new CafeManagerWindow;
-            CafeManagerView->setStyleSheet("CafeManagerWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
             CafeManagerView->show();
             break;
         case EUserProfile::EUP_CafeStaff:
             CafeStaffWindow* CafeStaffView;
             CafeStaffView = new CafeStaffWindow;
-            CafeStaffView->setStyleSheet("CafeStaffWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
             CafeStaffView->show();
             break;
         default:

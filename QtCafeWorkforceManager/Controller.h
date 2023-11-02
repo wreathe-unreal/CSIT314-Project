@@ -183,7 +183,7 @@ class CreateSlotController: public IController
             return DBResponse;
        }
 
-   public:
+   private:
        Slot NewSlot;
        static Response<QVector<Slot>> DBResponse;
        CreateSlotController(Slot newslot)
@@ -208,7 +208,7 @@ class GetSlotsController: public IController
             return DBResponse;
        }
 
-   public:
+   private:
        static Response<QVector<Slot>> DBResponse;
        GetSlotsController(){}
        Response<QVector<Slot>> Execute();

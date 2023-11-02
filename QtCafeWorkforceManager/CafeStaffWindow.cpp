@@ -57,7 +57,7 @@ void ReloadSlots(Ui::CafeStaffWindow* ui)
         ui->pendingTable->setSortingEnabled(true);
     }
 
-    Response<QVector<Slot>> slotsResponse = GetSlotsController().Execute();
+    Response<QVector<Slot>> slotsResponse = GetSlotsController::Invoke();
     Response<QVector<Bid>> searchUserBidsResponse = SearchBidsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
     Response<QVector<Slot>> searchUserSlotsResponse = SearchSlotsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
 
@@ -288,7 +288,6 @@ void CafeStaffWindow::OnLogoutTriggered()
 {
     AuthWindow* AuthView;
     AuthView = new AuthWindow;
-    AuthView->setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
     AuthView->show();
     this->close();
 }
@@ -298,6 +297,7 @@ void CafeStaffWindow::on_editInfoButton_clicked()
     Response<User> userResponse = GetUserController::Invoke(QApplicationGlobal::CurrentUsername);
     userResponse.Data.FullName = ui->firstNameText->text();
     userResponse.Data.MaxSlots = ui->maxSlotsBox->value();
+
     if(UpdateUserController::Invoke(userResponse.Data, QApplicationGlobal::CurrentUsername).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp error;
@@ -305,9 +305,9 @@ void CafeStaffWindow::on_editInfoButton_clicked()
         return;
     }
 
-    Response<QVector<Slot>> userSlotsResponse = SearchSlotsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
+    SearchSlotsByUserIDController::Invoke(QApplicationGlobal::CurrentUserID);
 
-    int curSlots = userSlotsResponse.Data.size();
+    int curSlots = SearchSlotsByUserIDController::GetResponse().Data.size();
 
     QString workSlotFraction = QString::number(curSlots) + " / " + QString::number(userResponse.Data.MaxSlots);
 
@@ -403,23 +403,19 @@ void CafeStaffWindow::on_deleteButton_clicked()
     for (const QModelIndex &index : selectedRows)
     {
         int row = index.row();
-        for (auto bid : pendingBids.Data)
+        for (auto& bid : pendingBids.Data)
         {
             if (bid.SlotID == ui->pendingTable->item(row, 0)->text().toInt() && bid.UserID == QApplicationGlobal::CurrentUserID)
             {
-                deleteResponse = DeleteBidController::Invoke(bid.BidID);
-
-                if (deleteResponse.Result != EDatabaseResult::EDR_SUCCESS)
+                if (DeleteBidController::Invoke(bid.BidID).Result != EDatabaseResult::EDR_SUCCESS)
                 {
-                    // Handle failure for this specific bid, perhaps log it
+                    goto LeaveDoubleForLoop;
                 }
             }
         }
     }
 
-    // Depending on how you want to notify the user, you can adjust the following
-    // For example, you can notify after every delete or only once after all deletions.
-    // I'm showing a message only once after all deletions.
+    LeaveDoubleForLoop:
 
     if (deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
@@ -463,21 +459,17 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
 
         bool bSlotAvailable = true;
 
-        qDebug() << searchResponse.Data.size();
 
         for (auto& slot : searchResponse.Data)
         {
             Response<QVector<User>> bidders = GetBiddersBySlotIDController::Invoke(slot.SlotID);
 
-            qDebug() << bidders.Data.size();
 
             for(auto& b : bidders.Data)
             {
-                qDebug() << b.UserID << " " << QApplicationGlobal::CurrentUserID;
                 if(b.UserID == QApplicationGlobal::CurrentUserID)
                 {
                     bSlotAvailable = false;
-                    qDebug() << "Slot unavailable";
                 }
             }
 

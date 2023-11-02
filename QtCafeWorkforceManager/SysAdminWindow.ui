@@ -31,6 +31,9 @@
   <property name="windowTitle">
    <string>Cafe SysAdmin Portal</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">SysAdminWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="label">
     <property name="geometry">

@@ -515,6 +515,8 @@ Response<void> UserDataAccessObject::SetEUP(QString username, EUserProfile profi
         qWarning() << "Check user query failed: " << queryCheck.lastError().text();
         response.Result = EDatabaseResult::EDR_FAILURE;
     }
+    response.Result = EDatabaseResult::EDR_FAILURE;
+    return response;
 }
 
 

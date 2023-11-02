@@ -132,7 +132,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->rejectedTable->setColumnWidth(0,50);
     ui->rejectedTable->setColumnWidth(1,175);
 
-    Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
+    Response<QVector<Slot>> slotResponse = GetSlotsController::Invoke();
 
     if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS && slotResponse.Data.size() > 0)
     {
@@ -261,10 +261,6 @@ void ReloadTables(Ui::CafeManagerWindow* ui)
     Response<QVector<User>> staffSearch = GetStaffController::Invoke(thisSlot.Data.SlotID);
     Response<QVector<Bid>> bidSearch = SearchBidsBySlotIDController::Invoke(thisSlot.Data.SlotID);
     Response<QVector<User>> idleSearch = GetIdleStaffController::Invoke(thisSlot.Data.SlotID);
-
-    qDebug() << "slot#" << thisSlot.Data.SlotID;
-    qDebug() << "Staff Size: " << staffSearch.Data.size();
-    qDebug() << "Idle Staff Size: " << idleSearch.Data.size();
 
     ui->idleStaffTable->setRowCount (0);
     ui->idleStaffTable->setSortingEnabled(false);
@@ -439,7 +435,7 @@ void CafeManagerWindow::on_slotTable_itemSelectionChanged()
     }
 
     Response<Slot> slotResponse = GetSlotController::Invoke(ui->slotTable->item(ui->slotTable->currentRow(), 0)->text().toInt());
-
+    int slotID = ui->slotTable->item(ui->slotTable->currentRow(), 0)->text().toInt();
     if(slotResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         return;
@@ -462,14 +458,11 @@ void CafeManagerWindow::on_unapproveButton_clicked()
     int row = ui->staffTable->currentIndex().row();
     int bidID = ui->staffTable->item(row, 0)->text().toInt();
 
-    Response<void> unapproveResponse = UnapproveBidController::Invoke(bidID);
-
-    if(unapproveResponse.Result == EDatabaseResult::EDR_FAILURE)
+    if(UnapproveBidController::Invoke(bidID).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp error = PopUp();
         error.ManagerUnapprovalError();
     }
-
 
     ReloadTables(ui);
 }
@@ -487,7 +480,7 @@ void CafeManagerWindow::on_approveButton_clicked()
 void CafeManagerWindow::on_showWorkslotsButton_clicked()
 {
 
-    Response<QVector<Slot>> slotResponse = GetSlotsController().Execute();
+    Response<QVector<Slot>> slotResponse = GetSlotsController::Invoke();
 
     if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS && slotResponse.Data.size() > 0)
     {
@@ -555,15 +548,15 @@ void CafeManagerWindow::Reject(QTableWidget* tableWidget, Ui::CafeManagerWindow*
     int row = tableWidget->currentIndex().row();
     int bidID = tableWidget->item(row, 0)->text().toInt();
 
-    auto bidder = GetUserByBidIDController::Invoke(bidID);
+    auto bidder = GetUserByBidIDController::Invoke(bidID); //what is this LOL
 
-    Response<void> rejectResponse = RejectBidController::Invoke(bidID);
 
-    if(rejectResponse.Result == EDatabaseResult::EDR_FAILURE)
+    if(RejectBidController::Invoke(bidID).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp error = PopUp();
         error.ManagerRejectError();
     }
+    //if it succeeds we do nothing :D
 }
 
 void CafeManagerWindow::Approve(QTableWidget* tableWidget, Ui::CafeManagerWindow* ui)
@@ -579,11 +572,10 @@ void CafeManagerWindow::Approve(QTableWidget* tableWidget, Ui::CafeManagerWindow
     int row = tableWidget->currentIndex().row();
     int bidID = tableWidget->item(row, 0)->text().toInt();
 
-    Response<User> bidder = GetUserByBidIDController::Invoke(bidID);
-    Response<QVector<Slot>> bidderSlots = SearchSlotsByUserIDController::Invoke(bidder.Data.UserID);
+    int bidderID = GetUserByBidIDController::Invoke(bidID).Data.UserID;
+    Response<QVector<Slot>> bidderSlots = SearchSlotsByUserIDController::Invoke(bidderID);
 
-
-    if(bidder.Data.getMaxSlots() >= bidderSlots.Data.size())
+    if(GetUserByBidIDController::GetResponse().Data.getMaxSlots() >= bidderSlots.Data.size())
     {
         Response<void> approveResponse = ApproveBidController::Invoke(bidID);
         if(approveResponse.Result == EDatabaseResult::EDR_SUCCESS)
@@ -666,9 +658,8 @@ void CafeManagerWindow::on_rejectedUnreject_clicked()
 
     auto bidder = GetUserByBidIDController::Invoke(bidID);
 
-    Response<void> unapproveResponse = UnapproveBidController::Invoke(bidID);
 
-    if(unapproveResponse.Result == EDatabaseResult::EDR_FAILURE)
+    if(UnapproveBidController::Invoke(bidID).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp error = PopUp();
         error.ManagerUnapprovalError();
@@ -713,8 +704,8 @@ void CafeManagerWindow::on_assignButton_clicked()
     newBid.SlotID = ui->slotTable->item(ui->slotTable->currentRow(), 0)->text().toInt();
     newBid.UserID = ui->idleStaffTable->item(ui->idleStaffTable->currentRow(), 0)->text().toInt();
     newBid.EBS = 1;
-    Response<void> bidResult = CreateBidController::Invoke(newBid);
-    if(bidResult.Result == EDatabaseResult::EDR_SUCCESS)
+
+    if(CreateBidController::Invoke(newBid).Result == EDatabaseResult::EDR_SUCCESS)
     {
         Assign(ui->idleStaffTable, ui, newBid);
         ReloadTables(ui);

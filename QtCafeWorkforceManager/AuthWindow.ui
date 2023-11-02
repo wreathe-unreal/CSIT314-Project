@@ -14,7 +14,7 @@
    <string>Cafe Log-in</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox">

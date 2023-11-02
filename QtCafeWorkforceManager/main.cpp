@@ -38,7 +38,6 @@ int main(int argc, char *argv[])
         return -1; // Exit with an error code
     }
     AuthWindow w;
-    w.setStyleSheet("AuthWindow {background-image: url(../QtCafeWorkforceManager/bg.png);}");
     w.show();
 
     //close db and close app
