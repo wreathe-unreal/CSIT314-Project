@@ -397,7 +397,6 @@ void CafeStaffWindow::on_deleteButton_clicked()
 {
     Response<QVector<Bid>> pendingBids = GetPendingBidsController::Invoke();
 
-    Response<void> deleteResponse;
     QModelIndexList selectedRows = ui->pendingTable->selectionModel()->selectedRows();
 
     for (const QModelIndex &index : selectedRows)
@@ -407,17 +406,16 @@ void CafeStaffWindow::on_deleteButton_clicked()
         {
             if (bid.SlotID == ui->pendingTable->item(row, 0)->text().toInt() && bid.UserID == QApplicationGlobal::CurrentUserID)
             {
-                if (DeleteBidController::Invoke(bid.BidID).Result != EDatabaseResult::EDR_SUCCESS)
+                if (DeleteBidController::Invoke(bid.BidID).Result == EDatabaseResult::EDR_FAILURE)
                 {
-                    goto LeaveDoubleForLoop;
+                    //if we encounter an error, we leave early
+                    goto LeaveDoubleForLoop; //go to line 431
                 }
+
             }
         }
     }
-
-    LeaveDoubleForLoop:
-
-    if (deleteResponse.Result == EDatabaseResult::EDR_SUCCESS)
+    if (DeleteBidController::GetResponse().Result == EDatabaseResult::EDR_SUCCESS)
     {
         PopUp dialogBox;
         dialogBox.StaffBidDeleted();
@@ -428,11 +426,11 @@ void CafeStaffWindow::on_deleteButton_clicked()
         ReloadSlots(ui);
         return;
     }
-    else
-    {
+
+    //goto label, if we get here, we can assume an error was found
+    LeaveDoubleForLoop:
         PopUp error;
         error.StaffBidDeleteError();
-    }
 }
 
 

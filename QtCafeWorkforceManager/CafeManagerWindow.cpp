@@ -575,7 +575,7 @@ void CafeManagerWindow::Approve(QTableWidget* tableWidget, Ui::CafeManagerWindow
     int bidderID = GetUserByBidIDController::Invoke(bidID).Data.UserID;
     Response<QVector<Slot>> bidderSlots = SearchSlotsByUserIDController::Invoke(bidderID);
 
-    if(GetUserByBidIDController::GetResponse().Data.getMaxSlots() >= bidderSlots.Data.size())
+    if(GetUserByBidIDController::GetResponse().Data.getMaxSlots() > bidderSlots.Data.size())
     {
         Response<void> approveResponse = ApproveBidController::Invoke(bidID);
         if(approveResponse.Result == EDatabaseResult::EDR_SUCCESS)
