@@ -2,7 +2,10 @@
 #ifndef SLOT_H
 #define SLOT_H
 #include "Entity.h"
+#include "Response.h"
 #include <QDate>
+
+class User;
 
 class Slot : public IEntity
 {
@@ -57,6 +60,21 @@ class Slot : public IEntity
         QDate Date;
         QTime StartTime;
         QTime EndTime;
+
+
+        static Response<QVector<Slot>> GetAllSlots();
+        static Response<QVector<Slot>> CreateSlot(Slot newSlot);
+        static Response<void> AssignStaff(Slot slot, User user);
+        static Response<Slot> GetSlot(int slotID);
+        static Response<QVector<User>> GetStaff(int SlotID);
+        static Response<QVector<User>> GetUnassignedStaff(Slot slot);
+        static Response<QVector<User>> GetBidders(Slot slot);
+        static Response<QVector<Slot>> SearchDate(QDate date);
+        static Response<QVector<User>> GetUsersBySlotID(int SlotID);
+        static Response<void> DeleteSlot(int SlotID);
+        static Response<QVector<Slot>> UpdateSlot(Slot editedSlot);
+        static Response<QVector<Slot>> SearchByUserID(int userID);
+
 
 };
 

@@ -34,18 +34,18 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Entity.cpp
         User.h
         User.cpp
-        UserDAO.h
-        SlotDAO.h
-        UserDAO.cpp
+
+
+
         SysAdminWindow.h SysAdminWindow.cpp SysAdminWindow.ui
         CafeOwnerWindow.h CafeOwnerWindow.cpp CafeOwnerWindow.ui
         CafeManagerWindow.h CafeManagerWindow.cpp CafeManagerWindow.ui
         CafeStaffWindow.h CafeStaffWindow.cpp CafeStaffWindow.ui
 
 
-        SlotDAO.cpp
-        BidDAO.h
-        BidDAO.cpp
+
+
+
         Response.h
         PopUp.cpp PopUp.h PopUp.ui
         UnitTests.cpp UnitTests.h

@@ -3,6 +3,8 @@
 
 #include <QDebug>
 #include "Entity.h"
+#include "Response.h"
+#include "User.h"
 
 class Bid : public IEntity
 {
@@ -30,6 +32,24 @@ class Bid : public IEntity
         int EBS;
         virtual void ToString() override { qDebug() << QString::number(getBidID());}
 
+
+        static Response<Bid> GetBid(int bidID);
+        static Response<void> Insert(Bid newBid);
+        static Response<QVector<Bid>> GetBids();
+        static Response<QVector<Bid>> GetPending();
+        static Response<QVector<Bid>> GetApproved();
+        static Response<QVector<Bid>> GetRejected(int UserID);
+        static Response<QVector<Bid>> SearchByUserID(int UserID);
+        static Response<QVector<Bid>> SearchBySlotID(int slotID);
+        static Response<void> Delete(int bidID);
+        static Response<User>  GetUserByBidID(int bidid);
+        static Response<void> ApproveBid(int bidid);
+        static Response<QVector<int>> GetStaff(int slotID);
+        static Response<QVector<User>> GetBidder(int slotID);
+        static Response<void> RejectBid(int bidid);
+        static Response<void> UnapproveBid(int bidid);
+        static Response<QVector<int> > GetSlotIDsByUserID(int userID);
+        static Response<QVector<int>> GetBiddersBySlotID(int slotID);
 };
 
 #endif // BID_H

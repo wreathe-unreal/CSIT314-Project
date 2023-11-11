@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "Bid.h"
 #include "Enums.h"
 #include "Slot.h"

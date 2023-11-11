@@ -2,9 +2,6 @@
 #define QAPPLICATIONGLOBAL_H
 #include <QApplication>
 #include "Controller.h"
-#include "SlotDAO.h"
-#include "UserDAO.h"
-#include "BidDAO.h"
 #include <QSqlDatabase>
 
 #define DATABASE QApplicationGlobal::CafeDB
@@ -25,10 +22,6 @@ class QApplicationGlobal : public QApplication
         static QString CurrentUsername;
 
         static QSqlDatabase CafeDB;
-
-        static UserDataAccessObject UserDAO;
-        static SlotDataAccessObject SlotDAO;
-        static BidDataAccessObject BidDAO;
 
 };
 

@@ -5,9 +5,6 @@
 int QApplicationGlobal::CurrentUserID;
 QString QApplicationGlobal::CurrentUsername;
 QSqlDatabase QApplicationGlobal::CafeDB;
-UserDataAccessObject QApplicationGlobal::UserDAO;
-SlotDataAccessObject QApplicationGlobal::SlotDAO;
-BidDataAccessObject QApplicationGlobal::BidDAO;
 
 QApplicationGlobal::QApplicationGlobal(int &argc, char **argv) : QApplication(argc, argv)
 {

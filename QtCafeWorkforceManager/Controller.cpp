@@ -1,8 +1,11 @@
-﻿#include "QApplicationGlobal.h"
-#include "qcryptographichash.h"
+﻿#include "qcryptographichash.h"
 #include <QString>
 #include "PopUp.h"
 #include "Response.h"
+#include "Controller.h"
+#include "User.h"
+#include "Slot.h"
+#include "Bid.h"
 
 //define outside class for linker
 Response<EUserProfile> AuthorizeController::DBResponse;
@@ -44,23 +47,23 @@ Response<EUserProfile> AuthorizeController::Execute()
     QByteArray hashedPassword = QCryptographicHash::hash(passwordBytes, QCryptographicHash::Sha256);
     QString hashedPasswordHex = QString(hashedPassword.toHex());
 
-    return QApplicationGlobal::UserDAO.Authorize(Username, hashedPasswordHex);
+    return User::Authorize(Username, hashedPasswordHex);
 }
 
 
 
 Response<QVector<User>> GetUsersController::Execute()
 {
-    return QApplicationGlobal::UserDAO.GetUsers();
+    return User::GetUsers();
 }
 
 Response<void> UpdateUserController::Execute()
 {
      //if the password did not change, simply update the user info
-    Response<EUserProfile> authResponse = QApplicationGlobal::UserDAO.Authorize(this->UsernameBeforeUpdate, UpdatedUser.getPassword());
+    Response<EUserProfile> authResponse = User::Authorize(this->UsernameBeforeUpdate, UpdatedUser.getPassword());
     if(authResponse.Result == EDatabaseResult::EDR_SUCCESS)
     {
-        return QApplicationGlobal::UserDAO.UpdateOrInsert(this->UpdatedUser, this->UsernameBeforeUpdate);
+        return User::UpdateOrInsert(this->UpdatedUser, this->UsernameBeforeUpdate);
     }
 
     //if the password has changed, rehash the new plaint text password, and update
@@ -69,7 +72,7 @@ Response<void> UpdateUserController::Execute()
     QString hashedPasswordHex = QString(hashedPassword.toHex());
     UpdatedUser.setPassword(hashedPasswordHex);
 
-    return QApplicationGlobal::UserDAO.UpdateOrInsert(this->UpdatedUser, this->UsernameBeforeUpdate);
+    return User::UpdateOrInsert(this->UpdatedUser, this->UsernameBeforeUpdate);
 }
 
 Response<void> CreateUserController::Execute()
@@ -79,38 +82,38 @@ Response<void> CreateUserController::Execute()
     QString hashedPasswordHex = QString(hashedPassword.toHex());
     NewUser.setPassword(hashedPasswordHex);
 
-    return QApplicationGlobal::UserDAO.Insert(this->NewUser);
+    return User::Insert(this->NewUser);
 }
 
 Response<void> DeleteUserController::Execute()
 {
     //first delete all of a user's bids...not the most efficient code..but for now...it works..
-    Response<QVector<Bid>> allBidsResponse = QApplicationGlobal::BidDAO.GetBids();
+    Response<QVector<Bid>> allBidsResponse = Bid::GetBids();
 
     for(auto& b : allBidsResponse.Data)
     {
         if(b.UserID == this->UserID)
         {
-            QApplicationGlobal::BidDAO.Delete(b.BidID);
+            Bid::Delete(b.BidID);
         }
     }
 
-    return QApplicationGlobal::UserDAO.Delete(this->UserID);
+    return User::Delete(this->UserID);
 }
 
 Response<QVector<User>> SearchUsersByEUPController::Execute()
 {
-    return QApplicationGlobal::UserDAO.SearchByEUP(this->profile);
+    return User::SearchByEUP(this->profile);
 }
 
 Response<QVector<Slot>> CreateSlotController::Execute()
 {
-    return QApplicationGlobal::SlotDAO.CreateSlot(this->NewSlot);
+    return Slot::CreateSlot(this->NewSlot);
 }
 
 Response<QVector<Slot>> GetSlotsController::Execute()
 {
-    return QApplicationGlobal::SlotDAO.GetAllSlots();
+    return Slot::GetAllSlots();
 
 }
 
@@ -126,87 +129,87 @@ Response<void> DeleteSlotController::Execute()
             DeleteBidController::Invoke(b.BidID);
         }
     }
-    return QApplicationGlobal::SlotDAO.DeleteSlot(this->SlotID);
+    return Slot::DeleteSlot(this->SlotID);
 }
 
 Response<QVector<Slot>> UpdateSlotController::Execute()
 {
-    return QApplicationGlobal::SlotDAO.UpdateSlot(this->SlotToEdit);
+    return Slot::UpdateSlot(this->SlotToEdit);
 }
 
 Response<QVector<Slot>> SearchSlotsByQDateController::Execute()
 {
-    return QApplicationGlobal::SlotDAO.SearchDate(this->Date);
+    return Slot::SearchDate(this->Date);
 }
 
 Response<QVector<Slot>> SearchSlotsByUserIDController::Execute()
 {
-    return QApplicationGlobal::SlotDAO.SearchByUserID(this->UserID);
+    return Slot::SearchByUserID(this->UserID);
 }
 
 Response<void> SetESRController::Execute()
 {
-    return QApplicationGlobal::UserDAO.SetESR(this->Username, this->NewESR);
+    return User::SetESR(this->Username, this->NewESR);
 }
 
 Response<void> SetNameController::Execute()
 {
-    return QApplicationGlobal::UserDAO.SetName(this->Username, this->NewName);
+    return User::SetName(this->Username, this->NewName);
 }
 
 Response<void> SetMaxSlotsController::Execute()
 {
-    return QApplicationGlobal::UserDAO.SetMaxSlots(this->Username, this->MaxSlots);
+    return User::SetMaxSlots(this->Username, this->MaxSlots);
 }
 
 Response<User> GetUserController::Execute()
 {
     if(this->UserID == -1)
     {
-        return QApplicationGlobal::UserDAO.GetUser(this->Username);
+        return User::GetUser(this->Username);
 
     }
-    return QApplicationGlobal::UserDAO.GetUser(this->UserID);
+    return User::GetUser(this->UserID);
 }
 
 Response<void> CreateBidController::Execute()
 {
-    return QApplicationGlobal::BidDAO.Insert(this->NewBid);
+    return Bid::Insert(this->NewBid);
 }
 
 Response<QVector<Bid>> GetPendingBidsController::Execute()
 {
-    return QApplicationGlobal::BidDAO.GetPending();
+    return Bid::GetPending();
 }
 
 Response<Slot> GetSlotController::Execute()
 {
-    return QApplicationGlobal::SlotDAO.GetSlot(this->SlotID);
+    return Slot::GetSlot(this->SlotID);
 }
 
 Response<QVector<Bid>> SearchBidsByUserIDController::Execute()
 {
-    return QApplicationGlobal::BidDAO.SearchByUserID(this->UserID);
+    return Bid::SearchByUserID(this->UserID);
 }
 
 Response<void> DeleteBidController::Execute()
 {
-    return QApplicationGlobal::BidDAO.Delete(this->BidID);
+    return Bid::Delete(this->BidID);
 }
 
 Response<QVector<Bid>> SearchBidsBySlotIDController::Execute()
 {
-    return QApplicationGlobal::BidDAO.SearchBySlotID(this->SlotID);
+    return Bid::SearchBySlotID(this->SlotID);
 }
 
 Response<QVector<User>> GetStaffController::Execute()
 {
-    Response<QVector<int>> userIDResponse = QApplicationGlobal::BidDAO.GetStaff(this->SlotID);
+    Response<QVector<int>> userIDResponse = Bid::GetStaff(this->SlotID);
     Response<QVector<User>> staffResponse;
 
     for(auto& id : userIDResponse.Data)
     {
-        staffResponse.Data.push_back(QApplicationGlobal::UserDAO.GetUser(id).Data);
+        staffResponse.Data.push_back(User::GetUser(id).Data);
     }
     staffResponse.Result = EDatabaseResult::EDR_SUCCESS;
     return staffResponse;
@@ -214,27 +217,27 @@ Response<QVector<User>> GetStaffController::Execute()
 
 Response<User> GetUserByBidIDController::Execute()
 {
-    return QApplicationGlobal::BidDAO.GetUserByBidID(this->BidID);
+    return Bid::GetUserByBidID(this->BidID);
 }
 
 Response<void> ApproveBidController::Execute()
 {
-    return QApplicationGlobal::BidDAO.ApproveBid(this->BidID);
+    return Bid::ApproveBid(this->BidID);
 }
 
 Response<Bid> GetBidController::Execute()
 {
-    return QApplicationGlobal::BidDAO.GetBid(this->BidID);
+    return Bid::GetBid(this->BidID);
 }
 
 
 Response<QVector<User> > GetBiddersBySlotIDController::Execute()
 {
-    Response<QVector<int>> biddersIDResponse = QApplicationGlobal::BidDAO.GetBiddersBySlotID(this->SlotID);
+    Response<QVector<int>> biddersIDResponse = Bid::GetBiddersBySlotID(this->SlotID);
     Response<QVector<User>> BiddersResponse;
     for(auto& uid : biddersIDResponse.Data)
     {
-        BiddersResponse.Data.push_back(QApplicationGlobal::UserDAO.GetUser(uid).Data);
+        BiddersResponse.Data.push_back(User::GetUser(uid).Data);
     }
     BiddersResponse.Result = EDatabaseResult::EDR_SUCCESS;
     return BiddersResponse;
@@ -242,22 +245,22 @@ Response<QVector<User> > GetBiddersBySlotIDController::Execute()
 
 Response<void> UnapproveBidController::Execute()
 {
-    return QApplicationGlobal::BidDAO.UnapproveBid(this->BidID);
+    return Bid::UnapproveBid(this->BidID);
 }
 
 Response<void> RejectBidController::Execute()
 {
-    return QApplicationGlobal::BidDAO.RejectBid(this->BidID);
+    return Bid::RejectBid(this->BidID);
 }
 
 Response<QVector<Bid> > GetRejectedBidsByUserIDController::Execute()
 {
-    return QApplicationGlobal::BidDAO.GetRejected(this->UserID);
+    return Bid::GetRejected(this->UserID);
 }
 
 Response<QVector<User> > GetIdleStaffController::Execute()
 {
-    Response<QVector<User>> userResponse = QApplicationGlobal::UserDAO.GetUsers();
+    Response<QVector<User>> userResponse = User::GetUsers();
     if(userResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp error;
@@ -265,12 +268,12 @@ Response<QVector<User> > GetIdleStaffController::Execute()
         return userResponse;
     }
 
-    Response<QVector<int>> bidderIDs = QApplicationGlobal::BidDAO.GetBiddersBySlotID(this->SlotID);
+    Response<QVector<int>> bidderIDs = Bid::GetBiddersBySlotID(this->SlotID);
     Response<QVector<User>> bidderResponse;
 
     for(auto i : bidderIDs.Data)
     {
-        bidderResponse.Data.push_back(QApplicationGlobal::UserDAO.GetUser(i).Data);
+        bidderResponse.Data.push_back(User::GetUser(i).Data);
     }
     bidderResponse.Result = EDatabaseResult::EDR_SUCCESS;
 
@@ -300,5 +303,5 @@ Response<QVector<User> > GetIdleStaffController::Execute()
 
 Response<QVector<Bid>> GetBidsController::Execute()
 {
-    return QApplicationGlobal::BidDAO.GetBids();
+    return Bid::GetBids();
 }
