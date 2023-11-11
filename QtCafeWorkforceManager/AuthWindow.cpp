@@ -101,3 +101,9 @@ void AuthWindow::on_QLE_Password_textEdited(const QString &arg1)
     ui->InvalidLoginLabel->setVisible(false);
 }
 
+
+void AuthWindow::on_QLE_Password_returnPressed()
+{
+    AuthWindow::on_LoginButton_clicked();
+}
+

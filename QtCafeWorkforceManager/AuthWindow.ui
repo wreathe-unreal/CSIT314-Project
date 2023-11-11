@@ -81,7 +81,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QLineEdit" name="QLE_Username">
+       <widget class="QLE_Clearable" name="QLE_Username">
         <property name="font">
          <font>
           <family>Calibri</family>
@@ -90,6 +90,9 @@
           <bold>true</bold>
           <kerning>true</kerning>
          </font>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(52, 46, 36);
@@ -106,7 +109,10 @@ gridline-color: rgb(128, 128, 128);</string>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="QLE_Password">
+       <widget class="QLE_Clearable" name="QLE_Password">
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(52, 46, 36);
 color: rgb(202, 202, 202);
@@ -208,6 +214,13 @@ color:rgb(52, 52, 52)</string>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QLE_Clearable</class>
+   <extends>QLineEdit</extends>
+   <header>../../AuthWindow.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="CafeResources.qrc"/>
  </resources>
