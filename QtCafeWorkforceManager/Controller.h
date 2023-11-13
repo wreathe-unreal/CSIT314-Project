@@ -791,3 +791,29 @@ class GetIdleStaffController : public IController
         }
         Response<QVector<User>> Execute();
 };
+
+class UpdateBidController : public IController
+{
+    public:
+        static Response<void> Invoke(Bid newBid, int slotID)
+        {
+            UpdateBidController controller = UpdateBidController(newBid, slotID);
+            DBResponse = controller.Execute();
+            return DBResponse;
+        }
+        static Response<void> GetResponse()
+        {
+            return DBResponse;
+        }
+    private:
+        static Response<void> DBResponse;
+        Bid NewBid;
+        int SlotID;
+        UpdateBidController(Bid newBid, int slotID)
+        {
+            this->NewBid = newBid;
+            this->SlotID = slotID;
+        }
+
+        Response<void> Execute();
+};

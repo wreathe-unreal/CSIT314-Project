@@ -501,10 +501,10 @@ void CafeManagerWindow::on_showWorkslotsButton_clicked()
             QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
 
             // Add those items to the table
-            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            ui->slotTable->setItem(row, 0, slotID);
+            ui->slotTable->setItem(row, 1, date);
+            ui->slotTable->setItem(row, 2, startTime);
+            ui->slotTable->setItem(row, 3, endTime);
             ui->slotTable->setSortingEnabled(true);
 
         }

@@ -7,39 +7,128 @@
 #include "Slot.h"
 #include "Bid.h"
 
-//define outside class for linker
+//Below we define static objects outside class for linker recognition
+//we will also use this space to assign user stories to controllers
+
+//As a System Admin, I want to be able to log out the system
+//As a Cafe Staff, I want to be able to log out of the system
+//As a Cafe Manager, I want to be able to log out the system
+//As a Cafe Owner, I want to be able to log out the system
+//No Controller needed, the boundary itself closes itself and opens a new AuthWindow
+
+//As a Cafe Staff, I want to be able to log into the system
+//As a Cafe Manager, I want to be able to log into the system
+//As a Cafe Owner, I want to be able to log in the system
+//As a System Admin, I want to be able to log in the system
 Response<EUserProfile> AuthorizeController::DBResponse;
+
+//As a System Admin, I want to be able to view a list of user accounts
 Response<QVector<User>>  GetUsersController::DBResponse;
+
+//As a System Admin, I want to be able to update user accounts
+//As a System Admin, I want to be able to suspend user accounts
+//As a System Admin, I want to be able to update user profiles
+//As a System Admin, I want to be able to suspend user profiles
 Response<void> UpdateUserController::DBResponse;
+
+//As a System Admin, I want to be able to create user accounts
+//As a System Admin I want to be able to create user profiles
 Response<void> CreateUserController::DBResponse;
+
+//As a System Admin, I want to be able to delete user accounts
 Response<void> DeleteUserController::DBResponse;
+
+//As a System Admin, I want to be able to search for user accounts
 Response<QVector<User>> SearchUsersByEUPController::DBResponse;
+
+//As a Cafe Owner, I want to be able to create work slots
 Response<QVector<Slot>> CreateSlotController::DBResponse;
+
+//As a Cafe Owner, I want to be able to view the work slots
+//As a Cafe Staff I want to be able to view all work slots
+//As a Cafe Manager, I want to be able to view all work slots
 Response<QVector<Slot>> GetSlotsController::DBResponse;
+
+//As a Cafe Owner, I want to be able to delete a work slot
 Response<void> DeleteSlotController::DBResponse;
+
+//As a Cafe Owner, I want to be able to update a work slot
 Response<QVector<Slot>> UpdateSlotController::DBResponse;
+
+//As a Cafe Manager, I want to be able to search for work slots without a minimum number of staff
+//As a Cafe Owner, I want to be able to search for a particular work slot
 Response<QVector<Slot>> SearchSlotsByQDateController::DBResponse;
+
+//As a Cafe Staff, I want to be able to search through all work slots
 Response<QVector<Slot>> SearchSlotsByUserIDController::DBResponse;
+
+//As a Cafe Staff, I want to be able to select my role in the cafe
 Response<void> SetESRController::DBResponse;
+
+//Allows Cafe Staff to set their name
 Response<void> SetNameController::DBResponse;
+
+//As a Cafe Staff, I want to be able to choose my maximum number of work slots
 Response<void> SetMaxSlotsController::DBResponse;
+
+//As a System Admin, I want to be able to view user profiles
 Response<User> GetUserController::DBResponse;
+
+//As a Cafe Staff, I want to be able to create a bid for a work slot
 Response<void> CreateBidController::DBResponse;
+
+//Allows a more specific search for bids
 Response<QVector<Bid>> GetPendingBidsController::DBResponse;
+
+//Gets a specific slot
 Response<Slot> GetSlotController::DBResponse;
-Response<QVector<Bid>> SearchBidsByUserIDController::DBResponse;
-Response<void> DeleteBidController::DBResponse;
+
+//Gets the bids for a specific slot
 Response<QVector<Bid>> SearchBidsBySlotIDController::DBResponse;
+
+//Gets the staff approved for a specific slotID
 Response<QVector<User>> GetStaffController::DBResponse;
+
+//gets the user associated with a specific bid
 Response<User> GetUserByBidIDController::DBResponse;
+
+//As a Cafe Staff, I want to be able to change my current bids
+Response<void> UpdateBidController::DBResponse;
+
+//As a Cafe Staff, I want to be able to view all my current bids
+//As a Cafe Staff, I want to be able to check my bid approvals NOTE!! WE filter for approved bids on boundary
+Response<QVector<Bid>> SearchBidsByUserIDController::DBResponse;
+
+//As a Cafe Staff, I want to be able to delete my bids
+Response<void> DeleteBidController::DBResponse;
+
+//As a Cafe Manager, I want to be able to update the bids’ approval status
+//As a Cafe Manager, I want to be able to assign available staff to a work slot
 Response<void> ApproveBidController::DBResponse;
+
+//As a Cafe Manager, I want to be able to view the cafe staffs’ bids
 Response<QVector<Bid>> GetBidsController::DBResponse;
+
+//gets a specific bid
 Response<Bid> GetBidController::DBResponse;
+
+//gets bidders by slotID
 Response<QVector<User>> GetBiddersBySlotIDController::DBResponse;
+
+//As a Cafe Manager, I want to be able to update the bids’ approval status
 Response<void> UnapproveBidController::DBResponse;
+
+//As a Cafe Manager, I want to be able to update the bids’ approval status
 Response<void> RejectBidController::DBResponse;
+
+//gets a user's rejected bids
 Response<QVector<Bid>> GetRejectedBidsByUserIDController::DBResponse;
+
+//As a Cafe Manager, I want to be able to view the list of available cafe staff
 Response<QVector<User>>  GetIdleStaffController::DBResponse;
+
+//end user story breakdown
+
 
 Response<EUserProfile> AuthorizeController::Execute()
 {
@@ -304,4 +393,44 @@ Response<QVector<User> > GetIdleStaffController::Execute()
 Response<QVector<Bid>> GetBidsController::Execute()
 {
     return Bid::GetBids();
+}
+
+Response<void> UpdateBidController::Execute()
+{
+    Response<void> UpdateResponse;
+
+    if(CreateBidController::Invoke(this->NewBid).Result == EDatabaseResult::EDR_FAILURE)
+    {
+        PopUp dialogBox;
+        dialogBox.StaffBidConflictError();
+        UpdateResponse.Result = EDatabaseResult::EDR_FAILURE;
+        return UpdateResponse;
+    }
+
+    Response<QVector<Bid>> bidSlotResponse = SearchBidsBySlotIDController::Invoke(this->SlotID);
+
+
+    Response<void> deleteResponse;
+    for(auto& b : bidSlotResponse.Data)
+    {
+        if(b.UserID == QApplicationGlobal::CurrentUserID)
+        {
+            deleteResponse = DeleteBidController::Invoke(b.BidID);
+
+        }
+    }
+
+    if(deleteResponse.Result == EDatabaseResult::EDR_FAILURE)
+    {
+        PopUp error = PopUp();
+        error.StaffDeleteDuringUpdateError();
+        error.exec();
+        UpdateResponse.Result = EDatabaseResult::EDR_FAILURE;
+        return UpdateResponse;
+    }
+    UpdateResponse.Result = EDatabaseResult::EDR_SUCCESS;
+
+    PopUp dialogBox;
+    dialogBox.StaffBidSubmitted();
+    return UpdateResponse;
 }

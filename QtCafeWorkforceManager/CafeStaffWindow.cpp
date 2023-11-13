@@ -563,36 +563,9 @@ void CafeStaffWindow::on_updateButton_clicked()
     newBid.UserID = QApplicationGlobal::CurrentUserID;
     newBid.EBS = 0; // pending EBidStatus
 
-    if(CreateBidController::Invoke(newBid).Result == EDatabaseResult::EDR_FAILURE)
-    {
-        PopUp dialogBox;
-        dialogBox.StaffBidConflictError();
-        return;
-        ui->bidButton->setEnabled(false);
-        return;
-    }
-
     int pendingRow = ui->pendingTable->currentRow();
     int pendingSlotID = ui->pendingTable->item(pendingRow, 0)->text().toInt();
-    Response<QVector<Bid>> bidSlotResponse = SearchBidsBySlotIDController::Invoke(pendingSlotID);
-
-
-    Response<void> deleteResponse;
-    for(auto& b : bidSlotResponse.Data)
-    {
-        if(b.UserID == QApplicationGlobal::CurrentUserID)
-        {
-            deleteResponse = DeleteBidController::Invoke(b.BidID);
-
-        }
-    }
-
-    if(deleteResponse.Result == EDatabaseResult::EDR_FAILURE)
-    {
-        PopUp error = PopUp();
-        error.StaffDeleteDuringUpdateError();
-        error.exec();
-    }
+    UpdateBidController::Invoke(newBid, pendingSlotID);
 
     PopUp dialogBox;
     dialogBox.StaffBidSubmitted();
