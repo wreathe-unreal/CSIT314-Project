@@ -1,5 +1,6 @@
 ﻿#include "qcryptographichash.h"
 #include <QString>
+#include "QApplicationGlobal.h"
 #include "PopUp.h"
 #include "Response.h"
 #include "Controller.h"
