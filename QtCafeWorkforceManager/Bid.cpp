@@ -84,6 +84,7 @@ Response<QVector<int>> Bid::GetSlotIDsByUserID(int userID)
     return response;
 }
 
+//gets a list of Bidder's UsersID based on a provided Slot ID
 Response<QVector<int> > Bid::GetBiddersBySlotID(int slotID)
 {
     Response<QVector<int>> response;
@@ -235,6 +236,7 @@ Response<void> Bid::Insert(Bid newBid)
 
 }
 
+//gets all existing bids
 Response<QVector<Bid> > Bid::GetBids()
 {
     Response<QVector<Bid>> bidResponse;
@@ -284,6 +286,7 @@ Response<QVector<Bid> > Bid::GetBids()
     return bidResponse;
 }
 
+//get only pending bids
 Response<QVector<Bid>> Bid::GetPending()
 {
     Response<QVector<Bid>> bidResponse;
@@ -333,13 +336,14 @@ Response<QVector<Bid>> Bid::GetPending()
     return bidResponse;
 }
 
+//get only rejected bids that belong to a specific userID
 Response<QVector<Bid>> Bid::GetRejected(int UserID)
 {
     Response <QVector<Bid>> response = Bid::SearchByUserID(UserID);
     QVector<Bid> rejected;
     for(auto& b : response.Data)
     {
-        if(b.EBS == 2)
+        if(b.EBS == 2) //if rejected
         {
             rejected.push_back(b);
         }
@@ -348,6 +352,7 @@ Response<QVector<Bid>> Bid::GetRejected(int UserID)
     return response;
 }
 
+//gets a list of bids that belong to a specific userID
 Response<QVector<Bid>> Bid::SearchByUserID(int userID)
 {
     Response<QVector<Bid>> response;
@@ -398,6 +403,7 @@ Response<QVector<Bid>> Bid::SearchByUserID(int userID)
     return response;
 }
 
+//gets a list of bids that are associated with a specific slotID
 Response<QVector<Bid> > Bid::SearchBySlotID(int slotID)
 {
 
@@ -450,6 +456,7 @@ Response<QVector<Bid> > Bid::SearchBySlotID(int slotID)
 }
 
 
+//delete a bid by bidID
 Response<void> Bid::Delete(int bidID)
 {
 
@@ -489,6 +496,7 @@ Response<void> Bid::Delete(int bidID)
     }
 }
 
+//get users who have a bid for a specific bidID
 Response<User> Bid::GetUserByBidID(int bidid)
 {
     Response<User> response;
@@ -545,6 +553,7 @@ Response<User> Bid::GetUserByBidID(int bidid)
     return response;
 }
 
+//get users with approved workslots/bid for a specific slot
 Response<QVector<int>> Bid::GetStaff(int slotID)
 {
     Response<QVector<int>> response;
@@ -590,6 +599,7 @@ Response<QVector<int>> Bid::GetStaff(int slotID)
     return response;
 }
 
+//approve a bid by bidid
 Response<void> Bid::ApproveBid(int bidid)
 {
     Response<void> response;

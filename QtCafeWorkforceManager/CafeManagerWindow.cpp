@@ -9,6 +9,7 @@
 
 #include <QMessageBox>
 
+//clear all tables, we call this before rebuilding tables on update
 void ClearTables(Ui::CafeManagerWindow* ui)
 {
     ui->staffTable->clear();
@@ -19,12 +20,15 @@ void ClearTables(Ui::CafeManagerWindow* ui)
     ui->idleStaffTable->clear();
 }
 
+//constructor
 CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::CafeManagerWindow)
 {
+    //attach ui pointer
     ui->setupUi(this);
 
+    //setup UI
     ui->tabWidget->tabBar()->setTabTextColor(5, QColor("red"));
     ui->tabWidget->tabBar()->setStyleSheet(QString("QTabBar::tab:selected { background-color: dodgerblue; }"));
 
@@ -41,7 +45,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     QStringList idleHeaders;
     idleHeaders << "UserID" << "Full Name" << "Role";
 
-
+    //setup slot table
     ui->slotTable->setColumnCount(4);
     ui->slotTable->horizontalHeader()->setVisible(true);
     ui->slotTable->setHorizontalHeaderLabels(slotHeaders);
@@ -53,8 +57,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->slotTable->horizontalHeader()->setStretchLastSection(true);
     ui->slotTable->setColumnWidth(0,50);
 
-
-    // Setup column and properties first
+    //setup staff without bids table
     ui->idleStaffTable->setColumnCount(3);
     ui->idleStaffTable->setHorizontalHeaderLabels(idleHeaders);
     ui->idleStaffTable->verticalHeader()->setVisible(false);
@@ -65,6 +68,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->idleStaffTable->setColumnWidth(0,50);
     ui->idleStaffTable->setColumnWidth(1,175);
 
+    //setup bid table
     ui->bidTable->setColumnCount(3);
     ui->bidTable->setHorizontalHeaderLabels(bidHeaders);
     ui->bidTable->verticalHeader()->setVisible(false);
@@ -76,7 +80,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->bidTable->setColumnWidth(0,50);
     ui->bidTable->setColumnWidth(1,175);
 
-
+    //setup staff with approved bids table
     ui->staffTable->setColumnCount(3);
     ui->staffTable->setHorizontalHeaderLabels(bidHeaders);
     ui->staffTable->verticalHeader()->setVisible(false);
@@ -88,6 +92,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->staffTable->setColumnWidth(0,50);
     ui->staffTable->setColumnWidth(1,175);
 
+    //setup chef bids table
     ui->chefTable->setColumnCount(3);
     ui->chefTable->setHorizontalHeaderLabels(bidHeaders);
     ui->chefTable->verticalHeader()->setVisible(false);
@@ -99,6 +104,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->chefTable->setColumnWidth(0,50);
     ui->chefTable->setColumnWidth(1,175);
 
+    //setup waiter bids table
     ui->waiterTable->setColumnCount(3);
     ui->waiterTable->setHorizontalHeaderLabels(bidHeaders);
     ui->waiterTable->verticalHeader()->setVisible(false);
@@ -110,6 +116,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->waiterTable->setColumnWidth(0,50);
     ui->waiterTable->setColumnWidth(1,175);
 
+    //setup cashier bids table
     ui->cashierTable->setColumnCount(3);
     ui->cashierTable->setHorizontalHeaderLabels(bidHeaders);
     ui->cashierTable->verticalHeader()->setVisible(false);
@@ -121,6 +128,7 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->cashierTable->setColumnWidth(0,50);
     ui->cashierTable->setColumnWidth(1,175);
 
+    //setup rejected bids table
     ui->rejectedTable->setColumnCount(3);
     ui->rejectedTable->setHorizontalHeaderLabels(bidHeaders);
     ui->rejectedTable->verticalHeader()->setVisible(false);
@@ -132,11 +140,13 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
     ui->rejectedTable->setColumnWidth(0,50);
     ui->rejectedTable->setColumnWidth(1,175);
 
+    //get all bids
     Response<QVector<Slot>> slotResponse = GetSlotsController::Invoke();
 
+    //if getting all slots database call succeeds and slots are greater than 0
     if(slotResponse.Result == EDatabaseResult::EDR_SUCCESS && slotResponse.Data.size() > 0)
     {
-
+        //build slot table
         ui->slotTable->setRowCount(0);
         ui->slotTable->setSortingEnabled(false);
         for (auto& slot : slotResponse.Data)
@@ -153,41 +163,45 @@ CafeManagerWindow::CafeManagerWindow(QWidget *parent) :
             QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
 
             // Add those items to the table
-            ui->slotTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->slotTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->slotTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->slotTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
+            ui->slotTable->setItem(row, 0, slotID);
+            ui->slotTable->setItem(row, 1, date);
+            ui->slotTable->setItem(row, 2, startTime);
+            ui->slotTable->setItem(row, 3, endTime);
             ui->slotTable->setSortingEnabled(true);
 
         }
         ui->slotTable->setSortingEnabled(true);
     }
-    if(slotResponse.Data.size() <= 0)
+    if(slotResponse.Data.size() <= 0) //if slot response returns no slots, let the manager know
     {
         ClearTables(ui);
         PopUp dialogBox;
         dialogBox.ManagerSearchEmptyError();
     }
 
-    if(slotResponse.Result == EDatabaseResult::EDR_FAILURE)
+    if(slotResponse.Result == EDatabaseResult::EDR_FAILURE) //if the database call fails, warn the user
     {
         ClearTables(ui);
         PopUp dialogBox;
         dialogBox.ManagerSearchError();
     }
 
+    //set the first slot in the table to be clicked automatically
     ui->slotTable->setFocus();
     ui->slotTable->selectRow(0);
 
+    //attach callback for file->logout action
     connect(ui->actionLogout, &QAction::triggered, this, &CafeManagerWindow::OnLogoutTriggered);
 
 }
 
+//destructor
 CafeManagerWindow::~CafeManagerWindow()
 {
     delete ui;
 }
 
+//on logout close the window and show the authwindow
 void CafeManagerWindow::OnLogoutTriggered()
 {
     AuthWindow* AuthView;
@@ -202,8 +216,10 @@ void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
 
     ui->dateEdit->setDate(date);
 
+    //get the date from the calendar and search the slots for corresponding slots
     Response<QVector<Slot>> searchResponse = SearchSlotsByQDateController::Invoke(ui->calendarWidget->selectedDate());
 
+    //if database request succeeds, and slots exist for the date...create slot table
     if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
     {
         PopUp dialogBox;
@@ -235,13 +251,13 @@ void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
         }
         ui->slotTable->setSortingEnabled(true);
     }
-    if(searchResponse.Data.size() <= 0)
+    if(searchResponse.Data.size() <= 0) //if no slots exist, clear the table and warn the user
     {
         ClearTables(ui);
         PopUp dialogBox;
         dialogBox.ManagerSearchEmptyError();
     }
-    if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
+    if(searchResponse.Result == EDatabaseResult::EDR_FAILURE) //if it fails, clear the table and warn the user
     {
         ClearTables(ui);
         PopUp dialogBox;
@@ -251,6 +267,8 @@ void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
     ui->slotTable->selectRow(0);
 }
 
+//reloads all tables, called anytime we update the status of a bid
+//to provide an accurate reflection of the database
 void ReloadTables(Ui::CafeManagerWindow* ui)
 {
 
@@ -332,7 +350,7 @@ void ReloadTables(Ui::CafeManagerWindow* ui)
     }
     ui->staffTable->setSortingEnabled(true);
 
-    // Helper lambda function to determine color based on value
+    // Helper lambda function to determine color based on value in the # of employees text boxes
     auto determineColor = [](int value) -> QString { return (value == 0) ? "maroon" : "seagreen"; };
 
     // Cashier Text
@@ -349,6 +367,7 @@ void ReloadTables(Ui::CafeManagerWindow* ui)
 
 
 
+    //here we build all the tables
     ui->bidTable->setRowCount(0);
     ui->chefTable->setRowCount(0);
     ui->waiterTable->setRowCount(0);
@@ -367,7 +386,7 @@ void ReloadTables(Ui::CafeManagerWindow* ui)
         QTableWidgetItem *name = new QTableWidgetItem(bidder.Data.getFullName());
         QTableWidgetItem *role = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(bidder.Data.getESR())));
 
-        if(b.EBS == 0)
+        if(b.EBS == 0) //if pending
         {
             int bidRow = ui->bidTable->rowCount();
             ui->bidTable->insertRow(bidRow);
@@ -408,7 +427,7 @@ void ReloadTables(Ui::CafeManagerWindow* ui)
                 break;
             }
         }
-        else if(b.EBS == 2)
+        else if(b.EBS == 2) //if rejected
         {
             int rejectedRow = ui->rejectedTable->rowCount();
             ui->rejectedTable->insertRow(rejectedRow);
@@ -418,6 +437,7 @@ void ReloadTables(Ui::CafeManagerWindow* ui)
         }
     }
 
+    //re-enable sorting to prevent sorting bug/inefficiency while inserting
     ui->bidTable->setSortingEnabled(true);
     ui->chefTable->setSortingEnabled(true);
     ui->waiterTable->setSortingEnabled(true);
@@ -462,7 +482,12 @@ void CafeManagerWindow::on_unapproveButton_clicked()
     {
         PopUp error = PopUp();
         error.ManagerUnapprovalError();
+        ReloadTables(ui);
+        return;
     }
+
+    PopUp warning = PopUp();
+    warning.ManagerUnapprovalWarning();
 
     ReloadTables(ui);
 }
@@ -476,7 +501,7 @@ void CafeManagerWindow::on_approveButton_clicked()
 
 }
 
-
+//shows all workslots
 void CafeManagerWindow::on_showWorkslotsButton_clicked()
 {
 
@@ -538,6 +563,8 @@ void CafeManagerWindow::on_rejectButton_clicked()
 
 void CafeManagerWindow::Reject(QTableWidget* tableWidget, Ui::CafeManagerWindow* ui)
 {
+
+    //make sure selection is valid and not null
     if (!tableWidget->currentIndex().isValid() || tableWidget->rowCount() <= 0)
     {
         PopUp error = PopUp();
@@ -551,6 +578,7 @@ void CafeManagerWindow::Reject(QTableWidget* tableWidget, Ui::CafeManagerWindow*
     auto bidder = GetUserByBidIDController::Invoke(bidID); //what is this LOL
 
 
+    //if the database request to reject the bid fails, we warn the user, otherwise we do nothing
     if(RejectBidController::Invoke(bidID).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp error = PopUp();
@@ -562,6 +590,7 @@ void CafeManagerWindow::Reject(QTableWidget* tableWidget, Ui::CafeManagerWindow*
 void CafeManagerWindow::Approve(QTableWidget* tableWidget, Ui::CafeManagerWindow* ui)
 {
 
+    //check that the table selection is valid and not null
     if (!tableWidget->currentIndex().isValid() || tableWidget->rowCount() <= 0 )
     {
         PopUp error = PopUp();

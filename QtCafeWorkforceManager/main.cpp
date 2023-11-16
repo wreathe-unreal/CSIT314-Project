@@ -9,9 +9,6 @@
 
 int main(int argc, char *argv[])
 {
-
-    qDebug() << QDir::currentPath();
-
     QApplicationGlobal a(argc, argv);
     QApplicationGlobal::setStyle(QStyleFactory::create("Fusion"));
 

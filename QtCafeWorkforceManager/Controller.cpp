@@ -348,8 +348,10 @@ Response<QVector<Bid> > GetRejectedBidsByUserIDController::Execute()
     return Bid::GetRejected(this->UserID);
 }
 
+//get staff without bids for a slot id
 Response<QVector<User> > GetIdleStaffController::Execute()
 {
+    //first get all users
     Response<QVector<User>> userResponse = User::GetUsers();
     if(userResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
@@ -358,6 +360,7 @@ Response<QVector<User> > GetIdleStaffController::Execute()
         return userResponse;
     }
 
+    //get all bidders for a slot by slot id
     Response<QVector<int>> bidderIDs = Bid::GetBiddersBySlotID(this->SlotID);
     Response<QVector<User>> bidderResponse;
 
@@ -369,6 +372,8 @@ Response<QVector<User> > GetIdleStaffController::Execute()
 
     Response<QVector<User>> idleResponse;
 
+    //we loop through the list of bidding users and the list of all users and if the user does not have a bid
+    //we add him to the list of users we will return of "idle staff"
     for (const User& user : userResponse.Data)
     {
         bool bFound = false;
@@ -396,6 +401,8 @@ Response<QVector<Bid>> GetBidsController::Execute()
     return Bid::GetBids();
 }
 
+
+//inserts a new bid and deletes the old bid
 Response<void> UpdateBidController::Execute()
 {
     Response<void> UpdateResponse;

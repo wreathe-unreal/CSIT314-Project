@@ -6,6 +6,8 @@
 #include <QString>
 #include <QVector>
 #include "Response.h"
+
+//Empty Controller Interface
 class IController
 {
     public:

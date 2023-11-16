@@ -62,6 +62,7 @@ public:
     void OwnerSlotSearchResult(int nResults);
     void ManagerSearchEmptyError();
     void ManagerSearchError();
+    void ManagerUnapprovalWarning();
 private:
     Ui::PopUp *ui;
 };

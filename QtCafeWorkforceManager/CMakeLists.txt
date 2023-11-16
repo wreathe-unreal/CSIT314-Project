@@ -30,8 +30,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Enums.cpp
         QApplicationGlobal.h
         QApplicationGlobal.cpp
-        Entity.h
-        Entity.cpp
+
+
         User.h
         User.cpp
 
@@ -49,6 +49,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         Response.h
         PopUp.cpp PopUp.h PopUp.ui
         UnitTests.cpp UnitTests.h
+        Entity.h
 
 
     )

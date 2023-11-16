@@ -25,6 +25,25 @@ bool UnitTests::Assert()
     }
     qDebug() << "Assert: GetUsers succeeded.";
     InjectUsers = userResponse.Data;
+
+    for(auto u : InjectUsers)
+    {
+        if(AuthorizeController::Invoke(u.Username, u.Password).Result == EDatabaseResult::EDR_FAILURE)
+        {
+            qDebug() << "Assert: AuthorizeUsers failed.";
+            return false;
+        }
+        qDebug() << "Assert: AuthorizeUsers succeeded.";
+    }
+
+    if(AuthorizeController::Invoke("j32i42m3292i32", "239842kdm2idm3").Result == EDatabaseResult::EDR_FAILURE)
+    {
+        qDebug() << "Assert: UnauthorizedUserCannotLoginTest failed.";
+        return false;
+    }
+    qDebug() << "Assert: UnauthorizedUserCannotLoginTest succeeded.";
+
+
     Response<QVector<Slot>> slotResponse = GetSlotsController::Invoke();
     if (slotResponse.Result == EDatabaseResult::EDR_FAILURE)
     {

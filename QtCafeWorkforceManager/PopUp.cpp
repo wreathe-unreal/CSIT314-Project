@@ -323,6 +323,12 @@ void PopUp::ManagerUnapprovalError()
     this->exec();
 }
 
+void PopUp::ManagerUnapprovalWarning()
+{
+    this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
+    ui->popupText->setText("Unapproval successful, however if this staff member was idle when approved, please reject their bid as it was created during approval.");
+}
 void PopUp::ManagerRejectError()
 {
     this->Error();

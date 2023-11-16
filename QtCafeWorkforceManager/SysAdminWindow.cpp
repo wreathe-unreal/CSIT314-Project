@@ -386,10 +386,13 @@ void SysAdminWindow::on_searchButton_clicked()
 {
     EUserProfile searchProfile = IntToEUserProfile(ui->searchCombo->currentIndex());
 
+    //if search for users by EUP database request suceeds and there is at least 1 user with the profile searcched for...
     if(SearchUsersByEUPController::Invoke(searchProfile).Result == EDatabaseResult::EDR_SUCCESS
     && SearchUsersByEUPController::GetResponse().Data.size() > 0)
     {
         ui->userTable->setRowCount(0);
+
+        //get the data
         QVector<User> eupSearch = SearchUsersByEUPController::GetResponse().Data;
         for (auto& user : eupSearch)
         {
