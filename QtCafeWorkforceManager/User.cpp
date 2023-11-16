@@ -503,6 +503,49 @@ Response<void> User::SuspendUser(QString username)
     }
     return response;
 }
+
+Response<QVector<User>> User::SearchByUsername(QString username)
+{
+    Response<QVector<User>> response;
+
+    if (!DATABASE.isOpen()) {
+        qWarning("Error: connection with database failed");
+        response.Result = EDatabaseResult::EDR_FAILURE;
+        return response;
+    }
+
+    QSqlQuery query;
+    query.prepare("SELECT * FROM User WHERE Username LIKE :username");
+    query.bindValue(":username", "%" + username + "%");
+
+    if (query.exec())
+    {
+        QVector<User> users;
+        while (query.next())
+        {
+
+            User user;
+            user.UserID = query.value("UserID").toInt();
+            user.Username = query.value("Username").toString();
+            user.Password = query.value("Password").toString();
+            user.EUP = query.value("EUP").toInt();
+            user.ESR = query.value("ESR").toInt();
+            user.MaxSlots = query.value("MaxSlots").toInt();
+            user.bActive = query.value("bActive").toBool();
+            user.FullName = query.value("FullName").toString();
+
+            response.Data.push_back(user);
+        }
+        response.Result = EDatabaseResult::EDR_SUCCESS;
+    }
+    else {
+        qWarning() << "User search query failed: " << query.lastError().text();
+        response.Result = EDatabaseResult::EDR_FAILURE;
+    }
+
+    return response;
+}
+
 Response<void> User::SetEUP(QString username, EUserProfile profile)
 {
     Response<void> response;

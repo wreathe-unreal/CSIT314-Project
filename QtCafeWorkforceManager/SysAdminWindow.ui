@@ -432,14 +432,14 @@ color: dimgray;</string>
     </widget>
     <widget class="QWidget" name="tab_4">
      <attribute name="title">
-      <string>Search User</string>
+      <string>Profile Search</string>
      </attribute>
      <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>80</y>
-        <width>87</width>
+        <x>150</x>
+        <y>70</y>
+        <width>88</width>
         <height>56</height>
        </rect>
       </property>
@@ -468,7 +468,7 @@ color: black;</string>
       <property name="geometry">
        <rect>
         <x>120</x>
-        <y>30</y>
+        <y>10</y>
         <width>161</width>
         <height>48</height>
        </rect>
@@ -485,6 +485,64 @@ color: black;</string>
         <widget class="QComboBox" name="searchCombo"/>
        </item>
       </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab2">
+     <attribute name="title">
+      <string>User Search</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget_8">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>80</y>
+        <width>88</width>
+        <height>56</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QPushButton" name="searchProfileButton">
+         <property name="styleSheet">
+          <string notr="true">background-color: dodgerblue;
+color: black;</string>
+         </property>
+         <property name="text">
+          <string>Search</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="showAllUsersButton_2">
+         <property name="text">
+          <string>Show All Users</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QLineEdit" name="usernameSearch">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>50</y>
+        <width>113</width>
+        <height>24</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>58</x>
+        <y>50</y>
+        <width>81</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Username:</string>
+      </property>
      </widget>
     </widget>
    </widget>

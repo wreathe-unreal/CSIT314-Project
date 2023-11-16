@@ -446,3 +446,67 @@ void SysAdminWindow::on_showAllUsersButton_clicked()
     RebuildTable(ui->userTable);
 }
 
+
+void SysAdminWindow::on_searchProfileButton_clicked()
+{
+    if(SearchUsersByUsernameController::Invoke(ui->usernameSearch->text()).Result == EDatabaseResult::EDR_FAILURE)
+    {
+        PopUp error = PopUp();
+        error.AdminSearchUsernameError();
+        return;
+    }
+    else
+    {
+        int searchQty = SearchUsersByUsernameController::GetResponse().Data.size();
+
+        if(searchQty > 0)
+        {
+                PopUp success = PopUp();
+                success.AdminSearchUsernameSuccess(searchQty);
+        }
+        else
+        {
+                PopUp warning = PopUp();
+                warning.AdminSearchUsernameEmpty();
+                return;
+        }
+    }
+
+    ui->userTable->setRowCount(0);
+
+    for (auto& user : SearchUsersByUsernameController::GetResponse().Data)
+    {
+        ui->userTable->setSortingEnabled(false);
+        int row = ui->userTable->rowCount();
+        ui->userTable->insertRow(row); // Insert a new row
+
+        // Create a new item for each piece of data/*
+        QTableWidgetItem *userID = new QTableWidgetItem(QString::number(user.UserID));
+        QTableWidgetItem *fullNameItem = new QTableWidgetItem(user.FullName);
+        QTableWidgetItem *usernameItem = new QTableWidgetItem(user.Username);
+        QTableWidgetItem *passwordItem = new QTableWidgetItem(user.Password);
+        QTableWidgetItem *profileItem = new QTableWidgetItem(EUserProfileToQString(static_cast<EUserProfile>(user.EUP)));
+        QTableWidgetItem *roleItem = new QTableWidgetItem(EStaffRoleToQString(static_cast<EStaffRole>(user.ESR)));
+        QTableWidgetItem *maxSlotsItem = new QTableWidgetItem(QString::number(user.MaxSlots));
+        QString bActive = user.bActive ? "true" : "false";
+        QTableWidgetItem *bActiveItem = new QTableWidgetItem(bActive);
+
+        // Add those items to the table
+        ui->userTable->setItem(row, 0, userID);
+        ui->userTable->setItem(row, 1, fullNameItem);
+        ui->userTable->setItem(row, 2, usernameItem);
+        ui->userTable->setItem(row, 3, passwordItem);
+        ui->userTable->setItem(row, 4, profileItem);
+        ui->userTable->setItem(row, 5, roleItem);
+        ui->userTable->setItem(row, 6, maxSlotsItem);
+        ui->userTable->setItem(row, 7, bActiveItem);
+        ui->userTable->setSortingEnabled(true);
+    }
+}
+
+
+void SysAdminWindow::on_showAllUsersButton_2_clicked()
+{
+    RebuildTable(ui->userTable);
+}
+

@@ -39,6 +39,28 @@ void PopUp::Error()
 // ADMIN ALERTS
 //
 
+void PopUp::AdminSearchUsernameError()
+{
+    this->Error();
+    ui->popupText->setText("User Search failed check logs.");
+    this->exec();
+}
+
+void PopUp::AdminSearchUsernameEmpty()
+{
+    this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
+    ui->popupText->setText("User search returned no results.");
+    this->exec();
+}
+
+void PopUp::AdminSearchUsernameSuccess(int nResults)
+{
+    this->Success();
+    ui->popupText->setText("User search successful: " + QString::number(nResults) + " results found.");
+    this->exec();
+}
+
 void PopUp::AdminNoUserError()
 {
     this->Error();

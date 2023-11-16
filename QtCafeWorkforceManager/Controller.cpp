@@ -41,6 +41,7 @@ Response<void> DeleteUserController::DBResponse;
 
 //As a System Admin, I want to be able to search for user accounts
 Response<QVector<User>> SearchUsersByEUPController::DBResponse;
+Response<QVector<User>> SearchUsersByUsernameController::DBResponse;
 
 //As a Cafe Owner, I want to be able to create work slots
 Response<QVector<Slot>> CreateSlotController::DBResponse;
@@ -441,4 +442,9 @@ Response<void> UpdateBidController::Execute()
     PopUp dialogBox;
     dialogBox.StaffBidSubmitted();
     return UpdateResponse;
+}
+
+Response<QVector<User> > SearchUsersByUsernameController::Execute()
+{
+    return User::SearchByUsername(this->Username);
 }

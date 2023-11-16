@@ -79,6 +79,7 @@ class User : public IEntity
         static Response<bool> GetbActive(QString username);
         static Response<void> SuspendUser(QString username);
         static Response<int> GetUserID(QString username);
+        static Response<QVector<User>> SearchByUsername(QString username);
 };
 
 #endif // USER_H

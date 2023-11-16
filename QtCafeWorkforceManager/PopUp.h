@@ -63,6 +63,12 @@ public:
     void ManagerSearchEmptyError();
     void ManagerSearchError();
     void ManagerUnapprovalWarning();
+
+    void AdminSearchUsernameError();
+    void AdminSearchUsernameEmpty();
+    void AdminSearchUsernameSuccess(int nResults);
+
+
 private:
     Ui::PopUp *ui;
 };

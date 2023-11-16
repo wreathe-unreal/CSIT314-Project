@@ -15,6 +15,31 @@ class IController
    ~IController(){};
 };
 
+class SearchUsersByUsernameController : public IController
+{
+    public:
+
+    static Response<QVector<User>> Invoke(QString username)
+    {
+       SearchUsersByUsernameController controller = SearchUsersByUsernameController(username);
+       DBResponse = controller.Execute();
+       return DBResponse;
+    }
+    static Response<QVector<User>> GetResponse()
+    {
+       return DBResponse;
+    }
+
+    private:
+    static Response<QVector<User>> DBResponse;
+    QString Username;
+    SearchUsersByUsernameController(QString username)
+    {
+       this->Username = username;
+    }
+    Response<QVector<User>> Execute();
+};
+
 class AuthorizeController : public IController
 {
    public:
