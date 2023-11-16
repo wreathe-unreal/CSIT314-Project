@@ -210,13 +210,13 @@ Response<QVector<Slot>> GetSlotsController::Execute()
 Response<void> DeleteSlotController::Execute()
 {
     //first delete all bids associated with this slot
-    QVector<Bid> bids = GetBidsController::Invoke().Data;
+    QVector<Bid> bids = Bid::GetBids().Data;
 
     for(auto&b : bids)
     {
         if(b.SlotID == this->SlotID)
         {
-            DeleteBidController::Invoke(b.BidID);
+            Bid::Delete(b.BidID);
         }
     }
     return Slot::DeleteSlot(this->SlotID);
@@ -400,7 +400,7 @@ Response<void> UpdateBidController::Execute()
 {
     Response<void> UpdateResponse;
 
-    if(CreateBidController::Invoke(this->NewBid).Result == EDatabaseResult::EDR_FAILURE)
+    if(Bid::Insert(this->NewBid).Result == EDatabaseResult::EDR_FAILURE)
     {
         PopUp dialogBox;
         dialogBox.StaffBidConflictError();
@@ -408,7 +408,7 @@ Response<void> UpdateBidController::Execute()
         return UpdateResponse;
     }
 
-    Response<QVector<Bid>> bidSlotResponse = SearchBidsBySlotIDController::Invoke(this->SlotID);
+    Response<QVector<Bid>> bidSlotResponse = Bid::SearchBySlotID(this->SlotID);
 
 
     Response<void> deleteResponse;
@@ -416,7 +416,7 @@ Response<void> UpdateBidController::Execute()
     {
         if(b.UserID == QApplicationGlobal::CurrentUserID)
         {
-            deleteResponse = DeleteBidController::Invoke(b.BidID);
+            deleteResponse = Bid::Delete(b.BidID);
 
         }
     }
