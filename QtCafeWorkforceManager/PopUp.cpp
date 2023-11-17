@@ -191,6 +191,16 @@ void PopUp::StaffSlotSearchResult(QString str)
     this->exec();
 }
 
+void PopUp::StaffSlotSearchUnavailable()
+{
+    this->Error();
+    ui->popupIcon->setPixmap(WarningIcon.pixmap(QSize(61,61)));
+    ui->popupText->setText("Slots were found, but you have bids for all of them.");
+
+    this->exec();
+
+
+}
 void PopUp::StaffSearchEmptyError()
 {
     this->Error();

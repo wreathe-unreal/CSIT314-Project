@@ -5,24 +5,19 @@ project(QtCafeWorkforceManager VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Sql) 
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Sql)
 
-set(PROJECT_SOURCES
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(QtCafeWorkforceManager
+        MANUAL_FINALIZATION
         main.cpp
         AuthWindow.cpp
         AuthWindow.h
         AuthWindow.ui
-)
-
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(QtCafeWorkforceManager
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
         Controller.cpp Controller.h
         Bid.cpp Bid.h Slot.cpp Slot.h
         CafeResources.qrc

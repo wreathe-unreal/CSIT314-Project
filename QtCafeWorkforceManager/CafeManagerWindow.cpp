@@ -7,8 +7,6 @@
 #include "Slot.h"
 #include "ui_CafeManagerWindow.h"
 
-#include <QMessageBox>
-
 //clear all tables, we call this before rebuilding tables on update
 void ClearTables(Ui::CafeManagerWindow* ui)
 {
