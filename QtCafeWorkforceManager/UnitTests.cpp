@@ -33,8 +33,8 @@ bool UnitTests::Assert()
             qDebug() << "Assert: AuthorizeUsers failed.";
             return false;
         }
-        qDebug() << "Assert: AuthorizeUsers succeeded.";
     }
+    qDebug() << "Assert: AuthorizeUsers succeeded.";
 
     if(AuthorizeController::Invoke("j32i42m3292i32", "239842kdm2idm3").Result == EDatabaseResult::EDR_FAILURE)
     {
@@ -141,7 +141,7 @@ bool UnitTests::Assert()
     qDebug() << "Assert: UpdateUser succeeded.";
 
 
-    // If all Execute functions returned a value other than EDR_Failure, return true
+    // If all unit tests succeeded, return true
     return true;
 
 }

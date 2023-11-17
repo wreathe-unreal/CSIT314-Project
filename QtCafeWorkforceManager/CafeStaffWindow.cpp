@@ -450,64 +450,58 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
         error.StaffSearchError();
     }
 
-    if(searchResponse.Result == EDatabaseResult::EDR_SUCCESS && searchResponse.Data.size() > 0)
+    ui->availableTable->setRowCount(0);
+    ui->availableTable->setSortingEnabled(false);
+
+
+    for (auto& slot : searchResponse.Data)
     {
-        ui->availableTable->setRowCount(0);
-        ui->availableTable->setSortingEnabled(false);
-
         bool bSlotAvailable = true;
-
-
-        for (auto& slot : searchResponse.Data)
+        for(auto& b : GetBiddersBySlotIDController::Invoke(slot.SlotID).Data)
         {
-            Response<QVector<User>> bidders = GetBiddersBySlotIDController::Invoke(slot.SlotID);
-
-
-            for(auto& b : bidders.Data)
+            if(b.UserID == QApplicationGlobal::CurrentUserID)
             {
-                if(b.UserID == QApplicationGlobal::CurrentUserID)
-                {
-                    bSlotAvailable = false;
-                }
+                bSlotAvailable = false;
             }
-
-            if(!bSlotAvailable)
-            {
-                continue;
-            }
-
-            ui->availableTable->setSortingEnabled(false);
-            int row = ui->availableTable->rowCount();
-            ui->availableTable->insertRow(row); // Insert a new row
-
-
-            // Create a new item for each piece of data/*
-            QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
-            QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
-            QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
-            QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
-
-            // Add those items to the table
-            ui->availableTable->setItem(row, 0, slotID); // 1 is the column number for the Username
-            ui->availableTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
-            ui->availableTable->setItem(row, 2, startTime);  //3 is the column number for profile
-            ui->availableTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
-            ui->availableTable->setSortingEnabled(true);
-
         }
+
+        if(!bSlotAvailable)
+        {
+            continue;
+        }
+
+        ui->availableTable->setSortingEnabled(false);
+        int row = ui->availableTable->rowCount();
+        ui->availableTable->insertRow(row); // Insert a new row
+
+
+        // Create a new item for each piece of data/*
+        QTableWidgetItem *slotID = new QTableWidgetItem(QString::number(slot.getSlotID()));
+        QTableWidgetItem *date = new QTableWidgetItem(slot.getDate().toString());
+        QTableWidgetItem *startTime = new QTableWidgetItem(slot.getStartTime().toString("hh:mm:ss AP"));
+        QTableWidgetItem *endTime = new QTableWidgetItem(slot.getEndTime().toString("hh:mm:ss AP"));
+
+        // Add those items to the table
+        ui->availableTable->setItem(row, 0, slotID); // 1 is the column number for the Username
+        ui->availableTable->setItem(row, 1, date); // 2 is the column number for the HashedPassword
+        ui->availableTable->setItem(row, 2, startTime);  //3 is the column number for profile
+        ui->availableTable->setItem(row, 3, endTime); // 4 is the column number for the Role etc
         ui->availableTable->setSortingEnabled(true);
-        if(ui->availableTable->rowCount() > 0)
-        {
-            PopUp dialogBox;
-            dialogBox.StaffSlotSearchResult(QString::number(ui->availableTable->rowCount()));
 
-        }
-        else
-        {
-            PopUp warning;
-            warning.StaffSlotSearchUnavailable();
-        }
     }
+    ui->availableTable->setSortingEnabled(true);
+    if(ui->availableTable->rowCount() > 0)
+    {
+        PopUp dialogBox;
+        dialogBox.StaffSlotSearchResult(QString::number(ui->availableTable->rowCount()));
+
+    }
+    else
+    {
+        PopUp warning;
+        warning.StaffSlotSearchUnavailable();
+    }
+
 }
 
 

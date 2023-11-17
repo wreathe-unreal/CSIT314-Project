@@ -77,7 +77,7 @@ Response<void> SetMaxSlotsController::DBResponse;
 Response<User> GetUserController::DBResponse;
 
 //As a Cafe Staff, I want to be able to create a bid for a work slot
-Response<void> CreateBidController::DBResponse;
+Response<Bid> CreateBidController::DBResponse;
 
 //Allows a more specific search for bids
 Response<QVector<Bid>> GetPendingBidsController::DBResponse;
@@ -263,7 +263,7 @@ Response<User> GetUserController::Execute()
     return User::GetUser(this->UserID);
 }
 
-Response<void> CreateBidController::Execute()
+Response<Bid> CreateBidController::Execute()
 {
     return Bid::Insert(this->NewBid);
 }

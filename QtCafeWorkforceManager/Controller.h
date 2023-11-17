@@ -455,24 +455,24 @@ class GetUserController : public IController
 class CreateBidController : public IController
 {
     public:
-        static Response<void> Invoke(Bid newBid)
+        static Response<Bid> Invoke(Bid newBid)
         {
             CreateBidController controller = CreateBidController(newBid);
             DBResponse = controller.Execute();
             return DBResponse;
         }
-        static Response<void> GetResponse()
+        static Response<Bid> GetResponse()
         {
             return DBResponse;
         }
     private:
-        static Response<void> DBResponse;
+        static Response<Bid> DBResponse;
         Bid NewBid;
         CreateBidController(Bid newBid)
         {
             this->NewBid = newBid;
         }
-        Response<void> Execute();
+        Response<Bid> Execute();
 };
 
 class GetPendingBidsController : public IController

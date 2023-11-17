@@ -34,7 +34,7 @@ class Bid : public IEntity
 
 
         static Response<Bid> GetBid(int bidID);
-        static Response<void> Insert(Bid newBid);
+        static Response<Bid> Insert(Bid newBid);
         static Response<QVector<Bid>> GetBids();
         static Response<QVector<Bid>> GetPending();
         static Response<QVector<Bid>> GetApproved();

@@ -176,10 +176,10 @@ Response<Bid> Bid::GetBid(int bidID)
     return bidResponse;
 }
 
-Response<void> Bid::Insert(Bid newBid)
+Response<Bid> Bid::Insert(Bid newBid)
 {
 
-    Response<void> response;
+    Response<Bid> response;
 
     if (!DATABASE.isOpen())
     {
@@ -215,16 +215,24 @@ Response<void> Bid::Insert(Bid newBid)
         return response;
     }
 
-    // Insert the new user
     QSqlQuery queryInsert;
     queryInsert.prepare("INSERT INTO Bid (UserID, SlotID, EBS) VALUES (:userid, :slotid, :ebs)");
     queryInsert.bindValue(":userid", newBid.getUserID());
     queryInsert.bindValue(":slotid", newBid.getSlotID());
     queryInsert.bindValue(":ebs", newBid.getEBS());
 
+
     if (queryInsert.exec())
     {
         response.Result = EDatabaseResult::EDR_SUCCESS;
+        for(auto b : Bid::GetBids().Data)
+        {
+            if(b.SlotID == newBid.getSlotID() && b.UserID == newBid.getUserID())
+            {
+                response.Data = b;
+                break;
+            }
+        }
         return response;
     }
     else
@@ -540,12 +548,19 @@ Response<User> Bid::GetUserByBidID(int bidid)
             user.setMaxSlots(userQuery.value("MaxSlots").toInt());
             user.setbActive(userQuery.value("bActive").toInt());
             user.setFullName(userQuery.value("FullName").toString());
-            qDebug() << user.EUP;
+            qDebug() <<"LongLong:" <<  userQuery.value("MaxSlots").toLongLong();
+            qDebug() <<"Int:" <<  userQuery.value("MaxSlots").toInt();
+
+            qDebug() <<"Entity Max Slots:" << user.MaxSlots;
             response.Data = user;
+            response.Result = EDatabaseResult::EDR_SUCCESS;
+            return response;
         }
         else
         {
             qWarning() << "User query failed:" << userQuery.lastError().text();
+            response.Result = EDatabaseResult::EDR_FAILURE;
+            return response;
         }
     }
 

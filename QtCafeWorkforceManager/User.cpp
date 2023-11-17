@@ -10,7 +10,16 @@
 #include <QJsonObject>
 #include <QDebug>
 
-User::User(){};
+User::User()
+{
+    this->Username = "";
+    this->Password = "";
+    this->ESR = 0;
+    this->EUP = 0;
+    this->MaxSlots = 12345;
+    this->FullName = "";
+};
+
 User::~User(){}
 
 void User::setUsername(QString username)
@@ -37,6 +46,7 @@ void User::setMaxSlots(int maxSlots)
 {
     this->MaxSlots = maxSlots;
 }
+
 
 QString User::getFullName() const
 {

@@ -251,7 +251,7 @@ void CafeManagerWindow::on_calendarWidget_clicked(const QDate &date)
     }
     if(searchResponse.Data.size() <= 0) //if no slots exist, clear the table and warn the user
     {
-        ClearTables(ui);
+        //ClearTables(ui);
         PopUp dialogBox;
         dialogBox.ManagerSearchEmptyError();
     }
@@ -602,7 +602,7 @@ void CafeManagerWindow::Approve(QTableWidget* tableWidget, Ui::CafeManagerWindow
     int bidderID = GetUserByBidIDController::Invoke(bidID).Data.UserID;
     Response<QVector<Slot>> bidderSlots = SearchSlotsByUserIDController::Invoke(bidderID);
 
-    if(GetUserByBidIDController::GetResponse().Data.getMaxSlots() >= bidderSlots.Data.size())
+    if(GetUserByBidIDController::GetResponse().Data.getMaxSlots() > bidderSlots.Data.size())
     {
         Response<void> approveResponse = ApproveBidController::Invoke(bidID);
         if(approveResponse.Result == EDatabaseResult::EDR_SUCCESS)
@@ -621,6 +621,9 @@ void CafeManagerWindow::Approve(QTableWidget* tableWidget, Ui::CafeManagerWindow
 
 void CafeManagerWindow::Assign(QTableWidget* tableWidget, Ui::CafeManagerWindow* ui, Bid newBid)
 {
+    qDebug() << "bidID" << newBid.getBidID();
+    qDebug() << "userID" << newBid.getUserID();
+    qDebug() << "slotID" << newBid.getSlotID();
 
     if (!tableWidget->currentIndex().isValid() || tableWidget->rowCount() <= 0 )
     {
@@ -628,9 +631,11 @@ void CafeManagerWindow::Assign(QTableWidget* tableWidget, Ui::CafeManagerWindow*
         error.ManagerNullSelectionError();
         return;
     }
-    auto bidder = GetUserByBidIDController::Invoke(newBid.BidID);
-    auto bidderSlots = SearchSlotsByUserIDController::Invoke(bidder.Data.UserID);
+    Response<User> bidder = GetUserByBidIDController::Invoke(newBid.BidID);
+    Response<QVector<Slot>> bidderSlots = SearchSlotsByUserIDController::Invoke(bidder.Data.UserID);
 
+    qDebug() << "Bidder Max Slots:" << bidder.Data.getMaxSlots();
+    qDebug() << "Bidder Slots:" << bidderSlots.Data.size();
 
     if(bidder.Data.getMaxSlots() > bidderSlots.Data.size())
     {
@@ -730,11 +735,10 @@ void CafeManagerWindow::on_assignButton_clicked()
     Bid newBid;
     newBid.SlotID = ui->slotTable->item(ui->slotTable->currentRow(), 0)->text().toInt();
     newBid.UserID = ui->idleStaffTable->item(ui->idleStaffTable->currentRow(), 0)->text().toInt();
-    newBid.EBS = 1;
 
     if(CreateBidController::Invoke(newBid).Result == EDatabaseResult::EDR_SUCCESS)
     {
-        Assign(ui->idleStaffTable, ui, newBid);
+        Assign(ui->idleStaffTable, ui, CreateBidController::GetResponse().Data);
         ReloadTables(ui);
     }
 
