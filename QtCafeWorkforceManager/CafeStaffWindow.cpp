@@ -504,13 +504,8 @@ void CafeStaffWindow::on_workslotCalendar_clicked(const QDate &date)
         }
         else
         {
-            QMessageBox successMsgBox;
-            successMsgBox.setWindowTitle("No unbidded slots!"); // Set the window title
-            successMsgBox.setText("Slots were found, but none are available for bidding by you."); // Set the text to display
-            successMsgBox.setIcon(QMessageBox::Information); // Set an icon for the message box (optional)
-
-            // Show the message box as a modal dialog
-            successMsgBox.exec();
+            PopUp warning;
+            warning.StaffSlotSearchUnavailable();
         }
     }
 }
@@ -544,8 +539,7 @@ void CafeStaffWindow::on_updateButton_clicked()
     if(ui->availableTable->currentRow() == -1 || ui->availableTable->selectedItems().isEmpty())
     {
         PopUp dialogBox;
-        dialogBox.StaffUpdateBidEmptyError();
-        QMessageBox errorMsgBox;
+        dialogBox.StaffUpdateBidEmptyError();        
         return;
     }
 

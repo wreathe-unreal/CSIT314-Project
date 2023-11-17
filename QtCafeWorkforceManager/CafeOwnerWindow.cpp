@@ -294,19 +294,13 @@ void CafeOwnerWindow::on_searchButton_clicked()
     }
     if(searchResponse.Data.size() <= 0)
     {
-        QMessageBox warning;
-        warning.setWindowTitle("No Results"); // Set the window title
-        warning.setText("Slot search found no results."); // Set the text to display
-        warning.setIcon(QMessageBox::Warning); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp error;
+        error.OwnerSlotNullError();
     }
     if(searchResponse.Result == EDatabaseResult::EDR_FAILURE)
     {
-        QMessageBox warning;
-        warning.setWindowTitle("Error"); // Set the window title
-        warning.setText("Slot search encountered an error."); // Set the text to display
-        warning.setIcon(QMessageBox::Critical); // Set an icon for the message box (optional)
-        warning.exec();
+        PopUp error;
+        error.OwnerSlotSearchError();
     }
 }
 

@@ -69,6 +69,8 @@ public:
     void AdminSearchUsernameSuccess(int nResults);
 
 
+    void OwnerSlotSearchError();
+    void StaffSlotSearchUnavailable();
 private:
     Ui::PopUp *ui;
 };

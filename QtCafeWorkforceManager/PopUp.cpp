@@ -244,6 +244,12 @@ void PopUp::StaffBidUpdated()
 //
 // OWNER ALERTS
 //
+
+void PopUp::OwnerSlotSearchError()
+{
+    this->Error();
+    ui->popupText->setText("Slot search encountered an error.");
+}
 void PopUp::OwnerSlotSearchResult(int nResults)
 {
     this->Success();
